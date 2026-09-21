@@ -638,11 +638,11 @@ function vGoiY() {
   const chip = (act, val, cur, txt) => '<button class="chip" data-act="' + act + '" data-v="' + val + '" aria-pressed="' + (cur === val) + '">' + esc(txt) + '</button>';
   const approved = all.filter(g => g.duyet).length;
   let sel = all.find(g => g.id === S.sel) || list[0];
-  const card = g => '<article class="gy-card' + (sel && sel.id === g.id ? ' sel' : '') + '"><button class="gy-main" data-act="gy-sel" data-id="' + esc(g.id) + '"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' + priBadge(g.uu_tien) + typePill(g.tk) + mucPill(g.muc_uu_tien) + clChip(g.closing) + '<span class="muted" style="font-size:12px">' + esc(T('closing')) + ' ' + fTs(g.closing, true) + '</span>' + (g.duyet ? pill(T('approved'), 'var(--teal-bg)', 'var(--teal-ink)') : '') + '</div>' +
+  const card = g => '<article class="gy-card' + (sel && sel.id === g.id ? ' sel' : '') + '"><button class="gy-main" data-act="gy-sel" data-id="' + esc(g.id) + '"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' + priBadge(g.uu_tien) + typePill(g.tk) + mucPill(g.muc_uu_tien) + clChip(g.closing) + '<span class="muted" style="font-size:12px">' + esc(T('closing')) + ' ' + fTs(g.closing, true) + '</span>' + (g.la_phuong_an ? pill('★ ' + T1('Phương án', '方案'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + (g.duyet ? pill(T('approved'), 'var(--teal-bg)', 'var(--teal-ink)') : '') + '</div>' +
     (g.cont_day ? '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span class="mono" style="font-size:14px">' + esc(g.cont_day) + '</span><span class="muted" style="font-size:12px">' + esc(T('loCol')) + ' ' + esc((g.id_cont_day || '').split('-').pop()) + '</span><span style="font-weight:500">' + esc(g.kho_day || '') + '</span><span class="muted">→ ' + esc(tr(splitVZ(g.noi_ha))) + '</span>' + (g.kdChua ? pill(T1('KD chưa kiểm', '检疫未完成'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</div>' +
       '<div style="font-size:12px;color:var(--muted)">' + esc(T1('Mooc', '车架') + ': ') + (g.mooc ? '<b style="color:var(--ink)">' + esc(g.mooc) + '</b>' + (g.cd && g.cd.ngay_den_kho ? ' · ' + esc(T1('kéo lên', '上柜')) + ' ' + fDate(g.cd.ngay_den_kho) : '') : '<b style="color:var(--red-ink)">' + esc(T1('chưa rõ nhà xe nào', '未知')) + '</b>') + (g.cd && g.cd.so_seal ? ' · Seal <span class="mono">' + esc(g.cd.so_seal) + '</span>' : '') + '</div>' : '') +
     (g.kho_cat_rong ? '<div style="font-size:12px;color:var(--lav-ink)">' + esc(T('rong') + ': ' + (g.ma_don_rong || '') + ' @ ' + g.kho_cat_rong + ' · ' + (g.booking_lay_rong || T('noBooking'))) + '</div>' : '') +
-    '</button><div class="gy-side"><span class="muted" style="font-size:12px;text-align:center">' + esc(T('carrier')) + ': <b style="color:var(--ink)">' + esc(g.nx || '—') + '</b>' + (g.chi_phi_uoc_tinh != null ? '<br>' + esc(money(g.chi_phi_uoc_tinh)) : '') + '</span>' + (canPlan() ? '<button class="btn btn-sm ' + (g.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(g.id) + '" data-v="' + (g.duyet ? '0' : '1') + '">' + esc(g.duyet ? T('approved') : T('approve')) + '</button>' : '') + '</div></article>';
+    '</button><div class="gy-side"><span class="muted" style="font-size:12px;text-align:center">' + esc(T('carrier')) + ': <b style="color:var(--ink)">' + esc(g.nx || '—') + '</b>' + (g.chi_phi_uoc_tinh != null ? '<br>' + esc(money(g.chi_phi_uoc_tinh)) : '') + '</span>' + (canPlan() ? '<button class="btn btn-sm ' + (g.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(g.id) + '" data-v="' + (g.duyet ? '0' : '1') + '">' + esc(g.duyet ? T('approved') : (g.la_phuong_an ? T1('Chọn cont này', '选此柜') : T('approve'))) + '</button>' : '') + '</div></article>';
   const groups = [1, 2, 3].map(p => { const items = list.filter(g => g.uu_tien === p); if (!items.length) return ''; const nm = { 1:['gấp: KD / sát CLS / cần rỗng trong 24 giờ', '紧急'], 2:['CLS gần / cần rỗng trong 48 giờ', '两天内'], 3:['còn lại', '其他'] }[p];
     return '<div class="stack" style="gap:10px"><div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0;font-size:14px;color:var(--pri-ink)">' + esc(T('pri') + ' ' + p + ' · ' + tr(nm)) + '</h2><span class="cnt-b">' + items.length + '</span></div>' + items.map(card).join('') + '</div>'; }).join('');
   let panel = '<div class="muted">' + esc(T('pickOne')) + '</div>';
@@ -654,11 +654,12 @@ function vGoiY() {
       '<div class="kv"><span>' + esc(T('kho')) + '</span><span>' + esc(sel.kho_day || sel.kho_cat_rong || '—') + '</span><span>Nơi hạ 还柜点</span><span>' + esc(sel.noi_ha ? tr(splitVZ(sel.noi_ha)) : '—') + '</span><span>' + esc(T('closing')) + '</span><span>' + fTs(sel.closing, true) + '</span><span>' + esc(T('carrierSug')) + '</span><span>' + esc(sel.nha_xe_goi_y || '—') + '</span><span>' + esc(T1('Chi phí ước tính', '预估费用')) + '</span><span>' + (sel.chi_phi_uoc_tinh != null ? '<b>' + esc(money(sel.chi_phi_uoc_tinh)) + '</b>' : '—') + (sel.chi_phi_ghi_chu ? '<span class="muted" style="font-size:11px;display:block">' + esc(sel.chi_phi_ghi_chu) + '</span>' : '') + '</span></div>' +
       (sel.kho_cat_rong ? '<div class="msg">' + esc(T('rong') + ': ' + (sel.ma_don_rong || '') + ' @ ' + sel.kho_cat_rong + ' · ' + (sel.booking_lay_rong || T('noBooking'))) + '</div>' : '') +
       '<div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">' + esc(T('reason')) + '</div><ul style="margin:0;padding-left:18px;font-size:12px;line-height:1.55">' + String(sel.ly_do || '').split(';').filter(x => x.trim()).map(x => '<li>' + esc(x.trim()) + '</li>').join('') + '</ul></div>' +
+      (sel.la_phuong_an ? '<div class="msg" style="background:var(--amb-bg);color:var(--amb-ink)"><b>★ ' + esc(T1('Phương án đổi rỗng', '换空方案')) + '</b><br>' + esc(T1('1 trong ' + S.goiy.filter(x => x.nhom_gy === sel.nhom_gy).length + ' phương án dùng chung 1 rỗng. Chọn cont này thì các cont còn lại chuyển RÚT MOOC.', '与其他方案共用 1 个空柜；选此柜则其余转拉柜。')) + '</div>' : '') +
       (sel.locked ? '<div class="msg"><b>' + esc(T('pickCarrier')) + ': ' + esc(sel.mooc) + '</b> 🔒<br>' + esc(T1('Cont đang nằm trên mooc của ' + sel.mooc + ' — chỉ ' + sel.mooc + ' kéo về được. Muốn đổi, sửa nhà xe của cont trước.', '柜子在 ' + sel.mooc + ' 的车架上，只能由 ' + sel.mooc + ' 拉回。')) + '</div>' : (sel.cd ? '<div class="msg err">' + esc(T1('Chưa rõ cont nằm trên mooc nhà xe nào — hỏi kho rồi nhập nhà xe cho cont trước khi duyệt.', '未知车架属于哪个车队，请先确认。')) + '</div>' : '') +
   '<label class="field">' + esc(T('pickCarrier')) + '<select data-on="gy-pick" data-id="' + esc(sel.id) + '"' + (canPlan() ? '' : ' disabled') + '>' + '<option value="">—</option>' + S.nhaxe.map(n => '<option value="' + esc(n.ma) + '"' + (n.ma === sel.nx ? ' selected' : '') + '>' + esc(n.ma + (n.ten_day_du && n.ten_day_du !== n.ma ? ' · ' + n.ten_day_du : '')) + '</option>').join('') + '</select></label>') +
       '<div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">' + esc(T('orderText')) + '</div><pre class="order">' + esc(sel.text) + '</pre></div>' +
       '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">' +
-        (canPlan() ? '<button class="btn btn-sm ' + (sel.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(sel.id) + '" data-v="' + (sel.duyet ? '0' : '1') + '">' + esc(sel.duyet ? T('approved') : T('approve')) + '</button>' : '<span></span>') +
+        (canPlan() ? '<button class="btn btn-sm ' + (sel.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(sel.id) + '" data-v="' + (sel.duyet ? '0' : '1') + '">' + esc(sel.duyet ? T('approved') : (sel.la_phuong_an ? T1('Chọn cont này', '选此柜') : T('approve'))) + '</button>' : '<span></span>') +
         '<button class="btn btn-sm" data-act="copy-gy" data-id="' + esc(sel.id) + '">' + esc(S.copied === sel.id ? T('copied') : T('copy')) + '</button>' +
         (ph ? '<a class="btn btn-sm btn-zalo" href="' + esc(zaloUrl(ph)) + '" target="_blank" rel="noopener" data-act="copy-gy" data-id="' + esc(sel.id) + '" data-keep="1">' + esc(T('zalo')) + '</a>' : '<button class="btn btn-sm" disabled title="' + esc(T('noZalo')) + '">' + esc(T('noZalo')) + '</button>') +
       '</div>';
@@ -1177,7 +1178,19 @@ async function moveCont(id, to) {
 async function approveGy(id, val) {
   const g = S.goiy.find(x => x.id === id); if (!g) return;
   const nx = gyView(g).nx || null;
-  try { await q(sb.from('goi_y').update({ duyet:val, nha_xe_chon: val ? nx : g.nha_xe_chon }).eq('id', id)); Object.assign(g, { duyet:val, nha_xe_chon: val ? nx : g.nha_xe_chon }); toast((g.cont_day || g.ma_don_rong || id) + ' · ' + (val ? T('approved') : T('unapprove'))); renderMain(); renderNavCounts(); }
+  try {
+    if (val && g.la_phuong_an && g.nhom_gy) {
+      // Phương án: chọn cont này → các cont còn cùng nhóm chuyển rút mooc
+      const r = await sb.rpc('duyet_phuong_an', { p_id: id, p_nha_xe: nx }); if (r.error) throw r.error;
+      toast((g.cont_day || id) + ' · ' + T('approved') + (r.data > 0 ? ' · ' + r.data + (LANG === 'zh' ? ' 个转拉柜' : ' cont chuyển rút mooc') : ''));
+      await loadData(); renderMain(); renderNavCounts();
+    } else {
+      await q(sb.from('goi_y').update({ duyet:val, nha_xe_chon: val ? nx : g.nha_xe_chon }).eq('id', id));
+      Object.assign(g, { duyet:val, nha_xe_chon: val ? nx : g.nha_xe_chon });
+      toast((g.cont_day || g.ma_don_rong || id) + ' · ' + (val ? T('approved') : T('unapprove')));
+      renderMain(); renderNavCounts();
+    }
+  }
   catch (e) { toast(errMsg(e), true); }
 }
 async function applyGy(id) {
@@ -1224,7 +1237,7 @@ async function saveDm(form) {
 async function runGoiY() {
   const b = document.querySelector('[data-act="run-goiy"]'); if (b) b.disabled = true;
   try {
-    const r = await sb.rpc('tao_goi_y_v3'); if (r.error) throw r.error;
+    const r = await sb.rpc('tao_goi_y_v4'); if (r.error) throw r.error;
     if (r.data === -1) { toast(T('runBusy'), true); }
     else { toast(T('runOk') + ': ' + r.data); await loadData(); renderMain(); renderNavCounts(); }
   }
