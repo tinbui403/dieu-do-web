@@ -1352,6 +1352,7 @@ document.addEventListener('submit', e => {
   else if (f.dataset.form === 'f-lo') saveLo(f);
   else if (['nhaxe', 'kho', 'nv', 'bai', 'gia'].indexOf(f.dataset.form) > -1) saveDm(f);
   else if (f.id === 'login-form') doLogin(f);
+  else if (f.id === 'reset-form') doResetPw(f);
   else if (f.dataset.form === 'f-pw') savePw(f);
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.drawer) closeDrawer(); });
@@ -1359,6 +1360,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.drawer) 
 /* ---------------- đăng nhập ---------------- */
 let LOGIN_MODE = 'in';
 let LOGIN_EMAIL = '';
+// Trang mở từ link trong mail đặt lại mật khẩu -> không vào thẳng app, bắt đặt mật khẩu mới trước
+let RECOVERY = /type=recovery/.test(location.hash || '');
 function pwField(label, name, auto) {
   return '<div class="field">' + label + '<div class="pw-row"><input name="' + name + '" type="password" autocomplete="' + auto + '" minlength="6" required aria-label="' + esc(label) + '"><button type="button" class="pw-eye" data-act="pw-eye">Hiện 显示</button></div></div>';
 }
@@ -1368,6 +1371,7 @@ function renderLogin(msg, isErr) {
     '<div class="tabs2" role="group"><button type="button" data-act="login-mode" data-v="in" aria-pressed="' + (LOGIN_MODE === 'in') + '">Đăng nhập 登录</button><button type="button" data-act="login-mode" data-v="up" aria-pressed="' + (LOGIN_MODE === 'up') + '">Tạo tài khoản 注册</button></div>' +
     '<label class="field">Email 邮箱<input name="email" type="email" autocomplete="email" required value="' + esc(LOGIN_EMAIL) + '"></label>' +
     pwField('Mật khẩu 密码', 'password', LOGIN_MODE === 'in' ? 'current-password' : 'new-password') +
+    (LOGIN_MODE === 'in' ? '<div style="text-align:right;margin-top:-6px"><button type="button" data-act="login-forgot" style="background:none;border:0;padding:0;color:var(--pri-ink);font-size:12px;cursor:pointer;text-decoration:underline">Quên mật khẩu? 忘记密码？</button></div>' : '') +
     (msg ? '<div class="msg' + (isErr ? ' err' : '') + '">' + esc(msg) + '</div>' : '') +
     '<button class="btn btn-pri" type="submit" id="login-btn" style="min-height:44px">' + (LOGIN_MODE === 'in' ? 'Đăng nhập 登录' : 'Tạo tài khoản 注册') + '</button>' +
     '<p class="muted" style="margin:0;font-size:12px">' + (LOGIN_MODE === 'in' ? 'Chưa có tài khoản? Nhờ quản lý thêm email của bạn vào danh sách nhân viên, rồi chọn “Tạo tài khoản”. 还没有账号？请管理员先添加您的邮箱，再点“注册”。' : 'Dùng đúng email quản lý đã thêm vào danh sách nhân viên. Mật khẩu ít nhất 6 ký tự. 请使用管理员已添加的邮箱，密码至少6位。') + '</p>' +
@@ -1376,6 +1380,42 @@ function renderLogin(msg, isErr) {
 }
 ACT['login-mode'] = d => { const f = document.getElementById('login-form'); if (f) LOGIN_EMAIL = f.email.value.trim(); LOGIN_MODE = d.v; renderLogin(); };
 ACT['pw-eye'] = (d, el) => { const i = el.parentNode.querySelector('input'); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; el.textContent = show ? 'Ẩn 隐藏' : 'Hiện 显示'; };
+ACT['login-forgot'] = async () => {
+  const f = document.getElementById('login-form');
+  const email = (f && f.email.value.trim().toLowerCase()) || '';
+  if (!email) { renderLogin('Nhập email vào ô trên rồi bấm lại “Quên mật khẩu?”. 请先填写邮箱再点“忘记密码”。', true); return; }
+  LOGIN_EMAIL = email;
+  try {
+    const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+    if (r.error) throw r.error;
+    renderLogin('Đã gửi mail đặt lại mật khẩu tới ' + email + '. Mở hộp thư, bấm link trong mail rồi đặt mật khẩu mới. 重置密码邮件已发送，请查收。');
+  } catch (e) { renderLogin(errMsg(e), true); }
+};
+function renderResetPw(msg, isErr) {
+  document.getElementById('root').innerHTML = '<div class="login"><form class="login-card" id="reset-form">' +
+    '<div class="brand" style="padding:0"><div class="brand-logo" style="background:var(--side)">' + ico('truck', 22, '#fff') + '</div><div><div class="brand-name" style="color:var(--pri-ink)">Điều độ 调度</div><div class="muted" style="font-size:12px">Đặt mật khẩu mới 设置新密码</div></div></div>' +
+    pwField('Mật khẩu mới 新密码', 'p1', 'new-password') +
+    pwField('Nhập lại mật khẩu mới 再次输入', 'p2', 'new-password') +
+    (msg ? '<div class="msg' + (isErr ? ' err' : '') + '">' + esc(msg) + '</div>' : '') +
+    '<button class="btn btn-pri" type="submit" id="reset-btn" style="min-height:44px">Lưu mật khẩu 保存密码</button>' +
+    '<p class="muted" style="margin:0;font-size:12px">Ít nhất 6 ký tự. Lưu xong là vào thẳng trang luôn. 至少6位，保存后直接进入。</p>' +
+  '</form></div>';
+  const i = document.querySelector('#reset-form [name=p1]'); if (i) i.focus();
+}
+async function doResetPw(f) {
+  const p1 = f.p1.value, p2 = f.p2.value;
+  if (p1.length < 6) { renderResetPw('Mật khẩu cần ít nhất 6 ký tự. 密码至少6位。', true); return; }
+  if (p1 !== p2) { renderResetPw('Hai lần nhập không giống nhau. 两次输入不一致。', true); return; }
+  const b = document.getElementById('reset-btn'); if (b) { b.disabled = true; b.textContent = 'Đang lưu… 保存中…'; }
+  try {
+    const r = await sb.auth.updateUser({ password: p1 }); if (r.error) throw r.error;
+    RECOVERY = false;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    const { data } = await sb.auth.getSession();
+    if (data.session) afterLogin(data.session);
+    else { LOGIN_MODE = 'in'; renderLogin('Đã đặt mật khẩu mới — đăng nhập lại nhé. 新密码已设置，请重新登录。'); }
+  } catch (e) { renderResetPw(errMsg(e), true); }
+}
 async function doLogin(f) {
   const email = f.email.value.trim().toLowerCase(), password = f.password.value;
   LOGIN_EMAIL = email;
@@ -1403,9 +1443,23 @@ function renderNoAccess(email) {
   document.getElementById('root').innerHTML = '<div class="login"><div class="login-card"><h1>Chưa được cấp quyền</h1><p class="muted" style="margin:0">Tài khoản <b>' + esc(email) + '</b> chưa có trong danh sách nhân viên. Nhờ quản lý mở <b>Danh mục → Nhân viên</b> và thêm email này, rồi tải lại trang.</p><p class="muted" style="margin:0">账号 ' + esc(email) + ' 尚未授权，请管理员在“基础资料 → 员工”中添加该邮箱后刷新页面。</p><div style="display:flex;gap:8px"><button class="btn btn-pri" onclick="location.reload()">Tải lại 刷新</button><button class="btn" data-act="signout">Đăng xuất 退出</button></div></div></div>';
 }
 (async function init() {
+  sb.auth.onAuthStateChange((ev, session) => {
+    if (ev === 'PASSWORD_RECOVERY') { RECOVERY = true; renderResetPw(); return; }
+    if (RECOVERY) return;                       // đang đặt lại mật khẩu thì chưa cho vào app
+    if (ev === 'SIGNED_IN' && !S.session && session) afterLogin(session);
+    if (ev === 'SIGNED_OUT') { S.session = null; renderLogin(); }
+  });
+  const h = location.hash || '';
+  if (/error_description=/.test(h)) {          // link hết hạn hoặc đã dùng rồi
+    const m = decodeURIComponent((h.match(/error_description=([^&]*)/) || [])[1] || '').replace(/\+/g, ' ');
+    RECOVERY = false;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    renderLogin('Link không dùng được nữa (hết hạn hoặc đã dùng) — bấm “Quên mật khẩu?” để xin link mới. ' + m, true);
+    return;
+  }
   const { data } = await sb.auth.getSession();
+  if (RECOVERY) { renderResetPw(); return; }
   if (data.session) afterLogin(data.session); else renderLogin();
-  sb.auth.onAuthStateChange((ev, session) => { if (ev === 'SIGNED_IN' && !S.session && session) afterLogin(session); if (ev === 'SIGNED_OUT') { S.session = null; renderLogin(); } });
 })();
 </script>
 </body>
