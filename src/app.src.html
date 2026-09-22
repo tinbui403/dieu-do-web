@@ -236,6 +236,7 @@ a{color:var(--pri-ink)}
 <div id="drawer"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <script>/*__SUPABASE_UMD__*/</script>
+<script src="kiem_dich_wizard.js"></script>
 <script>
 'use strict';
 /* =========================================================
@@ -425,8 +426,8 @@ function kdBlock(l) {
     (v ? '<p style="margin:8px 0 0;font-size:12px;font-weight:700;color:var(--red-ink)" data-kd-sai>⚠ ' + esc(T1(v + ' cont đã ở cảng khi lô chưa kiểm dịch — sai quy trình. Điều độ lùi các cont đó về bãi, kiểm dịch rồi hạ lại.', v + ' 个柜未检疫已回港，流程错误')) + '</p>' : '') +
     '<p class="muted" style="margin:6px 0 0;font-size:11px">' + esc(T1('Quy tắc: 1 lô 1 cont kiểm dịch; cont đó phải về bãi HLS / PD / HT và có mã KDTV mới tích được; chưa kiểm dịch thì không cont nào được hạ cảng; đã kiểm dịch: cont ở kho chỉ hạ thẳng cảng khi CLS còn ≤ ' + gioHaThang() + 'h.', '规则：每批1个检疫柜；检疫柜须在HLS/PD/HT堆场且有检疫单号；未检疫不得回港；已检疫：截关≤' + gioHaThang() + '小时才可直接回港。')) + '</p>' +
     (canKd() ? '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">' +
-      (!l.da_kiem_dich ? '<button type="button" class="btn btn-sm" style="border-color:var(--teal);color:var(--teal-ink)" data-act="kd-done" data-lo="' + esc(l.lo) + '"' + (why ? ' disabled' : '') + '>' + esc(T('kdDone')) + ' ✓</button>'
-        : '<button type="button" class="btn btn-sm" data-act="kd-undo" data-lo="' + esc(l.lo) + '"' + (port ? ' disabled title="' + esc(T1('Đã có cont ở cảng', '已有柜回港')) + '"' : '') + '>' + esc(T1('Bỏ tích kiểm dịch', '取消检疫勾选')) + '</button>') + '</div>' : '') +
+      '<button type="button" class="btn btn-sm btn-pri" data-act="open-kd-wizard" data-lo="' + esc(l.lo) + '">' + esc(T('kdShort')) + ' Wizard</button>' +
+      '</div>' : '') +
     '</div>';
 }
 
@@ -1432,6 +1433,7 @@ async function afterLogin(session) {
     if (!S.me) { renderNoAccess(session.user.email); return; }
     try { if (!localStorage.getItem('dd_lang') && S.me.ngon_ngu) LANG = S.me.ngon_ngu; } catch (e) { LANG = S.me.ngon_ngu || 'vi'; }
     await loadCatalogs(); renderShell(); await loadData(); renderMain(); renderNavCounts(); startRealtime();
+    toast('Chào mừng ' + S.me.ho_ten + '!', false);
   } catch (e) { document.getElementById('root').innerHTML = '<div class="login"><div class="login-card"><div class="msg err">' + esc(errMsg(e)) + '</div><button class="btn" onclick="location.reload()">Thử lại 重试</button></div></div>'; }
 }
 function renderNoAccess(email) {

@@ -6,16 +6,13 @@ Cập nhật lần cuối: **22/09/2026** (giờ VN)
 
 ## Đang làm
 
-**Cải thiện trải nghiệm người dùng (UX) khi đăng nhập.**
-
-- Người dùng đã tạo tài khoản (Supabase Auth) nhưng chưa được thêm vào bảng `public.nhan_vien` (chưa được phân quyền) sẽ thấy màn hình trống hoặc không có dữ liệu.
-- Đang thực hiện: Thêm thông báo hướng dẫn thân thiện để người dùng biết tại sao họ chưa thấy dữ liệu và cần làm gì.
+**Chưa có việc đang làm.**
 
 ## Bước kế tiếp
 
-1. Sửa `src/app.src.html` để thêm thông báo hướng dẫn.
-2. Chạy `python build.py` để tạo lại `index.html`.
-3. Kiểm thử luồng đăng nhập của người dùng mới (chưa có trong bảng `nhan_vien`).
+1. Kiểm tra luồng Wizard thực tế trên trình duyệt.
+2. Tinh chỉnh logic `src/kiem_dich_wizard.js` (xử lý dữ liệu, API call).
+3. Kiểm thử các trường hợp chặn RLS.
 
 ## Việc còn treo (chưa ai yêu cầu làm, chỉ ghi để nhớ)
 
@@ -25,6 +22,7 @@ Cập nhật lần cuối: **22/09/2026** (giờ VN)
 
 ## Đã xong gần đây
 
+- **22/09** — Hoàn thành tích hợp UI Wizard vào `src/app.src.html`, build thành công `index.html`.
 - **22/09** — Phân tích quy trình xác thực/phân quyền: Xác nhận người dùng mới cần được Admin thêm vào bảng `nhan_vien` thì mới truy cập được dữ liệu (cơ chế RLS).
 - **21/09** — Gợi ý v3: `tao_goi_y_v3()` (khoá phiên, ID có giây, cột `phien`), `canh_bao_thieu_rong()`, `kiem_thu_goi_y_v3()` đạt 19/19; cron phút :05 và nút "Chạy gợi ý" đã chuyển sang v3 (web xử lý kết quả `-1` = đang có phiên khác). `index.html` đã build lại khớp `src/app.src.html`.
 - **20/09 tối** — Quy trình kiểm dịch → kéo → hạ cảng chặn bằng trigger; CLS ePort gộp Cát Lái + SPITC.
