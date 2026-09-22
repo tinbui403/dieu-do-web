@@ -1,0 +1,1461 @@
+<!doctype html>
+<!-- MÃ NGUỒN: sửa file này rồi chạy `python build.py` để tạo index.html. Đừng sửa trực tiếp index.html. -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4B3C8C">
+<title>Điều độ · Đại Cát Lâm</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%234B3C8C'/%3E%3Cpath d='M4 15h9V8H4zM13 10.5h3l2.5 2.5v2H13z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='7' cy='17' r='1.6' fill='white'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+:root{
+  --bg:#EFECF8;--surface:#FFFFFF;--ink:#2B2640;--muted:#625C7A;--faint:#8A849E;
+  --line:#E1DCF2;--line2:#F1EEFB;--soft:#F7F5FD;--soft2:#FAF9FE;
+  --pri:#5B4BB7;--pri-ink:#3E3190;--pri-soft:#E6E2F7;
+  --side:#4B3C8C;--side-ink:#E4DFF7;--side-h:#C7BEEE;--side-sub:#D9D3F4;
+  --red:#B42318;--red-bg:#FBE4E1;--red-ink:#A3261A;
+  --amb:#E0A43A;--amb-bg:#FBEBD5;--amb-ink:#7A4700;
+  --teal:#3E9C94;--teal-bg:#E0F1EF;--teal-ink:#10605A;--green-ink:#256B3A;
+  --lav:#EEEBF8;--lav-ink:#4B3C8C;--zalo:#0068FF;
+  --font:'Be Vietnam Pro','Noto Sans SC',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.55}
+a{color:var(--pri-ink)}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.mono{font-family:var(--mono);font-weight:600;letter-spacing:.01em}
+.muted{color:var(--muted)}
+.faint{color:var(--faint)}
+.num{font-variant-numeric:tabular-nums}
+.hide{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- layout ---------- */
+.app{display:flex;min-height:100vh}
+.side{width:236px;flex-shrink:0;background:var(--side);color:#fff;display:flex;flex-direction:column;gap:20px;padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px}
+.brand-logo{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-name{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.brand-sub{font-size:12px;color:var(--side-sub)}
+.nav-h{padding:0 10px 4px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--side-h)}
+.nav-g{display:flex;flex-direction:column;gap:3px}
+.nav-i{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);font-size:14px;font-weight:500;text-align:left}
+.nav-i:hover{background:rgba(255,255,255,.10)}
+.nav-i[aria-current="page"]{background:rgba(255,255,255,.18);color:#fff;font-weight:600}
+.nav-i .cnt{margin-left:auto;min-width:24px;padding:1px 7px;border-radius:999px;font-size:12px;font-weight:600;text-align:center;background:rgba(255,255,255,.16);color:#fff}
+.nav-i[aria-current="page"] .cnt{background:#fff;color:var(--pri-ink)}
+.langs{display:flex;gap:4px;padding:4px;border-radius:10px;background:rgba(255,255,255,.12)}
+.langs button{flex:1;min-height:34px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);font-size:13px;font-weight:600}
+.langs button[aria-pressed="true"]{background:#fff;color:var(--pri-ink)}
+.me{display:flex;align-items:center;gap:10px;padding:12px 6px 0;border-top:1px solid rgba(255,255,255,.16)}
+.avatar{width:34px;height:34px;border-radius:999px;background:var(--pri-soft);color:var(--pri-ink);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.me .out{border:0;background:transparent;color:var(--side-sub);font-size:12px;text-decoration:underline;padding:4px 6px;white-space:nowrap}
+.th-sort{border:0;background:transparent;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;white-space:nowrap}
+.th-sort.on{color:var(--pri-ink)}
+.th-sort:hover{text-decoration:underline}
+.me-acts{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end}
+.pw-row{position:relative}
+.pw-row input{padding-right:78px!important}
+.pw-eye{position:absolute;right:4px;top:4px;bottom:4px;border:0;border-radius:6px;background:var(--soft);color:var(--pri-ink);font-size:12px;font-weight:600;padding:0 10px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 28px;min-height:70px}
+.top h1{margin:0;font-size:21px;font-weight:700;color:var(--pri-ink);letter-spacing:-.01em}
+.top .sub{font-size:12px;color:var(--muted)}
+.top .grow{flex:1;min-width:0}
+.menu-btn{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:#fff;align-items:center;justify-content:center}
+.search{position:relative;width:300px}
+.search svg{position:absolute;left:12px;top:12px}
+.search input{width:100%;height:40px;padding:0 12px 0 36px;border-radius:10px;border:1px solid #D8D2EE;background:var(--soft)}
+.content{padding:22px 28px 60px}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.live i{width:8px;height:8px;border-radius:99px;background:#9A95AE;display:inline-block}
+.live.on i{background:#2E9E63}
+.bottom-nav{display:none}
+.scrim{display:none}
+
+/* ---------- controls ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;border-radius:10px;border:1px solid #D8D2EE;background:#fff;color:var(--pri-ink);font-weight:600;font-size:14px;white-space:nowrap;text-decoration:none}
+.btn:hover{background:var(--soft)}
+.btn-pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn-pri:hover{background:#4E3FA6}
+.btn-sm{min-height:34px;padding:0 11px;font-size:12px;border-radius:8px}
+.btn-ok{background:var(--teal-bg);border-color:#A9D6CF;color:var(--teal-ink)}
+.btn-zalo{background:var(--zalo);border-color:var(--zalo);color:#fff}
+.btn-line{border-color:var(--pri);color:var(--pri-ink)}
+.btn-danger{border-color:#F0B8B1;color:var(--red-ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid #D8D2EE;background:#fff;color:var(--ink);font-size:13px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#fff}
+.pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pri-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-size:12px;font-weight:700}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--pri)}
+.field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--muted)}
+.field input,.field select,.field textarea{height:40px;padding:0 10px;border-radius:8px;border:1px solid #D8D2EE;background:#fff;font-size:14px;font-weight:400;color:var(--ink);width:100%}
+.field textarea{height:auto;min-height:70px;padding:8px 10px;resize:vertical}
+.field input:disabled,.field select:disabled,.field textarea:disabled{background:var(--soft);color:var(--muted)}
+.field.chkf{flex-direction:row;align-items:center;gap:8px;min-height:40px}
+.field.chkf input{width:18px;height:18px;accent-color:var(--pri)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px}
+
+/* ---------- cards & tables ---------- */
+.stack{display:flex;flex-direction:column;gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:0 1px 2px rgba(62,49,144,.05)}
+.card h2{margin:0;font-size:15px;font-weight:700}
+.band{display:flex;align-items:center;gap:12px}
+.band span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pri)}
+.band i{flex:1;height:1px;background:#D8D2EE}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.span2{grid-column:span 2}
+.tile{display:flex;flex-direction:column;gap:10px}
+.tile .lab{font-size:13px;font-weight:600;color:var(--muted)}
+.tile .val{font-size:32px;font-weight:700;letter-spacing:-.02em}
+.tile .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--faint)}
+.tag{display:inline-flex;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600}
+.tbl{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl-x{overflow-x:auto}
+.tbl-h{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--soft);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tbl-h h2{margin:0;font-size:15px;font-weight:700;color:var(--pri-ink)}
+.tr{display:grid;grid-template-columns:var(--cols);gap:10px;align-items:center;padding:0 18px;min-height:44px;border-bottom:1px solid var(--line2);min-width:var(--minw,0)}
+.tr:last-child{border-bottom:0}
+.tr.th{min-height:36px;font-size:12px;font-weight:600;color:var(--muted);background:var(--soft2)}
+.tr:not(.th):hover{background:var(--soft2)}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lk{background:none;border:0;padding:0;color:var(--pri-ink);text-align:left;font-size:13px}
+.lk:hover{text-decoration:underline}
+.lk.mono{font-size:13px}
+.cnt-b{padding:1px 9px;border-radius:999px;background:var(--pri-soft);color:var(--pri-ink);font-size:12px;font-weight:700}
+.empty{padding:40px 20px;text-align:center;background:#fff;border:1px dashed #D8D2EE;border-radius:12px;color:var(--muted)}
+.bar-bg{height:10px;border-radius:5px;background:var(--line2)}
+.bar{height:10px;border-radius:5px}
+.heat-row{display:grid;grid-template-columns:190px repeat(14,minmax(0,1fr)) 36px;gap:4px;align-items:center}
+.heat-c{height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.legend-i{display:flex;align-items:center;gap:10px;min-height:34px;padding:0 8px;border:0;border-radius:6px;background:transparent;width:100%;text-align:left;font-size:13px}
+.legend-i:hover{background:var(--soft)}
+.todo-i{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:transparent;width:100%;text-align:left;font-size:13px}
+.todo-i:hover{background:var(--soft)}
+.todo-i b{min-width:32px;padding:2px 8px;border-radius:6px;background:var(--lav);color:var(--pri-ink);text-align:center}
+
+/* ---------- suggestions ---------- */
+.gy-layout{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:20px;align-items:start}
+.gy-card{display:flex;align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(62,49,144,.05)}
+.gy-card.sel{border:2px solid var(--pri);box-shadow:0 4px 14px rgba(62,49,144,.14)}
+.gy-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;padding:12px 16px;border:0;background:transparent;text-align:left}
+.gy-side{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:10px 14px;background:var(--soft2);border-radius:0 12px 12px 0;min-width:140px}
+.panel{position:sticky;top:90px;display:flex;flex-direction:column;gap:14px}
+.order{margin:0;white-space:pre-wrap;font-family:var(--mono),'Noto Sans SC',monospace;font-size:12px;line-height:1.6;background:var(--soft);border:1px solid #ECE8F8;border-radius:8px;padding:12px}
+.kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 10px;font-size:13px}
+.kv span:nth-child(odd){color:var(--muted)}
+
+/* ---------- drawer / modal ---------- */
+.drawer-wrap{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(43,38,64,.32)}
+.drawer-wrap>.close-area{flex:1;border:0;background:transparent}
+.drawer{width:560px;max-width:100%;height:100%;overflow-y:auto;background:#fff;box-shadow:-8px 0 24px rgba(43,38,64,.18);display:flex;flex-direction:column}
+.drawer-h{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:flex-start;gap:12px}
+.drawer-b{padding:18px 20px;display:flex;flex-direction:column;gap:18px}
+.drawer-f{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;display:flex;gap:10px;justify-content:flex-end}
+.steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.step{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:11px;line-height:1.3;color:var(--muted)}
+.step b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:99px;font-size:12px;background:#EEEDF3;color:#6E6985}
+.step.done b{background:var(--pri-soft);color:var(--pri-ink)}
+.step.cur b{background:var(--pri);color:#fff}
+.step.cur{color:var(--ink);font-weight:600}
+.sec{display:flex;flex-direction:column;gap:12px}
+.sec>h3{margin:0;font-size:13px;font-weight:700;color:var(--pri-ink)}
+.x-btn{width:40px;height:40px;border-radius:10px;border:1px solid #D8D2EE;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ---------- toast & login ---------- */
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;padding:12px 18px;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(43,38,64,.3);max-width:min(640px,calc(100vw - 32px));display:none}
+#toast.show{display:block}
+#toast.err{background:var(--red)}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:linear-gradient(180deg,var(--side) 0 38%,var(--bg) 38% 100%)}
+.login-card{width:420px;max-width:100%;background:#fff;border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(43,38,64,.18);display:flex;flex-direction:column;gap:16px}
+.login-card h1{margin:0;font-size:22px;color:var(--pri-ink)}
+.tabs2{display:flex;gap:4px;padding:4px;border-radius:10px;background:var(--soft)}
+.tabs2 button{flex:1;min-height:36px;border:0;border-radius:8px;background:transparent;font-weight:600;color:var(--muted)}
+.tabs2 button[aria-pressed="true"]{background:#fff;color:var(--pri-ink);box-shadow:0 1px 3px rgba(43,38,64,.12)}
+.msg{font-size:13px;padding:10px 12px;border-radius:8px;background:var(--lav);color:var(--lav-ink)}
+.msg.err{background:var(--red-bg);color:var(--red-ink)}
+.loading{padding:80px 0;text-align:center;color:var(--muted)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gy-layout{grid-template-columns:minmax(0,1fr)}
+  .panel{position:static}
+}
+@media (max-width:900px){
+  .side{position:fixed;left:0;top:0;z-index:50;transform:translateX(-100%);transition:transform .2s ease;visibility:hidden}
+  .app.nav-open .side{transform:none;visibility:visible;box-shadow:8px 0 24px rgba(43,38,64,.25)}
+  .app.nav-open .scrim{display:block;position:fixed;inset:0;z-index:45;background:rgba(43,38,64,.32);border:0}
+  .menu-btn{display:flex}
+  .top{padding:10px 14px;min-height:60px;gap:10px}
+  .top h1{font-size:18px}
+  .top .sub,.top .search,.top .live{display:none}
+  .content{padding:14px 14px 96px}
+  .g3,.g2{grid-template-columns:minmax(0,1fr)}
+  .span2{grid-column:auto}
+  .heat-row{grid-template-columns:110px repeat(14,minmax(0,1fr)) 28px}
+  .gy-card{flex-direction:column}
+  .gy-side{border-radius:0 0 12px 12px;flex-direction:row;align-items:center;justify-content:space-between}
+  .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);padding:4px 6px calc(8px + env(safe-area-inset-bottom))}
+  .bottom-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px;border:0;background:transparent;font-size:11px;font-weight:500;color:var(--muted)}
+  .bottom-nav button[aria-current="page"]{color:var(--pri);font-weight:700}
+  .bottom-nav .bdg{min-width:16px;padding:0 5px;border-radius:99px;background:var(--red);color:#fff;font-size:10px;font-weight:700;line-height:16px}
+  #toast{bottom:84px}
+  .top .btn span{display:none}
+  .top .btn{padding:0 12px}
+  .cards .tbl-x{overflow:visible}
+  .cards .tr{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px 14px;min-width:0!important}
+  .cards .tr.th{display:none}
+  .cards .tr>:empty{display:none}
+  .cards .tr>:first-child{flex-basis:100%;font-size:15px}
+  .cards .tr>.btn{margin-left:auto}
+  .cards [data-l]::before{content:attr(data-l) ": ";color:var(--muted);font-size:12px;font-weight:400}
+}
+@media (max-width:560px){
+  .g4{grid-template-columns:minmax(0,1fr)}
+  .grid2,.grid3{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+<div id="root"><div class="loading">Đang tải… 加载中…</div></div>
+<div id="drawer"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>/*__SUPABASE_UMD__*/</script>
+<script>
+'use strict';
+/* =========================================================
+   Web điều độ cont chuối — Đại Cát Lâm
+   Dữ liệu: Supabase (dự án dieu-do). Khoá dưới đây là khoá công khai
+   (publishable) — an toàn để nằm trong trang; quyền đọc/ghi do bảng
+   nhan_vien + chính sách RLS trong cơ sở dữ liệu quyết định.
+   ========================================================= */
+const SUPABASE_URL = 'https://cgfcbxsyjtdlligpdzbp.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_sbKx-V4-EijUlCI2mnVJ5w_RYg5jHRz';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const TZ = 'Asia/Ho_Chi_Minh';
+
+/* ---------------- ngôn ngữ ---------------- */
+const D = {
+  tong:['Tổng quan','总览'], goiy:['Gợi ý chờ duyệt','待确认建议'], homnay:['Kế hoạch hôm nay','今日计划'],
+  taikho:['Tại kho','在厂'], bai:['Bãi tạm','堆场'], kd:['Kiểm dịch','检疫'], lo:['Lô / Booking','批次 / 订舱'],
+  tim:['Tìm cont','查柜'], danhmuc:['Danh mục','基础资料'],
+  gDieuDo:['Điều độ','调度'], gTheoDoi:['Theo dõi cont','柜子跟踪'], gTraCuu:['Tra cứu','查询'],
+  refresh:['Chạy lại gợi ý','重新生成建议'], searchPh:['Tìm cont, seal, lô, mã đơn…','搜索柜号、封条、批次、订单号…'],
+  todo:['Việc cần làm','待办'], closing72:['Lô sắp closing · 72 giờ tới','72小时内截关的批次'],
+  byCarrier:['Cont theo nhà xe · tháng này','本月各车队柜数'], byKho:['Kho đang giữ cont','在厂柜数（按装货点）'],
+  yardNow:['Đang ở bãi tạm','在堆场'], noClosing72:['Không có lô nào closing trong 72 giờ tới.','72小时内没有截关批次。'],
+  all:['Tất cả','全部'], pri:['Ưu tiên','优先'], hideApproved:['Ẩn đã duyệt','隐藏已确认'],
+  approve:['Duyệt','确认'], approved:['Đã duyệt','已确认'], unapprove:['Bỏ duyệt','取消确认'],
+  copy:['Chép lệnh','复制指令'], copied:['Đã chép','已复制'], copyGroup:['Chép cả nhóm','复制整组'],
+  zalo:['Gửi Zalo','发Zalo'], noZalo:['Chưa có SĐT Zalo','未填Zalo电话'], orderText:['Nội dung lệnh','指令内容'],
+  reason:['Lý do máy gợi ý','建议说明'], carrier:['Nhà xe','车队'], carrierSug:['Máy gợi ý','建议'],
+  pickOne:['Chọn một gợi ý bên trái để xem lệnh.','请在左侧选择一条建议查看指令。'],
+  emptyToday:['Chưa duyệt gợi ý nào cho hôm nay.','今天还没有确认的建议。'], goSuggest:['Mở danh sách gợi ý','打开建议列表'],
+  orders:['lệnh','条指令'], cont:['Cont','柜号'], seal:['Seal','封条号'], loCol:['Lô','批次'], madon:['Mã đơn','订单号'],
+  kh:['Khách hàng','客户'], kho:['Kho','装货点'], den:['Đến kho','实际到厂'], can:['Cần lên kho','预计到厂'],
+  day:['Dự kiến đầy','预计装满'], closing:['Closing','截关'], status:['Trạng thái','状态'], noCont:['Chưa có cont','未有柜号'],
+  notEntered:['chưa nhập','未填'], kdShort:['KD','检疫'], toDen:['Cont đã tới','已到厂'], toDay:['Báo đầy','已装满'],
+  toBai:['Vào bãi','进堆场'], toCang:['Hạ cảng','回港'], toTau:['Lên tàu','已登船'], yardIn:['Vào bãi','进场时间'],
+  plugged:['Đã cắm điện','已插电'], power:['Tiền điện ước tính','预计电费'], allowPort:['Cho kéo hạ cảng','可回港'],
+  perHour:['/giờ','/小时'], hours:['giờ','小时'], noKd:['Không có cont kiểm dịch nào đang chờ.','没有待检疫的柜子。'],
+  kdDone:['Lô đã kiểm dịch','批次已检疫'], kdtv:['Mã KDTV','检疫单号'], noKdtv:['chưa có mã KDTV','无检疫单号'],
+  where:['Đang ở','位置'], onlyOpen:['Chỉ lô còn cont chưa lên tàu','只看未登船批次'], booking:['Booking','订舱号'],
+  line:['Hãng tàu · Tàu','船公司 · 船名'], pod:['Cảng đến','目的港'], etd:['ETD','开船'], eta:['ETA','到港'], left:['Hạn','剩余'],
+  conts:['Cont','柜数'], eport:['Eport','申报'], tl:['Thanh lý','清关'],
+  searchHint:['Gõ ít nhất 3 ký tự để tìm trong toàn bộ cont, cả cont đã lên tàu.','输入至少3个字符，在全部柜子中搜索（含已登船）。'],
+  found:['Tìm thấy','找到'], close:['Đóng','关闭'], lotInfo:['Thông tin lô','批次信息'], money:['Chi phí','费用'],
+  price:['Giá báo','报价'], surcharge:['Phụ phí xe','拖车附加费'], extra:['Phí phát sinh','其他费用'], total:['Tổng tiền','总金额'],
+  note:['Ghi chú','备注'], truck:['Số xe','车牌'], callDate:['Ngày gọi cont','叫柜日期'], yardOut:['Ra bãi','出场时间'],
+  portDrop:['Cảng hạ','还柜码头'], cskh:['CSKH','客服'], nextStep:['Chuyển bước tiếp','下一步'],
+  kdPending:['Cont kiểm dịch chưa kiểm','待检疫柜'], pendingSug:['Gợi ý chưa duyệt','待确认建议'],
+  waitEmpty:['Đơn chờ cắt rỗng','待提空'], fullWait:['Cont đầy chờ kéo','满柜待拉'], closing48:['Lô closing trong 48 giờ','48小时内截关'],
+  rong:['Rỗng','空柜'], noBooking:['chưa có booking','无订舱号'], pickCarrier:['Nhà xe chạy','选定车队'],
+  save:['Lưu','保存'], saving:['Đang lưu…','保存中…'], saved:['Đã lưu','已保存'], cancel:['Huỷ','取消'],
+  addCont:['Thêm đơn / cont','新增订单/柜'], addLo:['Thêm lô','新增批次'], editCont:['Sửa cont','编辑柜子'], editLo:['Sửa lô','编辑批次'],
+  newCont:['Đơn / cont mới','新订单/柜'], newLo:['Lô mới','新批次'], contsOfLo:['Cont trong lô','本批次柜子'],
+  applied:['Đã chạy','已执行'], markApplied:['Đánh dấu đã chạy','标记已执行'], confirm:['Bấm lần nữa để xác nhận','再按一次确认'],
+  containerTank:['Thùng cont','柜子'], vessel:['Tàu','船名'], shipLine:['Hãng tàu','船公司'], closingMail:['Closing mail','邮件截关'],
+  etdKho:['ETD kho','工厂预计开船'], tokhai:['Số tờ khai','报关单号'], needTem:['Cần tem','需要标签'], kdCont:['Cont kiểm dịch','检疫柜'],
+  gioGhiChu:['Giờ lên kho (ghi chú)','到厂时间备注'], readOnly:['Bạn chỉ có quyền xem.','您只有查看权限。'],
+  nhaxeTab:['Nhà xe','车队'], khoTab:['Kho','装货点'], nvTab:['Nhân viên','员工'],
+  fullName:['Tên đầy đủ','全称'], coord:['Người điều phối','调度'], zaloPhone:['SĐT Zalo','Zalo电话'],
+  area:['Khu vực','区域'], mainCust:['Khách hàng chính','主要客户'], cnName:['Tên TQ','中文名'], contact:['Người liên hệ','联系人'],
+  phone:['SĐT','电话'], map:['Google Map','地图'], email:['Email','邮箱'], name:['Họ tên','姓名'], role:['Vai trò','角色'],
+  langCol:['Ngôn ngữ','语言'], active:['Đang dùng','启用'], add:['Thêm','新增'],
+  runOk:['Đã tạo gợi ý mới','已生成新建议'], runBusy:['Đang có phiên chạy gợi ý khác — thử lại sau giây lát','另一个建议任务正在运行，请稍后重试'], signOut:['Đăng xuất','退出'], nkTab:['Nhật ký thay đổi','修改日志'], pwChange:['Đổi mật khẩu','修改密码'], live:['Cập nhật trực tiếp','实时更新'],
+  shipped:['Đã lên tàu','已登船'], lotsOpen:['lô đang chạy','批进行中'], required:['Thiếu thông tin bắt buộc','缺少必填信息'],
+  suggest:['Gợi ý','建议'], today:['Hôm nay','今日'], menu:['Menu','菜单'], search:['Tìm','查'],
+  hacang:['Hạ cảng','回港'], clsMail:['CLS mail','邮件截关'], clsEport:['CLS ePort','ePort截关'], clsTay:['CLS nhập tay','手填截关'], clsUse:['CLS máy dùng','计划用截关'],
+  eportBtn:['Cập nhật CLS ePort','更新ePort截关'], kdtvBtn:['Cập nhật mã KDTV','更新检疫单号'], kdtvNoUrl:['Chưa cấu hình URL đồng bộ KDTV (cấu hình: URL đồng bộ KDTV)','未配置检疫单号同步URL'], baiTab:['Bãi tạm','堆场'], giaTab:['Giá cước nhà xe','车队运价'], donTab:['Dọn dữ liệu','清理数据'],
+  dongNgay:['Đóng trong ngày','当天装柜'], nangHa:['Nâng hạ','吊装费'], haCangFee:['Vận chuyển hạ cảng','回港运费'], phatSinh:['Phát sinh','其他费用'], tongCP:['Tổng chi phí','费用合计'],
+  delete:['Xoá','删除'], inactive:['Đã ngưng','已停用']
+};
+let LANG = 'vi';
+try { LANG = localStorage.getItem('dd_lang') || 'vi'; } catch (e) {}
+let LO_SORT = { k:'closing', d:1 };
+try { const x = JSON.parse(localStorage.getItem('dd_lo_sort') || 'null'); if (x && x.k) LO_SORT = x; } catch (e) {}
+function tr(p, lang) { lang = lang || LANG; if (lang === 'zh') return p[1] || p[0]; if (lang === 'both') return p[1] ? p[0] + ' ' + p[1] : p[0]; return p[0]; }
+function T(k) { return tr(D[k] || [k, k]); }
+function T1(vi, zh) { return tr([vi, zh], LANG === 'both' ? 'vi' : LANG); }
+
+const ST = {
+  '1': { vi:'Chờ cắt rỗng', zh:'待提空', bg:'#EFECFA', fg:'#4B3C8C', dot:'#B8AEE6' },
+  '2': { vi:'Đang đóng hàng', zh:'装货中', bg:'#E6E2F7', fg:'#3E3190', dot:'#6C5DC0' },
+  '3': { vi:'Đầy chờ kéo', zh:'已装满待拉回', bg:'#FBEBD5', fg:'#7A4700', dot:'#E0A43A' },
+  '4': { vi:'Ở bãi tạm', zh:'堆场插电', bg:'#E0F1EF', fg:'#10605A', dot:'#3E9C94' },
+  '5': { vi:'Đã hạ cảng', zh:'已回港待登船', bg:'#E4E0F2', fg:'#2E2468', dot:'#3B2F7A' },
+  '6': { vi:'Đã lên tàu', zh:'已登船走船', bg:'#EEEDF3', fg:'#55516A', dot:'#A7A3B8' },
+  '9': { vi:'Hủy / đổi cont', zh:'取消换柜', bg:'#FBE4E1', fg:'#A3261A', dot:'#C4392B' }
+};
+const TYPES = {
+  dong:{ vi:'Đóng trong ngày', zh:'当天装柜', bg:'#FDF1DC', fg:'#7A4700' },
+  doi:{ vi:'Đổi rỗng kéo đầy', zh:'换空拉满', bg:'#E0F1EF', fg:'#10605A' },
+  cat:{ vi:'Cắt mooc', zh:'甩挂', bg:'#F3EFFB', fg:'#5A4A9E' },
+  rut:{ vi:'Rút mooc', zh:'拉满柜', bg:'#E6E2F7', fg:'#3E3190' }
+};
+function typeKey(t) { t = String(t || ''); if (t.indexOf('Đóng trong ngày') === 0) return 'dong'; if (t.indexOf('Đổi rỗng') === 0 || t.indexOf('+') > -1) return 'doi'; if (t.indexOf('Rút mooc') === 0) return 'rut'; return 'cat'; }
+const MUC = { 'Quá CLS':['#6B0A12', '#fff'], 'KD gấp':['#B42318', '#fff'], 'Sát CLS':['#FBE4E1', '#A3261A'], 'CLS gần':['#FBEBD5', '#7A4700'], 'CLS xa':['#EEEBF8', '#4B3C8C'] };
+function mucPill(m) { const c = MUC[m]; return c ? pill(m, c[0], c[1]) : ''; }
+function splitVZ(s) { s = String(s || ''); const m = s.match(/^(.*?)\s*([㐀-鿿].*)$/); return m ? [m[1].trim(), m[2].trim()] : [s, '']; }
+function stLabel(k) { const s = ST[k] || { vi:k, zh:'' }; return tr([s.vi, s.zh]); }
+
+/* ---------------- tiện ích ---------------- */
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
+const _fp = new Intl.DateTimeFormat('en-GB', { timeZone:TZ, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hourCycle:'h23' });
+function vn(d) { const p = {}; for (const x of _fp.formatToParts(d)) p[x.type] = x.value; return p; }
+function fTs(ts, full) { if (!ts) return '—'; const p = vn(new Date(ts)); const hm = p.hour + ':' + p.minute; const dm = p.day + '/' + p.month + (full ? '/' + p.year : ''); return hm === '00:00' ? dm : (full ? hm + ' ' + dm : dm + ' ' + hm); }
+function fDate(ds, full) { if (!ds) return '—'; const a = String(ds).slice(0, 10).split('-'); return a[2] + '/' + a[1] + (full ? '/' + a[0] : ''); }
+function todayVN() { const p = vn(new Date()); return p.year + '-' + p.month + '-' + p.day; }
+function addDays(ds, n) { const d = new Date(ds + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+function tsToInput(ts) { if (!ts) return ''; const p = vn(new Date(ts)); return p.year + '-' + p.month + '-' + p.day + 'T' + p.hour + ':' + p.minute; }
+function inputToTs(v) { return v ? v + ':00+07:00' : null; }
+function hLeft(ts) { return ts ? (new Date(ts).getTime() - Date.now()) / 36e5 : null; }
+function money(n) { return n == null || n === '' ? '—' : Math.round(+n).toLocaleString('vi-VN') + ' đ'; }
+function pill(t, bg, fg) { return '<span class="pill" style="background:' + bg + ';color:' + fg + '">' + esc(t) + '</span>'; }
+function stPill(k) { const s = ST[k] || ST['6']; return pill(stLabel(k), s.bg, s.fg); }
+function typePill(tk) { const t = TYPES[tk]; return pill(tr([t.vi, t.zh]), t.bg, t.fg); }
+function clChip(ts) {
+  const h = hLeft(ts);
+  if (h === null) return pill(T1('Chưa có closing', '无截关'), '#EEEBF8', '#4B3C8C');
+  if (h < 0) { const o = -h; return pill(o >= 48 ? T1('Quá ' + Math.round(o / 24) + ' ngày', '超' + Math.round(o / 24) + '天') : T1('Quá ' + Math.round(o) + ' giờ', '超' + Math.round(o) + '小时'), '#B42318', '#fff'); }
+  const txt = h >= 48 ? T1('Còn ' + Math.round(h / 24) + ' ngày', '剩' + Math.round(h / 24) + '天') : T1('Còn ' + Math.round(h) + ' giờ', '剩' + Math.round(h) + '小时');
+  if (h < 24) return pill(txt, '#FBE4E1', '#A3261A');
+  if (h < 48) return pill(txt, '#FBEBD5', '#7A4700');
+  return pill(txt, '#EEEBF8', '#4B3C8C');
+}
+function tick(b) { return b ? '<span style="color:var(--green-ink);font-weight:700">✓</span>' : '<span class="faint">—</span>'; }
+const ICON = {
+  tong:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+  goiy:'M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z',
+  homnay:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4',
+  taikho:'M3 10l9-6 9 6v10H3zM7 20v-6h10v6', bai:'M13 3L5 14h6l-1 7 8-11h-6z',
+  kd:'M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6zM9 12l2 2 4-4',
+  lo:'M3 17l2 3h14l2-3M5 17v-6h14v6M8 11V7h8v4M12 4v3', tim:'M11 4a7 7 0 1 0 0 14a7 7 0 0 0 0-14zM20 20l-4-4',
+  danhmuc:'M4 5h16M4 12h16M4 19h10', truck:'M2 16h13V7H2zM15 10h4l3 3v3h-7zM6 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4zM18 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4z',
+  hacang:'M3 18h18M5 18l1-5h12l1 5M8 13V8h8v5M12 8V4', menu:'M4 7h16M4 12h16M4 17h16', x:'M6 6l12 12M18 6L6 18', refresh:'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7', plus:'M12 5v14M5 12h14'
+};
+function ico(k, size, color) { return '<svg width="' + (size || 18) + '" height="' + (size || 18) + '" viewBox="0 0 24 24" fill="none" stroke="' + (color || 'currentColor') + '" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + ICON[k] + '"/></svg>'; }
+let _tt;
+function toast(msg, isErr) { const el = document.getElementById('toast'); el.textContent = msg; el.className = 'show' + (isErr ? ' err' : ''); clearTimeout(_tt); _tt = setTimeout(() => { el.className = ''; }, isErr ? 6000 : 2800); }
+function errMsg(e) { const m = (e && (e.message || e.error_description || e.msg)) || String(e); if (/row-level security|permission denied|42501/i.test(m)) return T1('Bạn không có quyền thực hiện thao tác này.', '您没有权限执行此操作。'); if (/duplicate key/i.test(m)) return T1('Mã này đã tồn tại (có thể là lô đã hủy — bật “Xem lô đã hủy” để tìm).', '编号已存在（可能是已取消的批次）。'); return m; }
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; } catch (e) {}
+  try { const ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); return true; } catch (e) { return false; }
+}
+function zaloUrl(phone) { const d = String(phone || '').replace(/[^\d]/g, ''); return d ? 'https://zalo.me/' + d : ''; }
+
+/* ---------------- trạng thái ---------------- */
+const S = {
+  session: null, me: null, tab: 'tong', conts: [], lots: {}, goiy: [], kho: [], nhaxe: [], bai: [], cauhinh: {}, khachhang: [], hangtau: [], cangden: [], cangha: [], nhanvien: [],
+  recent: [], shipped: 0, loaded: false, live: false,
+  gyType: 'all', gyPri: 'all', gyHide: true, sel: null, pick: {}, copied: null, confirmApply: null,
+  tkSeg: '2', loOpen: true, q: '', results: null, searching: false, dmTab: 'nhaxe', navOpen: false,
+  chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, eportRunning: false
+};
+function canWrite() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
+function canCat() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
+function canKho() { return S.me && ['Quản lý', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
+function canPlan() { return S.me && ['Quản lý', 'Điều độ'].indexOf(S.me.vai_tro) > -1; }
+function isAdmin() { return S.me && S.me.vai_tro === 'Quản lý'; }
+/* ---- Quy trình kiểm dịch → hạ cảng (cơ sở dữ liệu cũng chặn y hệt) ---- */
+const BAI_KD = ['HLS', 'PD', 'HT'];
+function canKd() { return S.me && ['Quản lý', 'Điều độ'].indexOf(S.me.vai_tro) > -1; }
+function gioHaThang() { return +S.cauhinh['Giờ trước closing hạ thẳng cảng'] || 48; }
+function cheDoThu() { return /^(bật|bat|on|1|có)$/i.test(String(S.cauhinh['Chế độ thử: cho xoá dữ liệu đã chạy'] || '').trim()); }
+function kdCont(lo) { return lo ? S.conts.find(c => c.lo === lo && c.cont_kiem_dich && c.trang_thai !== '9') || null : null; }
+function kdWhy(l) {
+  const c = kdCont(l.lo);
+  if (!c) return T1('Lô chưa chọn cont kiểm dịch', '本批未选检疫柜');
+  if (c.trang_thai !== '4') return T1('Cont kiểm dịch ' + (c.so_cont || c.ma_don || '') + ' đang "' + stLabel(c.trang_thai) + '" — phải về bãi HLS / PD / HT', '检疫柜需先到 HLS/PD/HT 堆场');
+  if (BAI_KD.indexOf(c.bai_tam) < 0) return T1('Cont kiểm dịch đang ở bãi ' + (c.bai_tam || '—') + ' — chỉ kiểm ở HLS / PD / HT', '只能在 HLS/PD/HT 检疫');
+  if (!l.ma_don_kdtv) return T1('Lô chưa có mã KDTV', '缺检疫单号');
+  return '';
+}
+function nPortNoKd(l) { return l && !l.da_kiem_dich ? S.conts.filter(c => c.lo === l.lo && c.trang_thai === '5').length : 0; }
+function stBlock(c, l, k) {
+  const st = c.trang_thai || '1'; if (k === st) return '';
+  if ((st === '9' || (k !== '9' && k < st)) && !canKd()) return T1('chỉ Quản lý / Điều độ được lùi', '仅管理/调度可回退');
+  if ((k === '5' || k === '6') && !(l && l.da_kiem_dich)) return T1('lô chưa kiểm dịch', '未检疫');
+  if (k === '5' && ['1', '2', '3'].indexOf(st) > -1) { const h = hLeft(l.closing); if (h === null || h > gioHaThang()) return T1('CLS còn > ' + gioHaThang() + 'h: phải hạ bãi', '截关>' + gioHaThang() + '小时须先进堆场'); }
+  return '';
+}
+function kdBlock(l) {
+  const c = kdCont(l.lo), why = l.da_kiem_dich ? '' : kdWhy(l), v = nPortNoKd(l), port = S.conts.filter(x => x.lo === l.lo && x.trang_thai === '5').length;
+  const where = c ? (c.trang_thai === '4' ? T('bai') + ' ' + (c.bai_tam || '—') : stLabel(c.trang_thai) + (c.trang_thai < '4' && c.kho ? ' · ' + c.kho : '')) : '';
+  return '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px"><h3 style="margin-bottom:6px">' + esc(T1('Kiểm dịch → hạ cảng', '检疫 → 回港')) + '</h3><div class="kv" style="font-size:13px">' +
+    '<span>' + esc(T('kd')) + '</span><span>' + (l.da_kiem_dich ? '<b style="color:var(--green-ink)">✓ ' + esc(T('kdDone')) + '</b>' : '<b style="color:var(--red-ink)">' + esc(T1('Chưa kiểm dịch', '未检疫')) + '</b>') + '</span>' +
+    '<span>' + esc(T('kdCont')) + '</span><span>' + (c ? contBtn(c) + ' <span class="muted">· ' + esc(where) + '</span>' : '<span style="color:var(--red-ink)">' + esc(T1('chưa chọn', '未选')) + '</span>') + '</span>' +
+    '<span>' + esc(T('allowPort')) + '</span><span>' + tick(l.da_kiem_dich) + ' <span class="muted" style="font-size:11px">' + esc(T1('(tự động theo kiểm dịch)', '（随检疫自动）')) + '</span></span></div>' +
+    (why ? '<p style="margin:8px 0 0;font-size:12px;color:var(--red-ink)" data-kd-why>' + esc(T1('Chưa tích được: ', '暂不能勾选：') + why) + '</p>' : '') +
+    (v ? '<p style="margin:8px 0 0;font-size:12px;font-weight:700;color:var(--red-ink)" data-kd-sai>⚠ ' + esc(T1(v + ' cont đã ở cảng khi lô chưa kiểm dịch — sai quy trình. Điều độ lùi các cont đó về bãi, kiểm dịch rồi hạ lại.', v + ' 个柜未检疫已回港，流程错误')) + '</p>' : '') +
+    '<p class="muted" style="margin:6px 0 0;font-size:11px">' + esc(T1('Quy tắc: 1 lô 1 cont kiểm dịch; cont đó phải về bãi HLS / PD / HT và có mã KDTV mới tích được; chưa kiểm dịch thì không cont nào được hạ cảng; đã kiểm dịch: cont ở kho chỉ hạ thẳng cảng khi CLS còn ≤ ' + gioHaThang() + 'h.', '规则：每批1个检疫柜；检疫柜须在HLS/PD/HT堆场且有检疫单号；未检疫不得回港；已检疫：截关≤' + gioHaThang() + '小时才可直接回港。')) + '</p>' +
+    (canKd() ? '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">' +
+      (!l.da_kiem_dich ? '<button type="button" class="btn btn-sm" style="border-color:var(--teal);color:var(--teal-ink)" data-act="kd-done" data-lo="' + esc(l.lo) + '"' + (why ? ' disabled' : '') + '>' + esc(T('kdDone')) + ' ✓</button>'
+        : '<button type="button" class="btn btn-sm" data-act="kd-undo" data-lo="' + esc(l.lo) + '"' + (port ? ' disabled title="' + esc(T1('Đã có cont ở cảng', '已有柜回港')) + '"' : '') + '>' + esc(T1('Bỏ tích kiểm dịch', '取消检疫勾选')) + '</button>') + '</div>' : '') +
+    '</div>';
+}
+
+/* ---------------- tải dữ liệu ---------------- */
+async function q(p) { const r = await p; if (r.error) throw r.error; return r; }
+async function loadCatalogs() {
+  const [k, nx, b, ch, kh, ht, cd, chh, gc] = await Promise.all([
+    q(sb.from('kho').select('*').order('ten')), q(sb.from('nha_xe').select('*').order('ma')), q(sb.from('bai_tam').select('*').order('ma')),
+    q(sb.from('cau_hinh').select('*')), q(sb.from('khach_hang').select('*').order('ten')), q(sb.from('hang_tau').select('*').order('ma')),
+    q(sb.from('cang_den').select('*').order('ma')), q(sb.from('cang_ha').select('*').order('ten')), q(sb.from('bang_gia_xe').select('*'))
+  ]);
+  S.kho = k.data; S.nhaxe = nx.data; S.bai = b.data; S.khachhang = kh.data; S.hangtau = ht.data; S.cangden = cd.data; S.cangha = chh.data; S.giacuoc = gc.data;
+  S.cauhinh = {}; ch.data.forEach(r => { S.cauhinh[r.tham_so] = r.gia_tri; });
+  if (isAdmin()) { const nv = await q(sb.from('nhan_vien').select('*').order('email')); S.nhanvien = nv.data; }
+}
+async function loadData() {
+  const t = todayVN(), d30 = addDays(t, -30), d14 = addDays(t, -14), m1 = t.slice(0, 8) + '01';
+  const [c, g, l, rc, sh] = await Promise.all([
+    q(sb.from('cont').select('*').in('trang_thai', ['1', '2', '3', '4', '5']).order('id')),
+    q(sb.from('goi_y').select('*').order('id')),
+    q(sb.from('lo_tong_hop').select('*').or('so_cont_dang_chay.gt.0,so_cont.eq.0,etd.gte.' + d14 + ',cls.gte.' + d14).order('lo')),
+    q(sb.from('cont').select('kho,nha_xe,ngay_den_kho,ngay_goi_cont').or('ngay_den_kho.gte.' + d30 + ',ngay_goi_cont.gte.' + m1).limit(3000)),
+    q(sb.from('cont').select('id', { count:'exact', head:true }).eq('trang_thai', '6'))
+  ]);
+  S.conts = c.data; S.goiy = g.data; S.lots = {}; l.data.forEach(x => { S.lots[x.lo] = normLot(x); });
+  S.recent = rc.data; S.shipped = sh.count || 0;
+  try { const ids = S.conts.filter(x => x.trang_thai >= '3').map(x => x.id); S.chiphi = {};
+    if (ids.length) { const cp = await q(sb.from('chi_phi_cont').select('*').in('cont_id', ids).order('tao_luc')); cp.data.forEach(r => { (S.chiphi[r.cont_id] = S.chiphi[r.cont_id] || []).push(r); }); } } catch (e) { console.warn(e); }
+  S.loaded = true;
+}
+let _rl;
+function scheduleReload() {
+  clearTimeout(_rl);
+  _rl = setTimeout(async () => { try { await loadData(); if (S.tab !== 'danhmuc') renderMain(); renderNavCounts(); } catch (e) { console.warn(e); } }, 900);
+}
+let realtimeChannel = null;
+
+function startRealtime() {
+  if (realtimeChannel) {
+    sb.removeChannel(realtimeChannel);
+  }
+  realtimeChannel = sb.channel('dieu-do')
+    .on('postgres_changes', { event:'*', schema:'public', table:'cont' }, scheduleReload)
+    .on('postgres_changes', { event:'*', schema:'public', table:'lo' }, scheduleReload)
+    .on('postgres_changes', { event:'*', schema:'public', table:'goi_y' }, scheduleReload)
+    .subscribe(st => { S.live = st === 'SUBSCRIBED'; const el = document.getElementById('live'); if (el) el.className = 'live' + (S.live ? ' on' : ''); });
+}
+
+/* ---------------- mô hình tính toán ---------------- */
+// CLS máy dùng = cls (mail → ePort → tay); giữ CLS nhập tay ở closing_tay
+function normLot(x) { if (!x || x._n) return x; x._n = true; x.closing_tay = x.closing; if (x.cls) x.closing = x.cls; return x; }
+function eportCang(l) { return !l || !l.eport_cang ? '' : l.eport_cang === 'SPITC' ? 'SPITC' : T1('Cát Lái', '吉莱'); }
+function cangHa(l) { return l.cang_ha || (l.eport_cang ? eportCang(l) + ' ' + T1('(theo ePort)', '(按ePort)') : T1('theo booking', '按订舱')); }
+function clsDetail(l) { if (!l) return ''; const a = []; if (l.closing_mail) a.push('Mail ' + fTs(l.closing_mail)); if (l.closing_eport) a.push('ePort ' + (l.eport_cang === 'SPITC' ? 'SPITC ' : '') + fTs(l.closing_eport)); return a.length ? '<span class="muted" style="font-size:11px;display:block">' + esc(a.join(' · ')) + '</span>' : ''; }
+function khoActive(cur) { return S.kho.filter(x => x.hoat_dong !== false || x.ten === cur); }
+function nxActive(cur) { return S.nhaxe.filter(x => x.hoat_dong !== false || x.ma === cur); }
+function baiCost(c) {
+  const bi = S.bai.find(x => x.ma === c.bai_tam) || {};
+  const gio = c.gio_vao_bai ? Math.max(0, Math.ceil(((c.gio_ra_bai ? new Date(c.gio_ra_bai).getTime() : Date.now()) - new Date(c.gio_vao_bai).getTime()) / 36e5)) : null;
+  const dien = gio !== null && bi.dien_moi_gio ? gio * bi.dien_moi_gio : 0;
+  const nang = c.gio_vao_bai && bi.nang_ha ? +bi.nang_ha : 0, hacang = bi.trucking ? +bi.trucking : 0;
+  const ps = (S.chiphi[c.id] || []).reduce((a, r) => a + (+r.so_tien || 0), 0);
+  return { gio, dien, nang, hacang, ps, tong: dien + nang + hacang + ps, bi };
+}
+function lotOf(c) { return c && c.lo ? S.lots[c.lo] || null : null; }
+function counts() { const n = { '1':0, '2':0, '3':0, '4':0, '5':0 }; S.conts.forEach(c => { if (n[c.trang_thai] !== undefined) n[c.trang_thai]++; }); return n; }
+function kdList() { return S.conts.filter(c => c.cont_kiem_dich && c.trang_thai < '5' && !(lotOf(c) && lotOf(c).da_kiem_dich)); }
+function openLots() { return Object.values(S.lots).filter(l => l.so_cont_dang_chay > 0); }
+function nxPhone(ma) { const n = S.nhaxe.find(x => x.ma === ma); return n ? n.sdt_zalo : null; }
+function gyView(g) {
+  const tk = typeKey(g.loai_lenh), cd = g.id_cont_day ? (S.conts.find(c => c.id === g.id_cont_day) || null) : null;
+  const mooc = cd && cd.nha_xe ? cd.nha_xe : null, locked = !!mooc;
+  const kdChua = !!(cd && cd.cont_kiem_dich && !(lotOf(cd) && lotOf(cd).da_kiem_dich));
+  const nx = locked ? mooc : (S.pick[g.id] || g.nha_xe_chon || g.nha_xe_goi_y || '');
+  let text = String(g.noi_dung_lenh || '');
+  text = /Nhà xe 车队:/.test(text) ? text.replace(/Nhà xe 车队: .*$/m, 'Nhà xe 车队: ' + (nx || '—')) : text + '\nNhà xe 车队: ' + (nx || '—');
+  return Object.assign({}, g, { tk, nx, text, cd, mooc, locked, kdChua });
+}
+const NEXT = { '1':['2','toDen'], '2':['3','toDay'], '3':['4','toBai'], '4':['5','toCang'], '5':['6','toTau'] };
+
+/* ---------------- khung trang ---------------- */
+const NAV_GROUPS = [['gDieuDo', ['tong', 'goiy', 'homnay']], ['gTheoDoi', ['taikho', 'bai', 'kd', 'hacang']], ['gTraCuu', ['lo', 'tim', 'danhmuc']]];
+function navCount(k) {
+  const n = counts();
+  if (k === 'goiy') return S.goiy.filter(g => !g.duyet).length;
+  if (k === 'homnay') return S.goiy.filter(g => g.duyet && !g.da_ap_dung).length;
+  if (k === 'taikho') return n['1'] + n['2'] + n['3'];
+  if (k === 'bai') return n['4'];
+  if (k === 'kd') return kdList().length;
+  if (k === 'lo') return openLots().length;
+  if (k === 'hacang') return haCangLots(false).length;
+  return '';
+}
+function renderShell() {
+  const me = S.me || {};
+  document.getElementById('root').innerHTML =
+    '<div class="app' + (S.navOpen ? ' nav-open' : '') + '" id="app">' +
+    '<button class="scrim" data-act="nav-close" aria-label="' + esc(T('close')) + '"></button>' +
+    '<nav class="side" aria-label="Menu">' +
+      '<div class="brand"><div class="brand-logo">' + ico('truck', 22, '#4B3C8C') + '</div><div><div class="brand-name">Điều độ 调度</div><div class="brand-sub">Đại Cát Lâm · cont chuối</div></div></div>' +
+      NAV_GROUPS.map(g => '<div class="nav-g"><div class="nav-h">' + esc(T(g[0])) + '</div>' + g[1].map(k => '<button class="nav-i" data-act="tab" data-tab="' + k + '" aria-current="' + (S.tab === k ? 'page' : 'false') + '">' + ico(k) + '<span>' + esc(T(k)) + '</span><span class="cnt" data-cnt="' + k + '"></span></button>').join('') + '</div>').join('') +
+      '<div style="flex:1"></div>' +
+      '<div class="nav-g"><div class="nav-h">Ngôn ngữ 语言</div><div class="langs" role="group">' +
+        [['vi', 'VI'], ['zh', '中文'], ['both', 'VI + 中']].map(x => '<button data-act="lang" data-lang="' + x[0] + '" aria-pressed="' + (LANG === x[0]) + '">' + x[1] + '</button>').join('') + '</div></div>' +
+      '<div class="me"><div class="avatar">' + esc((me.ho_ten || me.email || '?').slice(0, 1).toUpperCase()) + '</div><div style="min-width:0"><div style="font-size:13px;font-weight:600" class="ell">' + esc(me.ho_ten || me.email || '') + '</div><div style="font-size:12px;color:var(--side-sub)">' + esc(me.vai_tro || '') + '</div></div><div class="me-acts"><button class="out" data-act="pw-open">' + esc(T('pwChange')) + '</button><button class="out" data-act="signout">' + esc(T('signOut')) + '</button></div></div>' +
+    '</nav>' +
+    '<div class="main"><header class="top">' +
+      '<button class="menu-btn" data-act="nav-open" aria-label="Menu">' + ico('menu') + '</button>' +
+      '<div class="grow"><h1 id="title"></h1><div class="sub" id="subtitle"></div></div>' +
+      '<span class="live' + (S.live ? ' on' : '') + '" id="live"><i></i>' + esc(T('live')) + '</span>' +
+      '<div class="search">' + ico('tim', 16, '#625C7A') + '<input type="search" id="topq" aria-label="' + esc(T('searchPh')) + '" placeholder="' + esc(T('searchPh')) + '" value="' + esc(S.q) + '"></div>' +
+      (canPlan() ? '<button class="btn btn-pri" data-act="run-goiy">' + ico('refresh', 16) + '<span>' + esc(T('refresh')) + '</span></button>' : '') +
+    '</header><div class="content" id="main"></div></div>' +
+    '<nav class="bottom-nav" aria-label="Menu">' +
+      [['goiy', 'suggest'], ['homnay', 'today'], ['taikho', 'taikho'], ['tim', 'search']].map(x => '<button data-act="tab" data-tab="' + x[0] + '" aria-current="' + (S.tab === x[0] ? 'page' : 'false') + '">' + ico(x[0], 20) + '<span>' + esc(T(x[1])) + '</span></button>').join('') +
+      '<button data-act="nav-open">' + ico('menu', 20) + '<span>' + esc(T('menu')) + '</span></button>' +
+    '</nav></div>';
+  renderNavCounts();
+  renderMain();
+}
+function renderNavCounts() {
+  document.querySelectorAll('[data-cnt]').forEach(el => { const n = navCount(el.dataset.cnt); el.textContent = n === '' || n === 0 ? '' : n; el.style.display = n === '' || n === 0 ? 'none' : ''; });
+}
+function setTitle(t, sub) { const a = document.getElementById('title'), b = document.getElementById('subtitle'); if (a) a.textContent = t; if (b) b.textContent = sub || ''; }
+function renderMain() {
+  const el = document.getElementById('main'); if (!el) return;
+  if (!S.loaded) { el.innerHTML = '<div class="loading">Đang tải dữ liệu… 数据加载中…</div>'; return; }
+  const V = { tong:vTong, goiy:vGoiY, homnay:vHomNay, taikho:vTaiKho, bai:vBai, kd:vKD, hacang:vHaCang, lo:vLo, tim:vTim, danhmuc:vDanhMuc };
+  setTitle(T(S.tab), (S.me ? S.me.email : '') + (canWrite() ? '' : ' · ' + T('readOnly')));
+  el.innerHTML = (V[S.tab] || vTong)();
+}
+
+/* ---------------- TỔNG QUAN ---------------- */
+function vTong() {
+  const n = counts(), t = todayVN(), totalAct = n['1'] + n['2'] + n['3'] + n['4'] + n['5'];
+  const byDay = {}, byKhoDay = {};
+  S.recent.forEach(r => { if (!r.ngay_den_kho) return; byDay[r.ngay_den_kho] = (byDay[r.ngay_den_kho] || 0) + 1; const k = r.kho + '|' + r.ngay_den_kho; byKhoDay[k] = (byKhoDay[k] || 0) + 1; });
+  const d30 = []; for (let i = 29; i >= 0; i--) d30.push(addDays(t, -i));
+  const d14 = d30.slice(-14);
+  const v30 = d30.map(d => byDay[d] || 0), mx = Math.max(1, ...v30);
+  const pts = v30.map((v, i) => [(i * 232 / 29).toFixed(1), (52 - v / mx * 46).toFixed(1)]);
+  const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ' ' + p[1]).join(' ');
+  const last7 = v30.slice(-7).reduce((a, b) => a + b, 0), prev7 = v30.slice(-14, -7).reduce((a, b) => a + b, 0);
+  const diff = prev7 ? Math.round((last7 - prev7) / prev7 * 100) : 0;
+  const pending = S.goiy.filter(g => !g.duyet);
+  const pc = [1, 2, 3].map(p => pending.filter(g => g.uu_tien === p).length), pcm = Math.max(1, ...pc);
+  const d7 = []; for (let i = 0; i < 7; i++) d7.push(addDays(t, i));
+  const ol = openLots();
+  const clPer = d7.map(d => ol.filter(l => l.closing && tsToInput(l.closing).slice(0, 10) === d).length), clm = Math.max(1, ...clPer);
+  const overdue = ol.filter(l => l.closing && hLeft(l.closing) < 0).length;
+  const tag = (txt, kind) => '<span class="tag" style="' + (kind === 'bad' ? 'background:var(--red-bg);color:var(--red-ink)' : kind === 'good' ? 'background:var(--teal-bg);color:var(--teal-ink)' : 'background:var(--lav);color:var(--lav-ink)') + '">' + esc(txt) + '</span>';
+  const tile = (lab, val, unit, chart, tg, foot) => '<section class="card tile"><div class="lab">' + esc(lab) + '</div><div style="display:flex;align-items:baseline;gap:6px"><span class="val num">' + esc(val) + '</span><span class="muted" style="font-size:13px">' + esc(unit) + '</span></div><div style="height:58px;display:flex;align-items:flex-end">' + chart + '</div><div class="foot">' + tg + '<span>' + esc(foot) + '</span></div></section>';
+  const bars = (arr, colors, titles) => '<div style="width:100%;height:58px;display:flex;align-items:flex-end;gap:6px">' + arr.map((v, i) => '<div title="' + esc(titles[i]) + '" style="flex:1;border-radius:4px 4px 0 0;background:' + (Array.isArray(colors) ? colors[i] : colors) + ';height:' + Math.max(3, Math.round(v / Math.max(1, ...arr) * 52)) + 'px"></div>').join('') + '</div>';
+  const stack = '<div style="width:100%;display:flex;border-radius:6px;overflow:hidden;margin-bottom:20px">' + ['1', '2', '3', '4', '5'].filter(k => n[k] > 0).map(k => '<div title="' + esc(stLabel(k) + ': ' + n[k]) + '" style="height:14px;background:' + ST[k].dot + ';width:' + (n[k] / Math.max(1, totalAct) * 100).toFixed(2) + '%"></div>').join('') + '</div>';
+  const tiles = '<div class="g4">' +
+    tile(T1('Cont vào kho · 7 ngày', '7天到厂柜数'), last7, 'cont', '<svg width="100%" height="56" viewBox="0 0 232 56" preserveAspectRatio="none" aria-hidden="true"><path d="' + line + ' L232 56 L0 56 Z" fill="#E6E2F7"/><path d="' + line + '" fill="none" stroke="#5B4BB7" stroke-width="2" stroke-linejoin="round"/></svg>', tag((diff >= 0 ? '+' : '') + diff + '% ' + T1('so với 7 ngày trước', '较前7天')), T1('30 ngày gần nhất', '近30天')) +
+    tile(T1('Cont đang chạy', '在途柜数'), totalAct, 'cont', stack, tag(n['1'] + ' ' + T1('chờ cắt rỗng', '待提空')), T1('theo trạng thái', '按状态')) +
+    tile(T('pendingSug'), pending.length, T('orders'), bars(pc, ['#B42318', '#E0A43A', '#B8AEE6'], pc.map((v, i) => 'P' + (i + 1) + ': ' + v)), tag(pc[0] + ' ' + T1('ưu tiên 1', '优先1'), pc[0] ? 'bad' : 'good'), T1('theo mức ưu tiên', '按优先级')) +
+    tile(T1('Lô closing · 7 ngày tới', '7天内截关批次'), clPer.reduce((a, b) => a + b, 0), T1('lô', '批'), bars(clPer, '#8F82D6', clPer.map((v, i) => fDate(d7[i]) + ': ' + v)), tag(overdue + ' ' + T1('lô đã quá closing', '批已过截关'), overdue ? 'bad' : 'good'), T1('theo ngày closing', '按截关日')) +
+  '</div>';
+  // heatmap
+  const khoTot = {}; d14.forEach(d => Object.keys(byKhoDay).forEach(k => { if (k.slice(-10) === d) { const kh = k.slice(0, -11); khoTot[kh] = (khoTot[kh] || 0) + byKhoDay[k]; } }));
+  const top = Object.keys(khoTot).sort((a, b) => khoTot[b] - khoTot[a]).slice(0, 10);
+  const shade = v => !v ? 'background:#F4F2FB;color:transparent' : v === 1 ? 'background:#DCD6F3;color:#3E3190' : v === 2 ? 'background:#B9AFE6;color:#2E2468' : v === 3 ? 'background:#9185D4;color:#fff' : 'background:#5B4BB7;color:#fff';
+  const heat = '<section class="card span2 stack" style="gap:12px"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><h2>' + esc(T1('Cont vào kho theo ngày · 14 ngày', '近14天到厂柜数')) + '</h2><div style="display:flex;align-items:center;gap:5px;font-size:11px" class="muted">' + esc(T1('ít', '少')) + [0, 1, 2, 3, 4].map(v => '<span style="width:18px;height:14px;border-radius:3px;' + shade(v) + '"></span>').join('') + esc(T1('nhiều', '多')) + '</div></div>' +
+    '<div class="tbl-x"><div style="min-width:640px;display:flex;flex-direction:column;gap:4px"><div class="heat-row"><span></span>' + d14.map(d => '<span class="faint" style="font-size:10px;text-align:center">' + fDate(d) + '</span>').join('') + '<span class="faint" style="font-size:10px;text-align:right">Σ</span></div>' +
+    (top.length ? top.map(kh => '<div class="heat-row"><span class="ell" style="font-size:12px;font-weight:500" title="' + esc(kh) + '">' + esc(kh) + '</span>' + d14.map(d => { const v = byKhoDay[kh + '|' + d] || 0; return '<span class="heat-c" style="' + shade(v) + '" title="' + esc(kh + ' · ' + fDate(d) + ': ' + v) + '">' + v + '</span>'; }).join('') + '<span class="num" style="font-size:12px;font-weight:700;text-align:right;color:var(--pri-ink)">' + khoTot[kh] + '</span></div>').join('') : '<div class="muted">—</div>') +
+    '</div></div></section>';
+  // donut
+  const C = 2 * Math.PI * 52; let cum = 0;
+  const segs = ['1', '2', '3', '4', '5'].filter(k => n[k] > 0).map(k => { const len = C * n[k] / Math.max(1, totalAct); const s = '<circle cx="70" cy="70" r="52" fill="none" stroke="' + ST[k].dot + '" stroke-width="18" stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-cum).toFixed(2) + '"/>'; cum += len; return s; }).join('');
+  const kpiTab = { '1':'taikho', '2':'taikho', '3':'taikho', '4':'bai', '5':'lo' };
+  const donut = '<section class="card stack" style="gap:14px"><h2>' + esc(T1('Cont đang chạy', '在途柜')) + '</h2><div style="display:flex;justify-content:center"><div style="position:relative;width:168px;height:168px"><svg width="168" height="168" viewBox="0 0 140 140" aria-hidden="true"><g transform="rotate(-90 70 70)"><circle cx="70" cy="70" r="52" fill="none" stroke="#F1EEFB" stroke-width="18"/>' + segs + '</g></svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:30px;font-weight:700;color:var(--pri-ink)" class="num">' + totalAct + '</span><span class="muted" style="font-size:12px">cont 柜</span></div></div></div><div>' +
+    ['1', '2', '3', '4', '5'].map(k => '<button class="legend-i" data-act="tab" data-tab="' + kpiTab[k] + '" data-seg="' + (k < '4' ? k : '') + '"><span style="width:10px;height:10px;border-radius:3px;background:' + ST[k].dot + '"></span><span style="flex:1">' + esc(stLabel(k)) + '</span><b class="num">' + n[k] + '</b><span class="muted num" style="width:40px;text-align:right">' + Math.round(n[k] / Math.max(1, totalAct) * 100) + '%</span></button>').join('') +
+    '</div><div class="muted" style="font-size:12px;padding:0 8px">' + esc(T('shipped')) + ': ' + S.shipped.toLocaleString('vi-VN') + ' cont</div></section>';
+  // closing 72
+  const cl72 = ol.filter(l => { const h = hLeft(l.closing); return h !== null && h > -24 && h < 72; }).sort((a, b) => new Date(a.closing) - new Date(b.closing));
+  const cols = '--cols:52px 124px minmax(110px,1fr) 44px 92px 96px 128px 26px;--minw:780px;gap:8px';
+  const clTbl = '<section class="card span2 stack" style="gap:10px;padding-bottom:10px"><h2>' + esc(T('closing72')) + '</h2><div class="tbl-x" style="margin:0 -20px"><div class="tr th" style="' + cols + '"><span>' + esc(T('loCol')) + '</span><span>' + esc(T('booking')) + '</span><span>' + esc(T('line')) + '</span><span>' + esc(T('pod')) + '</span><span>' + esc(T('closing')) + '</span><span>' + esc(T('left')) + '</span><span>' + esc(T('where')) + '</span><span>' + esc(T('kdShort')) + '</span></div>' +
+    (cl72.length ? cl72.map(l => { const mine = S.conts.filter(c => c.lo === l.lo); const k = mine.filter(c => c.trang_thai <= '3').length, b = mine.filter(c => c.trang_thai === '4').length, p = mine.filter(c => c.trang_thai === '5').length;
+      return '<div class="tr" style="' + cols + '"><button class="lk" style="font-weight:700" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button><span class="mono ell" style="font-size:12px">' + esc(l.booking || '—') + '</span><span class="ell">' + esc((l.hang_tau || '') + (l.ten_tau ? ' · ' + l.ten_tau : '')) + '</span><span>' + esc(l.cang_den || '—') + '</span><span class="num">' + fTs(l.closing) + '</span><span>' + clChip(l.closing) + '</span><span class="muted" style="font-size:12px">' + esc(LANG === 'zh' ? ('厂 ' + k + ' · 场 ' + b + ' · 港 ' + p) : (k + ' kho · ' + b + ' bãi · ' + p + ' cảng')) + '</span><span>' + tick(l.da_kiem_dich) + '</span></div>'; }).join('') : '<div class="muted" style="padding:14px 20px">' + esc(T('noClosing72')) + '</div>') +
+    '</div></section>';
+  const todo = [['pendingSug', pending.length, 'goiy', ''], ['waitEmpty', n['1'], 'taikho', '1'], ['fullWait', n['3'], 'taikho', '3'], ['kdPending', kdList().length, 'kd', ''], ['closing48', cl72.filter(l => hLeft(l.closing) < 48).length, 'lo', '']];
+  const yards = ['HLS', 'HT', 'PD', 'DCL'].map(b => { const bi = S.bai.find(x => x.ma === b) || {}; return '<div style="border-radius:10px;background:var(--soft);border:1px solid #ECE8F8;padding:10px 12px"><div style="display:flex;align-items:baseline;justify-content:space-between"><b style="color:var(--pri-ink)">' + b + '</b><span class="num" style="font-size:22px;font-weight:700">' + S.conts.filter(c => c.trang_thai === '4' && c.bai_tam === b).length + '</span></div><div class="muted" style="font-size:11px">' + (bi.dien_moi_gio ? money(bi.dien_moi_gio) + T('perHour') : '—') + '</div></div>'; }).join('');
+  const right = '<div class="stack" style="gap:16px"><section class="card"><h2 style="margin-bottom:6px">' + esc(T('todo')) + '</h2>' + todo.map(x => '<button class="todo-i" data-act="tab" data-tab="' + x[2] + '" data-seg="' + x[3] + '"><span>' + esc(T(x[0])) + '</span><b class="num">' + x[1] + '</b></button>').join('') + '</section><section class="card stack" style="gap:12px"><h2>' + esc(T('yardNow')) + '</h2><div class="g2" style="gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))">' + yards + '</div></section></div>';
+  // bars
+  const m1 = t.slice(0, 8) + '01', byNx = {};
+  S.recent.forEach(r => { if (r.ngay_goi_cont && r.ngay_goi_cont >= m1 && r.nha_xe) byNx[r.nha_xe] = (byNx[r.nha_xe] || 0) + 1; });
+  const nxArr = Object.keys(byNx).map(k => [k, byNx[k]]).sort((a, b) => b[1] - a[1]), nxm = nxArr.length ? nxArr[0][1] : 1;
+  const khoCnt = {}; S.conts.forEach(c => { if (c.trang_thai <= '3' && c.kho) khoCnt[c.kho] = (khoCnt[c.kho] || 0) + 1; });
+  const khoArr = Object.keys(khoCnt).map(k => [k, khoCnt[k]]).sort((a, b) => b[1] - a[1]).slice(0, 8), km = khoArr.length ? khoArr[0][1] : 1;
+  const barList = (arr, m, color, w) => arr.length ? arr.map(r => '<div style="display:grid;grid-template-columns:' + w + ' minmax(0,1fr) 40px;gap:12px;align-items:center;font-size:13px"><span class="ell" style="font-weight:600">' + esc(r[0]) + '</span><div class="bar-bg"><div class="bar" style="background:' + color + ';width:' + Math.max(4, Math.round(r[1] / m * 100)) + '%"></div></div><span class="num" style="text-align:right;font-weight:700">' + r[1] + '</span></div>').join('') : '<div class="muted">—</div>';
+  return '<div class="stack" style="gap:22px">' + tiles +
+    '<div class="band"><span>Hoạt động kho 仓库动态</span><i></i></div><div class="g3">' + heat + donut + '</div>' +
+    '<div class="band"><span>Closing &amp; việc cần làm 截关与待办</span><i></i></div><div class="g3">' + clTbl + right + '</div>' +
+    '<div class="g2"><section class="card stack" style="gap:10px"><h2>' + esc(T('byCarrier')) + '</h2>' + barList(nxArr, nxm, '#6C5DC0', '130px') + '</section><section class="card stack" style="gap:10px"><h2>' + esc(T('byKho')) + '</h2>' + barList(khoArr, km, '#B8AEE6', '210px') + '</section></div></div>';
+}
+
+/* ---------------- GỢI Ý ---------------- */
+function priBadge(p) { return '<span class="pri-badge" style="' + (p === 1 ? 'background:#B42318;color:#fff' : p === 2 ? 'background:#E0A43A;color:#2B2640' : 'background:#E6E2F7;color:#3E3190') + '">' + p + '</span>'; }
+function vGoiY() {
+  const all = S.goiy.map(gyView), tc = { dong:0, doi:0, cat:0, rut:0 }; all.forEach(g => tc[g.tk]++);
+  const list = all.filter(g => (S.gyType === 'all' || g.tk === S.gyType) && (S.gyPri === 'all' || String(g.uu_tien) === S.gyPri) && !(S.gyHide && g.duyet));
+  const chip = (act, val, cur, txt) => '<button class="chip" data-act="' + act + '" data-v="' + val + '" aria-pressed="' + (cur === val) + '">' + esc(txt) + '</button>';
+  const approved = all.filter(g => g.duyet).length;
+  let sel = all.find(g => g.id === S.sel) || list[0];
+  const card = g => '<article class="gy-card' + (sel && sel.id === g.id ? ' sel' : '') + '"><button class="gy-main" data-act="gy-sel" data-id="' + esc(g.id) + '"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' + priBadge(g.uu_tien) + typePill(g.tk) + mucPill(g.muc_uu_tien) + clChip(g.closing) + '<span class="muted" style="font-size:12px">' + esc(T('closing')) + ' ' + fTs(g.closing, true) + '</span>' + (g.duyet ? pill(T('approved'), 'var(--teal-bg)', 'var(--teal-ink)') : '') + '</div>' +
+    (g.cont_day ? '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span class="mono" style="font-size:14px">' + esc(g.cont_day) + '</span><span class="muted" style="font-size:12px">' + esc(T('loCol')) + ' ' + esc((g.id_cont_day || '').split('-').pop()) + '</span><span style="font-weight:500">' + esc(g.kho_day || '') + '</span><span class="muted">→ ' + esc(tr(splitVZ(g.noi_ha))) + '</span>' + (g.kdChua ? pill(T1('KD chưa kiểm', '检疫未完成'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</div>' +
+      '<div style="font-size:12px;color:var(--muted)">' + esc(T1('Mooc', '车架') + ': ') + (g.mooc ? '<b style="color:var(--ink)">' + esc(g.mooc) + '</b>' + (g.cd && g.cd.ngay_den_kho ? ' · ' + esc(T1('kéo lên', '上柜')) + ' ' + fDate(g.cd.ngay_den_kho) : '') : '<b style="color:var(--red-ink)">' + esc(T1('chưa rõ nhà xe nào', '未知')) + '</b>') + (g.cd && g.cd.so_seal ? ' · Seal <span class="mono">' + esc(g.cd.so_seal) + '</span>' : '') + '</div>' : '') +
+    (g.kho_cat_rong ? '<div style="font-size:12px;color:var(--lav-ink)">' + esc(T('rong') + ': ' + (g.ma_don_rong || '') + ' @ ' + g.kho_cat_rong + ' · ' + (g.booking_lay_rong || T('noBooking'))) + '</div>' : '') +
+    '</button><div class="gy-side"><span class="muted" style="font-size:12px;text-align:center">' + esc(T('carrier')) + ': <b style="color:var(--ink)">' + esc(g.nx || '—') + '</b>' + (g.chi_phi_uoc_tinh != null ? '<br>' + esc(money(g.chi_phi_uoc_tinh)) : '') + '</span>' + (canPlan() ? '<button class="btn btn-sm ' + (g.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(g.id) + '" data-v="' + (g.duyet ? '0' : '1') + '">' + esc(g.duyet ? T('approved') : T('approve')) + '</button>' : '') + '</div></article>';
+  const groups = [1, 2, 3].map(p => { const items = list.filter(g => g.uu_tien === p); if (!items.length) return ''; const nm = { 1:['gấp: KD / sát CLS / cần rỗng trong 24 giờ', '紧急'], 2:['CLS gần / cần rỗng trong 48 giờ', '两天内'], 3:['còn lại', '其他'] }[p];
+    return '<div class="stack" style="gap:10px"><div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0;font-size:14px;color:var(--pri-ink)">' + esc(T('pri') + ' ' + p + ' · ' + tr(nm)) + '</h2><span class="cnt-b">' + items.length + '</span></div>' + items.map(card).join('') + '</div>'; }).join('');
+  let panel = '<div class="muted">' + esc(T('pickOne')) + '</div>';
+  if (sel) {
+    const ph = nxPhone(sel.nx);
+    panel = '<div style="display:flex;gap:8px;flex-wrap:wrap">' + typePill(sel.tk) + clChip(sel.closing) + '</div>' +
+      (sel.cont_day ? '<div class="mono" style="font-size:20px">' + esc(sel.cont_day) + '</div>' : '') +
+      (sel.cd ? '<div class="kv" style="background:var(--soft);border-radius:10px;padding:10px 12px"><span>' + esc(T1('Cont đầy', '满柜')) + '</span><span class="mono">' + esc(sel.cd.so_cont || '—') + '</span><span>Seal</span><span class="mono">' + esc(sel.cd.so_seal || '—') + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(sel.cd.lo || '—') + '</span><span>' + esc(T1('Đang ở kho', '所在仓库')) + '</span><span>' + esc(sel.cd.kho || '—') + '</span><span>' + esc(T1('Mooc của', '车架属于')) + '</span><span><b>' + esc(sel.mooc || T1('chưa rõ', '未知')) + '</b>' + (sel.cd.ngay_den_kho ? ' · ' + esc(T1('kéo lên', '上柜')) + ' ' + fDate(sel.cd.ngay_den_kho, true) : '') + '</span><span>' + esc(T('kd')) + '</span><span>' + (sel.cd.cont_kiem_dich ? (sel.kdChua ? pill(T1('KD chưa kiểm', '检疫未完成'), 'var(--amb-bg)', 'var(--amb-ink)') : esc(T1('KD — lô đã kiểm xong', '已检疫'))) : esc(T1('Không', '否'))) + '</span></div>' : '') +
+      '<div class="kv"><span>' + esc(T('kho')) + '</span><span>' + esc(sel.kho_day || sel.kho_cat_rong || '—') + '</span><span>Nơi hạ 还柜点</span><span>' + esc(sel.noi_ha ? tr(splitVZ(sel.noi_ha)) : '—') + '</span><span>' + esc(T('closing')) + '</span><span>' + fTs(sel.closing, true) + '</span><span>' + esc(T('carrierSug')) + '</span><span>' + esc(sel.nha_xe_goi_y || '—') + '</span><span>' + esc(T1('Chi phí ước tính', '预估费用')) + '</span><span>' + (sel.chi_phi_uoc_tinh != null ? '<b>' + esc(money(sel.chi_phi_uoc_tinh)) + '</b>' : '—') + (sel.chi_phi_ghi_chu ? '<span class="muted" style="font-size:11px;display:block">' + esc(sel.chi_phi_ghi_chu) + '</span>' : '') + '</span></div>' +
+      (sel.kho_cat_rong ? '<div class="msg">' + esc(T('rong') + ': ' + (sel.ma_don_rong || '') + ' @ ' + sel.kho_cat_rong + ' · ' + (sel.booking_lay_rong || T('noBooking'))) + '</div>' : '') +
+      '<div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">' + esc(T('reason')) + '</div><ul style="margin:0;padding-left:18px;font-size:12px;line-height:1.55">' + String(sel.ly_do || '').split(';').filter(x => x.trim()).map(x => '<li>' + esc(x.trim()) + '</li>').join('') + '</ul></div>' +
+      (sel.locked ? '<div class="msg"><b>' + esc(T('pickCarrier')) + ': ' + esc(sel.mooc) + '</b> 🔒<br>' + esc(T1('Cont đang nằm trên mooc của ' + sel.mooc + ' — chỉ ' + sel.mooc + ' kéo về được. Muốn đổi, sửa nhà xe của cont trước.', '柜子在 ' + sel.mooc + ' 的车架上，只能由 ' + sel.mooc + ' 拉回。')) + '</div>' : (sel.cd ? '<div class="msg err">' + esc(T1('Chưa rõ cont nằm trên mooc nhà xe nào — hỏi kho rồi nhập nhà xe cho cont trước khi duyệt.', '未知车架属于哪个车队，请先确认。')) + '</div>' : '') +
+  '<label class="field">' + esc(T('pickCarrier')) + '<select data-on="gy-pick" data-id="' + esc(sel.id) + '"' + (canPlan() ? '' : ' disabled') + '>' + '<option value="">—</option>' + S.nhaxe.map(n => '<option value="' + esc(n.ma) + '"' + (n.ma === sel.nx ? ' selected' : '') + '>' + esc(n.ma + (n.ten_day_du && n.ten_day_du !== n.ma ? ' · ' + n.ten_day_du : '')) + '</option>').join('') + '</select></label>') +
+      '<div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">' + esc(T('orderText')) + '</div><pre class="order">' + esc(sel.text) + '</pre></div>' +
+      '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">' +
+        (canPlan() ? '<button class="btn btn-sm ' + (sel.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(sel.id) + '" data-v="' + (sel.duyet ? '0' : '1') + '">' + esc(sel.duyet ? T('approved') : T('approve')) + '</button>' : '<span></span>') +
+        '<button class="btn btn-sm" data-act="copy-gy" data-id="' + esc(sel.id) + '">' + esc(S.copied === sel.id ? T('copied') : T('copy')) + '</button>' +
+        (ph ? '<a class="btn btn-sm btn-zalo" href="' + esc(zaloUrl(ph)) + '" target="_blank" rel="noopener" data-act="copy-gy" data-id="' + esc(sel.id) + '" data-keep="1">' + esc(T('zalo')) + '</a>' : '<button class="btn btn-sm" disabled title="' + esc(T('noZalo')) + '">' + esc(T('noZalo')) + '</button>') +
+      '</div>';
+  }
+  return '<div class="stack" style="gap:16px"><div class="chips">' + chip('gy-type', 'all', S.gyType, T('all') + ' ' + all.length) + ['dong', 'doi', 'cat', 'rut'].map(k => chip('gy-type', k, S.gyType, tr([TYPES[k].vi, TYPES[k].zh]) + ' ' + tc[k])).join('') +
+    '<span style="width:1px;height:24px;background:#D8D2EE;margin:0 4px"></span>' + chip('gy-pri', 'all', S.gyPri, T('all')) + ['1', '2', '3'].map(p => chip('gy-pri', p, S.gyPri, T('pri') + ' ' + p)).join('') +
+    '<span style="flex:1"></span><label class="chk"><input type="checkbox" data-on="gy-hide"' + (S.gyHide ? ' checked' : '') + '>' + esc(T('hideApproved')) + '</label><span class="muted" style="font-size:13px">' + esc(LANG === 'zh' ? all.length + ' 条建议 · 已确认 ' + approved : all.length + ' gợi ý · ' + approved + ' đã duyệt') + '</span></div>' +
+    '<div class="gy-layout"><div class="stack">' + (list.length ? groups : '<div class="empty">' + esc(T1('Không có gợi ý nào khớp bộ lọc.', '无匹配建议。')) + '</div>') + '</div><aside class="card panel">' + panel + '</aside></div></div>';
+}
+
+/* ---------------- KẾ HOẠCH HÔM NAY ---------------- */
+function vHomNay() {
+  const ap = S.goiy.filter(g => g.duyet).map(gyView);
+  if (!ap.length) return '<div class="empty stack" style="align-items:center;gap:14px"><span>' + esc(T('emptyToday')) + '</span><button class="btn btn-pri" data-act="tab" data-tab="goiy">' + esc(T('goSuggest')) + '</button></div>';
+  const groups = {}; ap.forEach(g => { (groups[g.nx || '—'] = groups[g.nx || '—'] || []).push(g); });
+  const cols = '--cols:160px 130px minmax(0,1fr) 120px 150px;--minw:760px';
+  return '<div class="stack">' + Object.keys(groups).sort().map(k => {
+    const items = groups[k], ph = nxPhone(k), open = items.filter(g => !g.da_ap_dung);
+    return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:13px">' + items.length + ' ' + esc(T('orders')) + '</span><span style="flex:1"></span><button class="btn btn-sm" data-act="copy-grp" data-nx="' + esc(k) + '">' + esc(S.copied === 'grp-' + k ? T('copied') : T('copyGroup')) + '</button>' + (ph ? '<a class="btn btn-sm btn-zalo" href="' + esc(zaloUrl(ph)) + '" target="_blank" rel="noopener" data-act="copy-grp" data-nx="' + esc(k) + '" data-keep="1">' + esc(T('zalo')) + '</a>' : '<span class="faint" style="font-size:12px">' + esc(T('noZalo')) + '</span>') + '</div><div class="tbl-x">' +
+      items.map(g => '<div class="tr" style="' + cols + (g.da_ap_dung ? ';opacity:.6' : '') + '"><span>' + typePill(g.tk) + '</span><span class="mono">' + esc(g.cont_day || g.ma_don_rong || '') + '</span><span class="ell">' + esc((g.kho_day || g.kho_cat_rong || '') + (g.noi_ha ? ' → ' + tr(splitVZ(g.noi_ha)) : '')) + '</span><span>' + clChip(g.closing) + '</span><span style="display:flex;gap:6px;justify-content:flex-end">' +
+        (g.da_ap_dung ? pill(T('applied'), 'var(--teal-bg)', 'var(--teal-ink)') : (canPlan() ? '<button class="btn btn-sm btn-line" data-act="gy-apply" data-id="' + esc(g.id) + '">' + esc(S.confirmApply === g.id ? T('confirm') : T('markApplied')) + '</button><button class="btn btn-sm" data-act="gy-approve" data-id="' + esc(g.id) + '" data-v="0" title="' + esc(T('unapprove')) + '">' + ico('x', 14) + '</button>' : '')) +
+      '</span></div>').join('') + '</div></section>';
+  }).join('') + '<p class="muted" style="font-size:12px;margin:0">' + esc(T1('“Đánh dấu đã chạy” sẽ tự cập nhật trạng thái cont: cont đầy → vào bãi hoặc hạ cảng theo nơi hạ; đơn rỗng → cont đã tới kho.', '“标记已执行”会自动更新柜子状态：满柜→进堆场或回港；空柜订单→已到厂。')) + '</p></div>';
+}
+
+/* ---------------- TẠI KHO ---------------- */
+function contBtn(c) { return c.so_cont ? '<button class="lk mono" data-act="open-cont" data-id="' + esc(c.id) + '">' + esc(c.so_cont) + '</button>' : '<button class="lk" style="font-style:italic;color:var(--muted)" data-act="open-cont" data-id="' + esc(c.id) + '">' + esc(T('noCont')) + '</button>'; }
+function nextBtn(c) { const nx = NEXT[c.trang_thai]; if (!nx || !canWrite()) return '<span></span>'; return '<button class="btn btn-sm btn-line" data-act="move" data-id="' + esc(c.id) + '" data-to="' + nx[0] + '">' + esc(T(nx[1])) + ' →</button>'; }
+function loOrder(a, b) {
+  const la = S.lots[a.lo] || {}, lb = S.lots[b.lo] || {};
+  const ta = la.thu_tu != null ? la.thu_tu : 1e9, tb = lb.thu_tu != null ? lb.thu_tu : 1e9;
+  if (ta !== tb) return ta - tb;
+  const r = String(a.lo || '~').localeCompare(String(b.lo || '~'), 'vi', { numeric:true });
+  return r || String(a.so_cont || a.ma_don || a.id).localeCompare(String(b.so_cont || b.ma_don || b.id));
+}
+function vTaiKho() {
+  const n = counts(), seg = S.tkSeg, list = S.conts.filter(c => c.trang_thai === seg);
+  const g = {}; list.forEach(c => { (g[c.kho || '—'] = g[c.kho || '—'] || []).push(c); });
+  const cols = '--cols:150px 60px 96px 88px 110px 110px 44px minmax(190px,1fr) 124px;--minw:1040px';
+  const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('madon')) + '</span><span>' + esc(seg === '1' ? T('can') : T('den')) + '</span><span>' + esc(T('day')) + '</span><span>' + esc(T('carrier')) + '</span><span>' + esc(T('kdShort')) + '</span><span>' + esc(T('clsUse') + ' · ' + T('clsMail') + ' / ' + T('clsEport')) + '</span><span></span></div>';
+  return '<div class="stack" style="gap:16px"><div class="chips">' + ['1', '2', '3'].map(k => '<button class="chip" data-act="tk-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Mỗi kho xếp theo thứ tự lô', '各仓库按批次排序')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>' +
+    (list.length ? Object.keys(g).sort((a, b) => g[b].length - g[a].length).map(k => { const ki = S.kho.find(x => x.ten === k) || {};
+      return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:12px">' + esc([ki.khu_vuc, ki.ten_tq].filter(Boolean).join(' · ')) + '</span><span style="flex:1"></span><span class="cnt-b">' + g[k].length + '</span></div><div class="tbl-x">' + head +
+        g[k].slice().sort(loOrder).map(c => { const l = lotOf(c); return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + (l && l.dong_trong_ngay ? ' <span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + '</span><span>' + esc(c.ma_don || '—') + '</span><span data-l="' + esc(seg === '1' ? T('can') : T('den')) + '">' + (seg === '1' ? fTs(c.ngay_can_len_kho) : fDate(c.ngay_den_kho)) + '</span><span data-l="' + esc(T('day')) + '" style="' + (c.du_kien_day ? '' : 'color:#8A5A00;font-style:italic') + '">' + (c.du_kien_day ? fTs(c.du_kien_day) : esc(T('notEntered'))) + '</span><span data-l="' + esc(T('carrier')) + '">' + esc(c.nha_xe || '—') + '</span><span>' + (c.cont_kiem_dich ? pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('')
+      : '<div class="empty">' + esc(T1('Không có cont nào ở bước này.', '没有柜子处于此状态。')) + '</div>') + '</div>';
+}
+
+/* ---------------- BÃI TẠM ---------------- */
+function vBai() {
+  const list = S.conts.filter(c => c.trang_thai === '4');
+  const sorters = { vao:(a, b) => new Date(a.gio_vao_bai || 0) - new Date(b.gio_vao_bai || 0), cls:(a, b) => { const la = lotOf(a), lb = lotOf(b); return (la && la.closing ? new Date(la.closing) : 9e15) - (lb && lb.closing ? new Date(lb.closing) : 9e15); }, lo:loOrder, tien:(a, b) => baiCost(b).tong - baiCost(a).tong };
+  const bais = S.bai.map(b => b.ma).concat(list.some(c => !c.bai_tam) ? ['—'] : []);
+  const cols = '--cols:140px 58px 96px 64px 104px 96px 104px 96px 110px minmax(150px,1fr) 70px 104px;--minw:1280px';
+  const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('yardIn')) + '</span><span>' + esc(T('hours')) + '</span><span>' + esc(T1('Tiền điện', '电费')) + '</span><span>' + esc(T('nangHa')) + '</span><span>' + esc(T('haCangFee')) + '</span><span>' + esc(T('phatSinh')) + '</span><span>' + esc(T('tongCP')) + '</span><span>' + esc(T('closing')) + '</span><span style="text-align:center">' + esc(T('allowPort')) + '</span><span></span></div>';
+  const sortSel = '<label class="chk" style="gap:6px">' + esc(T1('Sắp xếp trong bãi', '堆场内排序')) + '<select data-on="bai-sort" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff">' + [['vao', T1('Giờ vào bãi', '进场时间')], ['cls', T1('CLS gần nhất', '截关')], ['lo', T1('Thứ tự lô', '批次')], ['tien', T1('Chi phí cao nhất', '费用最高')]].map(o => '<option value="' + o[0] + '"' + (S.baiSort === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select></label>';
+  const cards = '<div class="g4">' + S.bai.map(bi => { const cs = list.filter(c => c.bai_tam === bi.ma), tong = cs.reduce((a, c) => a + baiCost(c).tong, 0);
+    return '<section class="card" style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;align-items:baseline;justify-content:space-between"><b style="font-size:16px;color:var(--pri-ink)">' + esc(bi.ma) + '</b><span class="num" style="font-size:28px;font-weight:700">' + cs.length + '</span></div><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span class="muted" style="font-size:12px">' + esc(T1('Điện', '电费')) + ' ' + (bi.dien_moi_gio ? money(bi.dien_moi_gio) + T('perHour') : '—') + ' · ' + esc(T('nangHa')) + ' ' + money(bi.nang_ha) + ' · ' + esc(T1('Hạ cảng', '回港')) + ' ' + money(bi.trucking) + '</span><span style="font-size:13px">' + esc(T('tongCP')) + ': <b>' + money(tong) + '</b></span></section>'; }).join('') + '</div>';
+  return '<div class="stack" style="gap:16px">' + cards + '<div class="chips">' + sortSel + '<span class="muted" style="font-size:12px">' + esc(T1('Điện tính theo giờ thực tế (làm tròn lên), nâng hạ 1 lần khi hạ vào bãi, hạ cảng theo giá từng bãi.', '电费按实际小时（向上取整），吊装一次，回港按堆场价。')) + '</span></div>' +
+    bais.map(ma => { const cs = list.filter(c => (c.bai_tam || '—') === ma).sort(sorters[S.baiSort] || sorters.vao); if (!cs.length) return '';
+      const tong = cs.reduce((a, c) => a + baiCost(c).tong, 0), bi = S.bai.find(x => x.ma === ma) || {};
+      return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(ma) + '</h2><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span style="flex:1"></span><span class="muted" style="font-size:13px">' + esc(T('tongCP')) + ' <b style="color:var(--ink)">' + money(tong) + '</b></span><span class="cnt-b">' + cs.length + '</span></div><div class="tbl-x">' + head +
+        cs.map(c => { const l = lotOf(c), k = baiCost(c);
+          return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + '</span><span data-l="' + esc(T('yardIn')) + '">' + fTs(c.gio_vao_bai) + '</span><span class="num" data-l="' + esc(T('hours')) + '">' + (k.gio === null ? '—' : k.gio) + '</span><span class="num" data-l="' + esc(T1('Tiền điện', '电费')) + '">' + money(k.dien) + '</span><span class="num" data-l="' + esc(T('nangHa')) + '">' + money(k.nang) + '</span><span class="num" data-l="' + esc(T('haCangFee')) + '">' + money(k.hacang) + '</span><span class="num" data-l="' + esc(T('phatSinh')) + '">' + (k.ps ? money(k.ps) : '—') + '</span><span class="num" style="font-weight:700" data-l="' + esc(T('tongCP')) + '">' + money(k.tong) + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span><span style="text-align:center">' + tick(l && (l.cho_keo_ha_cang || l.da_kiem_dich)) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('') +
+    (list.length ? '' : '<div class="empty">' + esc(T1('Không có cont nào ở bãi tạm.', '堆场没有柜子。')) + '</div>') + '</div>';
+}
+
+/* ---------------- KIỂM DỊCH ---------------- */
+function kdGroups() {
+  const list = kdList(), g = {}; list.forEach(c => { (g[c.lo || '—'] = g[c.lo || '—'] || []).push(c); });
+  const keo = new Set(S.goiy.filter(x => x.duyet && !x.da_ap_dung && x.id_cont_day).map(x => x.id_cont_day));
+  return Object.keys(g).map(k => { const l = S.lots[k] || {}, cs = g[k];
+    const tai_bai = cs.some(c => c.trang_thai === '4'), dang_keo = cs.some(c => keo.has(c.id)), why = kdWhy(l.lo ? l : { lo:k });
+    const h = hLeft(l.closing), gap = h !== null && h <= (+S.cauhinh['Số giờ cont KD cần về bãi trước CLS'] || 72);
+    const nhom = tai_bai ? 1 : dang_keo ? 2 : 3;
+    return { k, l, cs, tai_bai, dang_keo, gap, nhom, h, why };
+  }).sort((a, b) => a.nhom - b.nhom || (a.h === null ? 9e9 : a.h) - (b.h === null ? 9e9 : b.h));
+}
+function kdPlanText(items) {
+  return 'KẾ HOẠCH KIỂM DỊCH 检疫计划 · ' + fTs(new Date().toISOString(), true) + '\n' + items.map((x, i) => (i + 1) + '. Lô ' + x.k + ' · KDTV ' + (x.l.ma_don_kdtv || '—') + ' · CLS ' + fTs(x.l.closing, true) + '\n' +
+    x.cs.map(c => '   ' + (c.so_cont || '—') + (c.so_seal ? ' · Seal ' + c.so_seal : '') + ' · ' + (c.trang_thai === '4' ? 'Bãi ' + (c.bai_tam || '') : 'Kho ' + (c.kho || '') + ' (đang kéo về)')).join('\n')).join('\n');
+}
+function vKD() {
+  const all = kdGroups();
+  const chuaChon = openLots().filter(l => !l.da_huy && !l.da_kiem_dich && !kdCont(l.lo)).sort((a, b) => (hLeft(a.closing) ?? 9e9) - (hLeft(b.closing) ?? 9e9));
+  const sai = openLots().filter(l => nPortNoKd(l) > 0);
+  const warn = (sai.length ? '<section class="tbl" data-kd-sai style="border-color:var(--red-ink)"><div class="tbl-h"><h2 style="color:var(--red-ink)">⚠ ' + esc(T1('Sai quy trình: có cont ở cảng khi lô chưa kiểm dịch', '流程错误：未检疫已回港')) + '</h2><span class="cnt-b">' + sai.length + '</span></div><div style="padding:8px 16px 12px;display:flex;gap:8px;flex-wrap:wrap">' + sai.map(l => '<button class="btn btn-sm" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + ' · ' + nPortNoKd(l) + ' cont</button>').join('') + '</div></section>' : '') +
+    (chuaChon.length ? '<section class="tbl" data-kd-chua-chon><div class="tbl-h"><h2>' + esc(T1('Lô chưa chọn cont kiểm dịch (chưa được hạ cảng)', '未选检疫柜的批次（不可回港）')) + '</h2><span class="cnt-b">' + chuaChon.length + '</span></div><div style="padding:8px 16px 12px;display:flex;gap:8px;flex-wrap:wrap">' + chuaChon.map(l => '<button class="btn btn-sm" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + (l.closing ? ' · CLS ' + fTs(l.closing) : '') + '</button>').join('') + '</div></section>' : '');
+  if (!all.length) return warn ? '<div class="stack" style="gap:18px">' + warn + '<div class="empty">' + esc(T('noKd')) + '</div></div>' : '<div class="empty">' + esc(T('noKd')) + '</div>';
+  const plan = all.filter(x => x.nhom <= 2);
+  const nhomTen = { 1:T1('Sẵn sàng kiểm: cont KD đã ở bãi (chỉ HLS / PD / HT được kiểm)', '可检疫：检疫柜已在堆场（仅HLS/PD/HT）'), 2:T1('Đang kéo về bãi (lệnh đã duyệt)', '正在拉回堆场'), 3:T1('Còn ở kho', '仍在仓库') };
+  const card = x => '<section class="tbl"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + x.k) + '</h2>' + clChip(x.l.closing) + (x.gap && x.nhom === 3 ? pill(T1('KD gấp – cần rút mooc', '检疫紧急'), '#B42318', '#fff') : '') + '<span class="muted" style="font-size:12px">' + esc(x.l.ma_don_kdtv ? T('kdtv') + ' ' + x.l.ma_don_kdtv : T('noKdtv')) + '</span><span style="flex:1"></span>' + (canKd() && x.k !== '—' && x.nhom === 1 ? '<button class="btn btn-sm" style="border-color:var(--teal);color:var(--teal-ink)" data-act="kd-done" data-lo="' + esc(x.k) + '"' + (x.why ? ' disabled title="' + esc(x.why) + '"' : '') + '>' + esc(T('kdDone')) + ' ✓</button>' : '') + '</div>' +
+    '<div class="kv" style="padding:6px 16px 10px;font-size:12px"><span>' + esc(T('clsUse')) + '</span><span><b>' + fTs(x.l.closing, true) + '</b></span><span>' + esc(T('clsMail')) + '</span><span>' + fTs(x.l.closing_mail, true) + '</span><span>' + esc(T('clsEport')) + '</span><span>' + fTs(x.l.closing_eport, true) + (x.l.closing_eport && x.l.eport_cang ? ' <span class="muted">' + esc(eportCang(x.l)) + '</span>' : '') + (x.l.eport_ghi_chu ? ' <span style="color:var(--red-ink)">' + esc(x.l.eport_ghi_chu) + '</span>' : '') + '</span><span>' + esc(T('vessel')) + '</span><span>' + esc(x.l.ten_tau || '—') + '</span></div>' +
+    (x.nhom === 1 && x.why ? '<p style="margin:0;padding:0 16px 8px;font-size:12px;color:var(--red-ink)" data-kd-why>' + esc(x.why) + '</p>' : '') +
+    x.cs.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 150px">' + contBtn(c) + '<span class="ell">' + esc(c.trang_thai === '4' ? T('bai') + ' ' + (c.bai_tam || '') : (c.kho || '—')) + '</span><span>' + stPill(c.trang_thai) + '</span></div>').join('') + '</section>';
+  return '<div class="stack" style="gap:18px">' + warn + '<div class="chips"><b style="font-size:15px;color:var(--pri-ink)">' + esc(T1('Kế hoạch kiểm dịch', '检疫计划')) + '</b><span class="muted" style="font-size:13px">' + plan.length + ' ' + esc(T1('lô ở bãi / đang kéo về, xếp theo CLS gần nhất', '批（在堆场/拉回中），按截关排序')) + '</span><span style="flex:1"></span>' +
+      (plan.length ? '<button class="btn btn-sm" data-act="copy-kd">' + esc(S.copied === 'kd' ? T('copied') : T1('Chép kế hoạch KD', '复制检疫计划')) + '</button>' : '') + (canWrite() ? eportBtn() : '') + '</div>' +
+    [1, 2, 3].map(nh => { const xs = all.filter(x => x.nhom === nh); if (!xs.length) return '';
+      return '<div class="stack" style="gap:10px"><div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0;font-size:14px;color:var(--pri-ink)">' + esc(nhomTen[nh]) + '</h2><span class="cnt-b">' + xs.length + '</span></div><div class="g2" style="align-items:start">' + xs.map(card).join('') + '</div></div>'; }).join('') + '</div>';
+}
+
+/* ---------------- HẠ CẢNG ---------------- */
+const HC_GIO = 72; // màn Hạ cảng: lô đã KD có cont ở bãi, CLS còn ≤ 72 giờ (anh Tín chốt 20/09)
+function haCangLots(all) {
+  const g = {}; S.conts.filter(c => c.trang_thai === '4' && c.lo).forEach(c => { (g[c.lo] = g[c.lo] || []).push(c); });
+  return Object.keys(g).map(k => ({ l:S.lots[k] || { lo:k }, cs:g[k] }))
+    .filter(x => x.l.da_kiem_dich && (all || (hLeft(x.l.closing) !== null && hLeft(x.l.closing) <= HC_GIO)))
+    .sort((a, b) => (a.l.closing ? new Date(a.l.closing) : 9e15) - (b.l.closing ? new Date(b.l.closing) : 9e15));
+}
+function haCangText(items) {
+  return 'DANH SÁCH KÉO HẠ CẢNG 回港计划 · ' + fTs(new Date().toISOString(), true) + '\n' + items.map((x, i) => (i + 1) + '. Lô ' + x.l.lo + ' · Booking ' + (x.l.booking || '—') + '\n   Tàu ' + (x.l.ten_tau || '—') + ' · CLS ePort ' + fTs(x.l.closing_eport, true) + (x.l.closing_eport && x.l.closing && x.l.closing !== x.l.closing_eport ? ' (CLS dùng ' + fTs(x.l.closing, true) + ')' : x.l.closing_eport ? '' : ' · CLS ' + fTs(x.l.closing, true)) + '\n   Hạ cảng 还柜: ' + (x.l.cang_ha || (x.l.eport_cang ? (x.l.eport_cang === 'SPITC' ? 'SPITC' : 'Cát Lái') + ' (theo ePort)' : 'theo booking')) + '\n' +
+    x.cs.map(c => '   - ' + (c.so_cont || '—') + ' · Seal ' + (c.so_seal || '—') + ' · Bãi ' + (c.bai_tam || '—')).join('\n')).join('\n');
+}
+function vHaCang() {
+  const items = haCangLots(S.hcAll);
+  const head = '<div class="chips"><label class="chk"><input type="checkbox" data-on="hc-all"' + (S.hcAll ? ' checked' : '') + '>' + esc(T1('Xem mọi lô đã kiểm dịch đang ở bãi (không chỉ CLS trong ' + HC_GIO + ' giờ)', '显示全部已检疫在堆场批次')) + '</label><span class="muted" style="font-size:13px">' + items.length + ' ' + esc(T1('lô', '批')) + ' · ' + items.reduce((a, x) => a + x.cs.length, 0) + ' cont</span><span style="flex:1"></span>' +
+    (items.length ? '<button class="btn btn-pri btn-sm" data-act="copy-hc">' + esc(S.copied === 'hc' ? T('copied') : T1('Chép gửi quản lý bãi', '复制发给堆场')) + '</button>' : '') + (canWrite() ? eportBtn() : '') + '</div>' +
+    '<div class="msg">' + esc(T1('Lô đã kiểm dịch xong (1 cont kiểm dịch đạt = cả lô đạt), đang ở bãi tạm, CLS còn ≤ ' + HC_GIO + ' giờ → cần kéo hạ cảng.', '批次已检疫完（一个检疫柜通过=整批通过），在堆场，截关≤' + HC_GIO + '小时 → 需回港。')) + '</div>';
+  if (!items.length) return '<div class="stack" style="gap:14px">' + head + '<div class="empty">' + esc(T1('Chưa có lô nào cần kéo hạ cảng.', '暂无需回港批次。')) + '</div></div>';
+  return '<div class="stack" style="gap:14px">' + head + '<div class="g2" style="align-items:start">' + items.map(x => '<section class="tbl"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + x.l.lo) + '</h2>' + clChip(x.l.closing) + '<span class="muted" style="font-size:12px">' + esc(x.l.booking || '') + '</span></div>' +
+    '<div class="kv" style="padding:6px 16px 10px;font-size:13px"><span>' + esc(T('vessel')) + '</span><span>' + esc(x.l.ten_tau || '—') + (x.l.eport_chuyen ? ' <span class="muted">(ePort ' + esc(x.l.eport_chuyen) + ')</span>' : '') + '</span><span>' + esc(T('clsEport')) + '</span><span><b>' + fTs(x.l.closing_eport, true) + '</b>' + (x.l.closing_eport && x.l.eport_cang ? ' <span class="muted">' + esc(eportCang(x.l)) + '</span>' : '') + '</span><span>' + esc(T('clsUse')) + '</span><span>' + fTs(x.l.closing, true) + '</span><span>' + esc(T('portDrop')) + '</span><span>' + esc(cangHa(x.l)) + '</span></div>' +
+    x.cs.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 70px 110px">' + contBtn(c) + '<span class="mono" style="font-size:12px">' + esc(c.so_seal || '—') + '</span><span style="font-weight:700;color:var(--teal-ink)">' + esc(c.bai_tam || '—') + '</span>' + nextBtn(c) + '</div>').join('') + '</section>').join('') + '</div></div>';
+}
+function eportBtn() {
+  return '<button class="btn btn-sm" data-act="eport-run"' + (S.eportRunning ? ' disabled' : '') + '>' + ico('refresh', 14) + esc(S.eportRunning ? T1('Đang tra ePort…', 'ePort查询中…') : T('eportBtn')) + '</button>';
+}
+async function runEport() {
+  if (S.eportRunning) return; S.eportRunning = true; renderMain();
+  try {
+    const g = await q(sb.rpc('eport_gui_yeu_cau'));
+    toast(T1('Đang tra ' + g.data + ' tàu trên ePort…', '正在查询 ' + g.data + ' 艘船…'));
+    let kq = null;
+    for (let i = 0; i < 4; i++) { await new Promise(r => setTimeout(r, i ? 5000 : 7000)); const r = await q(sb.rpc('eport_xu_ly_ket_qua')); kq = r.data; if (!kq || !kq.con_cho) break; }
+    await loadData(); toast(T1('Đã cập nhật CLS ePort: ' + (kq ? kq.lo_thay_doi : 0) + ' lô thay đổi', 'ePort截关已更新'));
+  } catch (e) { toast(errMsg(e), true); }
+  S.eportRunning = false; renderMain(); renderNavCounts();
+}
+
+function kdtvBtn() {
+  return '<button class="btn btn-sm" data-act="kdtv-sync"' + (S.kdtvRunning ? ' disabled' : '') + '>' + ico('refresh', 14) + esc(S.kdtvRunning ? T1('Đang cập nhật KDTV…', '更新检疫单号中…') : T('kdtvBtn')) + '</button>';
+}
+async function runKdtvSync() {
+  if (S.kdtvRunning) return;
+  const url = (S.cauhinh['URL đồng bộ KDTV'] || '').trim();
+  if (!url) { toast(T('kdtvNoUrl'), true); return; }
+  S.kdtvRunning = true; renderMain();
+  try {
+    // GET đơn giản (không header tuỳ biến) để tránh CORS preflight với Apps Script Web App
+    const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+    const txt = await res.text();
+    let kq; try { kq = JSON.parse(txt); } catch (e) { throw new Error(T1('Web App trả về không phải JSON — kiểm tra deploy/quyền truy cập', 'Web App返回非JSON')); }
+    if (!kq || kq.ok !== true) throw new Error(kq && kq.loi ? kq.loi : T1('Web App báo lỗi', 'Web App报错'));
+    await loadData();
+    toast(T1('Đã cập nhật mã KDTV: ' + (kq.n || 0) + ' lô (đọc ' + (kq.doc != null ? kq.doc : '?') + ' dòng)', '检疫单号已更新: ' + (kq.n || 0) + ' 批'));
+    renderMain(); renderNavCounts();
+  } catch (e) { toast(T1('Lỗi cập nhật KDTV: ', '更新检疫单号出错: ') + errMsg(e), true); }
+  S.kdtvRunning = false; renderMain();
+}
+
+/* ---------------- LÔ ---------------- */
+const LO_SORTS = [['closing', ['Closing gần nhất', '截关时间']], ['thu_tu', ['Thứ tự tự đặt', '自定顺序']], ['lo', ['Số lô', '批次号']], ['etd', ['ETD', 'ETD']], ['booking', ['Booking', '订舱号']], ['hang_tau', ['Hãng tàu', '船公司']], ['so_luong', ['Số lượng cont', '柜数']], ['moi', ['Mới cập nhật', '最近更新']]];
+function loKey(l, k) {
+  if (k === 'closing') return l.closing ? +new Date(l.closing) : null;
+  if (k === 'etd') return l.etd || l.etd_kho || null;
+  if (k === 'moi') return l.cap_nhat_luc ? +new Date(l.cap_nhat_luc) : null;
+  if (k === 'so_luong') return l.so_luong_cont != null ? l.so_luong_cont : (l.so_cont || null);
+  if (k === 'thu_tu') return l.thu_tu != null ? l.thu_tu : null;
+  return l[k] == null || l[k] === '' ? null : l[k];
+}
+function sortLots(arr) {
+  const k = LO_SORT.k, d = LO_SORT.d;
+  return arr.sort((a, b) => {
+    const x = loKey(a, k), y = loKey(b, k);
+    if (x == null && y == null) return String(a.lo).localeCompare(String(b.lo), 'vi', { numeric:true });
+    if (x == null) return 1; if (y == null) return -1;   // ô trống luôn nằm cuối
+    const r = typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y), 'vi', { numeric:true });
+    return (r || String(a.lo).localeCompare(String(b.lo), 'vi', { numeric:true })) * d;
+  });
+}
+function setLoSort(k, d) { LO_SORT = { k, d }; try { localStorage.setItem('dd_lo_sort', JSON.stringify(LO_SORT)); } catch (e) {} renderMain(); }
+function sortHead(k, label, extra) {
+  const on = LO_SORT.k === k;
+  return '<button class="th-sort' + (on ? ' on' : '') + '" data-act="lo-sort" data-k="' + k + '"' + (extra || '') + ' title="' + esc(T1('Bấm để sắp xếp', '点击排序')) + '">' + esc(label) + (on ? (LO_SORT.d === 1 ? ' ▲' : ' ▼') : '') + '</button>';
+}
+function vLo() {
+  const arr = sortLots(Object.values(S.lots).filter(l => S.loHuy ? l.da_huy : (!l.da_huy && (!S.loOpen || l.so_cont_dang_chay > 0 || !l.so_cont))));
+  const nHuy = Object.values(S.lots).filter(l => l.da_huy).length;
+  const cols = '--cols:84px 150px minmax(160px,1fr) 54px 64px 150px 110px 86px 44px 52px 60px 70px;--minw:1150px';
+  const sortSel = '<label class="chk" style="gap:6px">' + esc(T1('Sắp xếp', '排序')) + '<select data-on="lo-sortk" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff">' + LO_SORTS.map(o => '<option value="' + o[0] + '"' + (LO_SORT.k === o[0] ? ' selected' : '') + '>' + esc(tr(o[1])) + '</option>').join('') + '</select></label>' +
+    '<button class="btn btn-sm" data-act="lo-dir" title="' + esc(T1('Đảo chiều', '反向')) + '">' + (LO_SORT.d === 1 ? esc(T1('Tăng dần ▲', '升序 ▲')) : esc(T1('Giảm dần ▼', '降序 ▼'))) + '</button>';
+  const cntCell = l => { const plan = l.so_luong_cont, have = l.so_cont || 0, thieu = plan != null && have < plan;
+    return '<span class="num" data-l="' + esc(T('conts')) + '">' + (l.so_cont_dang_chay || 0) + ' / ' + have + (plan != null ? '<span style="display:block;font-size:11px;' + (thieu ? 'color:#8A5A00;font-weight:600' : 'color:var(--muted)') + '">' + esc(T1('KH', '计划') + ' ' + plan + (thieu ? ' · ' + T1('thiếu', '缺') + ' ' + (plan - have) : '')) + '</span>' : '') + '</span>'; };
+  return '<div class="stack" style="gap:14px"><div class="chips"><label class="chk"><input type="checkbox" data-on="lo-open"' + (S.loOpen ? ' checked' : '') + '>' + esc(T('onlyOpen')) + '</label><label class="chk"><input type="checkbox" data-on="lo-huy"' + (S.loHuy ? ' checked' : '') + '>' + esc(T1('Xem lô đã hủy', '查看已取消批次')) + (nHuy ? ' (' + nHuy + ')' : '') + '</label><span class="muted" style="font-size:13px">' + arr.length + ' ' + esc(S.loHuy ? T1('lô đã hủy', '批已取消') : T('lotsOpen')) + '</span>' + sortSel + '<span style="flex:1"></span>' + (canWrite() ? kdtvBtn() : '') + (canWrite() ? eportBtn() : '') + (canWrite() ? '<button class="btn btn-pri" data-act="new-lo">' + ico('plus', 16) + esc(T('addLo')) + '</button>' : '') + '</div>' +
+    '<section class="tbl cards"><div class="tbl-x"><div class="tr th" style="' + cols + '">' + sortHead('lo', T('loCol')) + sortHead('booking', T('booking')) + sortHead('hang_tau', T('line')) + '<span>' + esc(T('pod')) + '</span>' + sortHead('etd', T('etd')) + sortHead('closing', T('closing')) + '<span>' + esc(T('left')) + '</span>' + sortHead('so_luong', T('conts')) + '<span style="text-align:center">' + esc(T('kdShort')) + '</span><span style="text-align:center">' + esc(T('eport')) + '</span><span style="text-align:center">' + esc(T('tl')) + '</span><span style="text-align:center">' + esc(T('allowPort')) + '</span></div>' +
+    (arr.length ? arr.map(l => '<div class="tr" style="' + cols + '"><span style="display:flex;align-items:center;gap:6px">' + (l.thu_tu != null ? '<span class="cnt-b" title="' + esc(T1('Thứ tự', '顺序')) + '">' + esc(l.thu_tu) + '</span>' : '') + '<button class="lk" style="font-weight:700' + (l.da_huy ? ';text-decoration:line-through;color:var(--red-ink)' : '') + '" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button>' + (l.dong_trong_ngay ? '<span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + '</span><span class="mono ell" style="font-size:12px">' + esc(l.booking || '—') + '</span><span class="ell">' + esc((l.hang_tau || '—') + (l.ten_tau ? ' · ' + l.ten_tau : '')) + '</span><span>' + esc(l.cang_den || '—') + '</span><span>' + fDate(l.etd || l.etd_kho) + '</span><span class="num">' + fTs(l.closing) + clsDetail(l) + (l.eport_ghi_chu ? '<span style="font-size:11px;color:var(--red-ink);display:block">' + esc(l.eport_ghi_chu) + '</span>' : '') + (nPortNoKd(l) ? '<span style="font-size:11px;font-weight:700;color:var(--red-ink);display:block">⚠ ' + esc(T1(nPortNoKd(l) + ' cont ở cảng khi chưa KD', '未检疫已回港')) + '</span>' : '') + '</span><span>' + clChip(l.closing) + '</span>' + cntCell(l) + '<span style="text-align:center">' + tick(l.da_kiem_dich) + '</span><span style="text-align:center">' + tick(l.da_khai_eport) + '</span><span style="text-align:center">' + tick(l.thanh_ly) + '</span><span style="text-align:center">' + tick(l.cho_keo_ha_cang) + '</span></div>').join('') : '<div class="muted" style="padding:20px">' + esc(T1('Chưa có lô nào.', '暂无批次。')) + '</div>') +
+    '</div></section></div>';
+}
+
+/* ---------------- TÌM CONT ---------------- */
+function vTim() {
+  return '<div class="stack" style="gap:14px"><div class="search" style="width:100%">' + ico('tim', 18, '#625C7A') + '<input type="search" id="bigq" aria-label="' + esc(T('searchPh')) + '" placeholder="' + esc(T('searchPh')) + '" value="' + esc(S.q) + '" style="height:50px;font-size:16px;background:#fff"></div><div id="results">' + vResults() + '</div></div>';
+}
+function vResults() {
+  if (!S.q || S.q.trim().length < 3) return '<div class="muted">' + esc(T('searchHint')) + '</div>';
+  if (S.searching && !S.results) return '<div class="muted">…</div>';
+  const r = S.results || [];
+  const cols = '--cols:140px 120px 60px 96px 110px minmax(160px,1fr) 150px 100px 70px;--minw:1050px';
+  return '<div class="muted" style="font-size:13px;margin-bottom:10px">' + esc(T('found')) + ' ' + r.length + (r.length >= 60 ? '+' : '') + '</div>' + (r.length ? '<section class="tbl cards"><div class="tbl-x"><div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('seal')) + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('madon')) + '</span><span>' + esc(T('kh')) + '</span><span>' + esc(T('kho')) + '</span><span>' + esc(T('status')) + '</span><span>' + esc(T('carrier')) + '</span><span>' + esc(T('den')) + '</span></div>' +
+    r.map(c => '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span class="mono faint" style="font-size:12px">' + esc(c.so_seal || '—') + '</span><span style="font-weight:600">' + esc(c.lo || '—') + '</span><span>' + esc(c.ma_don || '—') + '</span><span>' + esc(c.khach_hang || '—') + '</span><span class="ell">' + esc(c.kho || '—') + '</span><span>' + stPill(c.trang_thai) + '</span><span>' + esc(c.nha_xe || '—') + '</span><span>' + fDate(c.ngay_den_kho) + '</span></div>').join('') + '</div></section>' : '');
+}
+let _sq;
+function doSearch() {
+  clearTimeout(_sq);
+  _sq = setTimeout(async () => {
+    const qq = S.q.trim().replace(/[,()%*\\"']/g, ' ').trim();
+    if (qq.length < 3) { S.results = null; const el = document.getElementById('results'); if (el) el.innerHTML = vResults(); return; }
+    S.searching = true;
+    try {
+      const pat = '%' + qq + '%';
+      const r = await q(sb.from('cont').select('id,so_cont,so_seal,lo,ma_don,khach_hang,kho,trang_thai,nha_xe,ngay_den_kho').or(['so_cont', 'so_seal', 'lo', 'ma_don', 'kho', 'khach_hang'].map(f => f + '.ilike.' + pat).join(',')).order('ngay_goi_cont', { ascending:false, nullsFirst:false }).limit(60));
+      S.results = r.data;
+    } catch (e) { toast(errMsg(e), true); }
+    S.searching = false;
+    const el = document.getElementById('results'); if (el) el.innerHTML = vResults();
+  }, 300);
+}
+
+/* ---------------- DANH MỤC ---------------- */
+function vNhatKy() {
+  const opts = [['', T1('Tất cả', '全部')]].concat(Object.keys(NK_BANG).map(k => [k, tr(NK_BANG[k])]));
+  return '<div class="chips"><label class="chk" style="gap:6px">' + esc(T1('Loại dữ liệu', '数据类型')) + '<select data-on="nk-bang" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff">' + opts.map(o => '<option value="' + o[0] + '"' + ((S.nkBang || '') === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select></label><span class="muted" style="font-size:12px">' + esc(T1('200 thay đổi gần nhất · không ai sửa hay xoá được nhật ký', '最近200条 · 日志不可修改或删除')) + '</span></div>' +
+    '<section class="card" id="nk-all"><div class="muted">…</div></section>';
+}
+async function loadNhatKy() {
+  const box = document.getElementById('nk-all'); if (!box) return;
+  box.innerHTML = '<div class="muted">…</div>';
+  try {
+    let qq = sb.from('nhat_ky').select('*').order('luc', { ascending:false }).limit(200);
+    if (S.nkBang) qq = qq.eq('bang', S.nkBang);
+    const r = await q(qq);
+    box.innerHTML = r.data.length ? r.data.map(x => nkLine(x, true)).join('') : '<div class="muted">' + esc(T1('Chưa có thay đổi nào.', '暂无记录。')) + '</div>';
+  } catch (e) { box.innerHTML = '<div class="msg err">' + esc(errMsg(e)) + '</div>'; }
+}
+function dmInp(name, val, ph, dis, type) { return '<input name="' + name + '"' + (type ? ' type="' + type + '"' : '') + ' value="' + esc(val == null ? '' : val) + '" placeholder="' + esc(ph || '') + '"' + (dis ? ' disabled' : '') + ' style="height:36px;padding:0 8px;border-radius:8px;border:1px solid #D8D2EE;width:100%;min-width:0">'; }
+function dmChk(name, val, dis) { return '<label class="chk" style="justify-content:center"><input type="checkbox" name="' + name + '"' + (val !== false ? ' checked' : '') + (dis ? ' disabled' : '') + '></label>'; }
+function dmDel(kind, key) { return '<button type="button" class="x-btn" data-act="dm-del" data-kind="' + kind + '" data-key="' + esc(key) + '" title="' + esc(T('delete')) + '" aria-label="' + esc(T('delete')) + '">' + ico('x', 12) + '</button>'; }
+const GIA_LOAI = [['dong_trong_ngay', 'dongNgay'], ['cat_mooc', ['Cắt mooc', '甩挂']], ['rut_mooc', ['Rút mooc', '拉满柜']], ['doi_rong', ['Đổi rỗng kéo đầy', '换空拉满']]];
+function khuVucList() { const s = new Set(['Tất cả']); S.kho.forEach(k => { if (k.khu_vuc) s.add(k.khu_vuc); }); S.giacuoc.forEach(g => s.add(g.khu_vuc)); return Array.from(s); }
+function vDanhMuc() {
+  if (['nv', 'nk', 'don'].indexOf(S.dmTab) > -1 && !isAdmin()) S.dmTab = 'nhaxe';
+  const tabs = [['nhaxe', 'nhaxeTab'], ['kho', 'khoTab'], ['bai', 'baiTab'], ['gia', 'giaTab']].concat(isAdmin() ? [['nv', 'nvTab'], ['don', 'donTab'], ['nk', 'nkTab']] : []);
+  const tabBar = '<div class="chips">' + tabs.map(t => '<button class="chip" data-act="dm-tab" data-v="' + t[0] + '" aria-pressed="' + (S.dmTab === t[0]) + '">' + esc(T(t[1])) + '</button>').join('') + '</div>';
+  if (S.dmTab === 'nk') return '<div class="stack" style="gap:14px">' + tabBar + vNhatKy() + '</div>';
+  if (S.dmTab === 'don') return '<div class="stack" style="gap:14px">' + tabBar + '<div id="don-box"><div class="muted">…</div></div></div>';
+  let body = '', note = '';
+  if (S.dmTab === 'nhaxe') {
+    const ro = !canCat();
+    const cols = '--cols:120px minmax(160px,1fr) 150px 150px minmax(120px,1fr) 70px 80px 40px;--minw:980px';
+    note = T1('Quản lý, Điều độ, CSKH được thêm / xoá nhà xe. Nhà xe đã có cont thì chỉ chuyển “ngưng dùng” để giữ lịch sử.', '管理、调度、客服可增删车队；已有记录的车队只会停用。');
+    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('carrier')) + '</span><span>' + esc(T('fullName')) + '</span><span>' + esc(T('coord')) + '</span><span>' + esc(T('zaloPhone')) + '</span><span>' + esc(T('note')) + '</span><span style="text-align:center">' + esc(T('active')) + '</span><span></span><span></span></div>' +
+      S.nhaxe.concat(ro ? [] : [{ _new:true }]).map(n => '<form class="tr" style="' + cols + (n.hoat_dong === false ? ';opacity:.55' : '') + '" data-form="nhaxe" data-key="' + esc(n.ma || '') + '">' + (n._new ? dmInp('ma', '', T('add') + '…') : '<b>' + esc(n.ma) + '</b>') + dmInp('ten_day_du', n.ten_day_du, '', ro) + dmInp('nguoi_dieu_phoi', n.nguoi_dieu_phoi, '', ro) + dmInp('sdt_zalo', n.sdt_zalo, '09…', ro) + dmInp('ghi_chu', n.ghi_chu, '', ro) + dmChk('hoat_dong', n.hoat_dong, ro) + (ro ? '<span></span>' : '<button class="btn btn-sm" type="submit">' + esc(n._new ? T('add') : T('save')) + '</button>') + (!ro && !n._new ? dmDel('nhaxe', n.ma) : '<span></span>') + '</form>').join('');
+  } else if (S.dmTab === 'kho') {
+    const ro = !canWrite(), addOk = canKho();
+    const cols = '--cols:minmax(180px,1.4fr) 130px 120px 110px 130px 120px minmax(120px,1fr) 70px 80px 40px;--minw:1300px';
+    note = T1('Quản lý, CSKH được thêm / xoá kho (Điều độ được sửa thông tin). Kho đã có cont thì chỉ chuyển “ngưng dùng”. Nhớ điền khu vực để máy ghép đổi rỗng kéo đầy.', '管理、客服可增删仓库；请填写区域以便配对。');
+    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('kho')) + '</span><span>' + esc(T('area')) + '</span><span>' + esc(T('mainCust')) + '</span><span>' + esc(T('cnName')) + '</span><span>' + esc(T('contact')) + '</span><span>' + esc(T('phone')) + '</span><span>' + esc(T('map')) + '</span><span style="text-align:center">' + esc(T('active')) + '</span><span></span><span></span></div>' +
+      S.kho.concat(addOk ? [{ _new:true }] : []).map(k => '<form class="tr" style="' + cols + (k.hoat_dong === false ? ';opacity:.55' : '') + '" data-form="kho" data-key="' + esc(k.ten || '') + '">' + (k._new ? dmInp('ten', '', T('add') + '…') : '<b class="ell" title="' + esc(k.ten) + '">' + esc(k.ten) + '</b>') + dmInp('khu_vuc', k.khu_vuc, '', ro) + dmInp('khach_hang_chinh', k.khach_hang_chinh, '', ro) + dmInp('ten_tq', k.ten_tq, '', ro) + dmInp('nguoi_lien_he', k.nguoi_lien_he, '', ro) + dmInp('sdt', k.sdt, '', ro) + dmInp('google_map', k.google_map, 'https://maps…', ro) + dmChk('hoat_dong', k.hoat_dong, ro || !addOk) + (ro ? '<span></span>' : '<button class="btn btn-sm" type="submit">' + esc(k._new ? T('add') : T('save')) + '</button>') + (addOk && !k._new ? dmDel('kho', k.ten) : '<span></span>') + '</form>').join('');
+  } else if (S.dmTab === 'bai') {
+    const ro = !isAdmin();
+    const cols = '--cols:80px minmax(160px,1fr) 130px 130px 150px minmax(120px,1fr) 80px;--minw:960px';
+    note = T1('Giá bãi do Quản lý nhập. Điện tính theo giờ thực tế; nâng hạ tính 1 lần khi hạ vào bãi; vận chuyển hạ cảng mỗi bãi 1 giá.', '堆场价格由管理员填写。');
+    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T1('Mã', '代码')) + '</span><span>' + esc(T1('Tên bãi', '堆场名')) + '</span><span>' + esc(T1('Điện / giờ', '电费/小时')) + '</span><span>' + esc(T('nangHa')) + '</span><span>' + esc(T('haCangFee')) + '</span><span>' + esc(T('note')) + '</span><span></span></div>' +
+      S.bai.concat(ro ? [] : [{ _new:true }]).map(b => '<form class="tr" style="' + cols + '" data-form="bai" data-key="' + esc(b.ma || '') + '">' + (b._new ? dmInp('ma', '', T('add') + '…') : '<b>' + esc(b.ma) + '</b>') + dmInp('ten', b.ten, '', ro) + dmInp('dien_moi_gio', b.dien_moi_gio, '25000', ro, 'number') + dmInp('nang_ha', b.nang_ha, '600000', ro, 'number') + dmInp('trucking', b.trucking, '500000', ro, 'number') + dmInp('ghi_chu', b.ghi_chu, '', ro) + (ro ? '<span></span>' : '<button class="btn btn-sm" type="submit">' + esc(b._new ? T('add') : T('save')) + '</button>') + '</form>').join('');
+  } else if (S.dmTab === 'gia') {
+    const ro = !isAdmin();
+    const cols = '--cols:120px 160px repeat(4,120px) minmax(100px,1fr) 80px;--minw:1100px';
+    note = T1('Giá cước để máy ước tính chi phí và chọn nhà xe rẻ nhất cho cắt mooc / đóng trong ngày. Khu vực “Tất cả” = giá chung khi chưa có giá riêng khu vực. Chỉ Quản lý sửa được.', '运价用于估算费用并选择最便宜车队；“全部”为通用价。');
+    const rows = {}; S.giacuoc.forEach(g => { const k = g.nha_xe + '||' + g.khu_vuc; (rows[k] = rows[k] || { nha_xe:g.nha_xe, khu_vuc:g.khu_vuc, gia:{}, ghi_chu:g.ghi_chu }).gia[g.loai] = g.gia; });
+    const list = Object.values(rows).sort((a, b) => a.nha_xe.localeCompare(b.nha_xe) || a.khu_vuc.localeCompare(b.khu_vuc, 'vi'));
+    const sel = (name, val, opts) => '<select name="' + name + '" style="height:36px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;width:100%">' + opts.map(o => '<option value="' + esc(o) + '"' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
+    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('carrier')) + '</span><span>' + esc(T('area')) + '</span>' + GIA_LOAI.map(x => '<span>' + esc(Array.isArray(x[1]) ? tr(x[1]) : T(x[1])) + '</span>').join('') + '<span>' + esc(T('note')) + '</span><span></span></div>' +
+      list.concat(ro ? [] : [{ _new:true, gia:{} }]).map(r => '<form class="tr" style="' + cols + '" data-form="gia" data-key="' + esc(r._new ? '' : r.nha_xe + '||' + r.khu_vuc) + '">' + (r._new ? sel('nha_xe', '', nxActive().map(n => n.ma)) + sel('khu_vuc', 'Tất cả', khuVucList()) : '<b>' + esc(r.nha_xe) + '</b><span class="ell">' + esc(r.khu_vuc) + '</span>') + GIA_LOAI.map(x => dmInp('g_' + x[0], r.gia[x[0]], '', ro, 'number')).join('') + dmInp('ghi_chu', r.ghi_chu, '', ro) + (ro ? '<span></span>' : '<button class="btn btn-sm" type="submit">' + esc(r._new ? T('add') : T('save')) + '</button>') + '</form>').join('');
+  } else {
+    const cols = '--cols:minmax(200px,1.3fr) 150px 130px 110px 120px 70px 80px 40px;--minw:1000px';
+    const sel = (name, val, opts) => '<select name="' + name + '" style="height:36px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;width:100%">' + opts.map(o => '<option value="' + esc(o[0]) + '"' + (o[0] === (val || '') ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select>';
+    note = T1('Người mới: thêm email ở đây, rồi họ mở trang web và bấm “Tạo tài khoản” bằng đúng email đó. Nhân viên nghỉ: bấm ✕ để xoá hẳn email và tài khoản đăng nhập.', '新同事：先添加邮箱再注册；离职：点 ✕ 删除邮箱和账号。');
+    const me = (S.me && S.me.email || '').toLowerCase();
+    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('email')) + '</span><span>' + esc(T('name')) + '</span><span>' + esc(T('role')) + '</span><span>' + esc(T('langCol')) + '</span><span>' + esc(T('carrier')) + '</span><span style="text-align:center">' + esc(T('active')) + '</span><span></span><span></span></div>' +
+      S.nhanvien.concat([{ _new:true, vai_tro:'Điều độ', ngon_ngu:'vi', hoat_dong:true }]).map(v => '<form class="tr" style="' + cols + '" data-form="nv" data-key="' + esc(v.email || '') + '">' + (v._new ? dmInp('email', '', 'ten@gmail.com') : '<b class="ell">' + esc(v.email) + '</b>') + dmInp('ho_ten', v.ho_ten) + sel('vai_tro', v.vai_tro, [['Quản lý', 'Quản lý'], ['Điều độ', 'Điều độ'], ['CSKH', 'CSKH'], ['Nhà xe', 'Nhà xe'], ['Chỉ xem', 'Chỉ xem']]) + sel('ngon_ngu', v.ngon_ngu, [['vi', 'Tiếng Việt'], ['zh', '中文'], ['both', 'VI + 中']]) + sel('nha_xe', v.nha_xe, [['', '—']].concat(nxActive(v.nha_xe).map(n => [n.ma, n.ma]))) + dmChk('hoat_dong', v.hoat_dong) + '<button class="btn btn-sm" type="submit">' + esc(v._new ? T('add') : T('save')) + '</button>' + (!v._new && v.email !== me ? dmDel('nv', v.email) : '<span></span>') + '</form>').join('');
+  }
+  return '<div class="stack" style="gap:14px">' + tabBar + (note ? '<div class="msg">' + esc(note) + '</div>' : '') + '<section class="tbl"><div class="tbl-x">' + body + '</div></section></div>';
+}
+async function loadDon() {
+  const box = document.getElementById('don-box'); if (!box) return;
+  box.innerHTML = '<div class="muted">…</div>';
+  try {
+    const [d, sl, dd] = await Promise.all([q(sb.rpc('lo_co_the_don')), q(sb.from('sao_luu_nhat_ky').select('*').order('luc', { ascending:false }).limit(1)), q(sb.from('lo_da_don').select('lo', { count:'exact', head:true }))]);
+    S.donList = d.data || []; const last = sl.data[0];
+    const ngay = S.cauhinh['Số ngày sau ETD được dọn dữ liệu'] || '90';
+    box.innerHTML = '<div class="stack" style="gap:12px"><div class="msg">' + esc(T1('Lô được gợi ý xoá khỏi Supabase: mọi cont đã lên tàu / hủy, ETD quá ' + ngay + ' ngày, và đã có bản sao lưu trên Google Drive sau lần sửa cuối. Dữ liệu vẫn nằm trong file sao lưu.', '建议清理：全部已登船/取消、ETD超过' + ngay + '天且已备份的批次。')) + '</div>' +
+      '<div class="kv" style="font-size:13px"><span>' + esc(T1('Bản sao lưu gần nhất', '最近备份')) + '</span><span>' + (last ? (last.url ? '<a href="' + esc(last.url) + '" target="_blank" rel="noopener">' + esc(last.ten) + '</a>' : esc(last.ten)) + ' · ' + fTs(last.luc, true) : '—') + '</span><span>' + esc(T1('Đã dọn trước đây', '已清理')) + '</span><span>' + (dd.count || 0) + ' ' + esc(T1('lô', '批')) + '</span></div>' +
+      (S.donList.length ? '<div class="chips"><label class="chk"><input type="checkbox" data-on="don-all" checked>' + esc(T1('Chọn tất cả', '全选')) + '</label><span class="muted" style="font-size:13px">' + S.donList.length + ' ' + esc(T1('lô · ', '批 · ')) + S.donList.reduce((a, x) => a + (+x.so_cont || 0), 0) + ' cont</span><span style="flex:1"></span><button class="btn btn-danger" data-act="don-run">' + esc(T1('Xoá các lô đã chọn khỏi Supabase', '从Supabase删除所选批次')) + '</button></div>' +
+        '<section class="tbl"><div class="tbl-x">' + '<div class="tr th" style="--cols:40px 80px 160px minmax(160px,1fr) 90px 60px 200px;--minw:860px"><span></span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('booking')) + '</span><span>' + esc(T('vessel')) + '</span><span>ETD</span><span>Cont</span><span>' + esc(T1('Sao lưu', '备份')) + '</span></div>' +
+        S.donList.map(x => '<label class="tr" style="--cols:40px 80px 160px minmax(160px,1fr) 90px 60px 200px;--minw:860px"><input type="checkbox" class="don-cb" value="' + esc(x.lo) + '" checked><b>' + esc(x.lo) + '</b><span class="mono ell" style="font-size:12px">' + esc(x.booking || '—') + '</span><span class="ell">' + esc(x.ten_tau || '—') + '</span><span>' + fDate(x.etd, true) + '</span><span class="num">' + x.so_cont + '</span><span class="muted ell" style="font-size:12px">' + esc(x.ban_sao_luu || '') + '</span></label>').join('') + '</div></section>'
+      : '<div class="empty">' + esc(T1('Chưa có lô nào đủ điều kiện dọn.', '暂无可清理批次。')) + '</div>') + '</div>';
+  } catch (e) { box.innerHTML = '<div class="msg err">' + esc(errMsg(e)) + '</div>'; }
+}
+
+/* ---------------- NGĂN KÉO: CONT ---------------- */
+function opt(list, val, blank) { return (blank ? '<option value="">—</option>' : '') + list.map(o => '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(val == null ? '' : val) ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join(''); }
+function fIn(label, name, val, type, extra) { return '<label class="field">' + esc(label) + '<input name="' + name + '" type="' + (type || 'text') + '" value="' + esc(val == null ? '' : val) + '"' + (extra || '') + (canWrite() ? '' : ' disabled') + '></label>'; }
+function fSel(label, name, opts, extra) { return '<label class="field">' + esc(label) + '<select name="' + name + '"' + (extra || '') + (canWrite() ? '' : ' disabled') + '>' + opts + '</select></label>'; }
+function fChk(label, name, val) { return '<label class="field chkf"><input type="checkbox" name="' + name + '"' + (val ? ' checked' : '') + (canWrite() ? '' : ' disabled') + '>' + esc(label) + '</label>'; }
+function drawerFrame(title, sub, body, formId) {
+  return '<div class="drawer-wrap"><button class="close-area" data-act="close-drawer" aria-label="' + esc(T('close')) + '"></button><aside class="drawer" role="dialog" aria-label="' + esc(title) + '"><div class="drawer-h"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">' + title + sub + '</div><button class="x-btn" data-act="close-drawer" aria-label="' + esc(T('close')) + '">' + ico('x', 16) + '</button></div>' +
+    '<form class="drawer-b" id="' + formId + '" data-form="' + formId + '">' + body + '</form>' +
+    (canWrite() ? '<div class="drawer-f"><button class="btn" data-act="close-drawer">' + esc(T('cancel')) + '</button><button class="btn btn-pri" type="submit" form="' + formId + '" id="save-btn">' + esc(T('save')) + '</button></div>' : '') + '</aside></div>';
+}
+const CP_LOAI = ['PTI', 'Đổi seal', 'Sửa chữa', 'Lưu bãi', 'Lưu cont', 'Khác'];
+function chiPhiBlock(c) {
+  const k = baiCost(c), items = S.chiphi[c.id] || [];
+  return '<div class="sec" style="border:1px solid var(--line);border-radius:10px;padding:14px"><h3>' + esc(T1('Chi phí bãi & phát sinh', '堆场及其他费用')) + '</h3>' +
+    (c.bai_tam ? '<div class="kv" style="font-size:13px"><span>' + esc(T('bai')) + '</span><span><b>' + esc(c.bai_tam) + '</b>' + (k.gio !== null ? ' · ' + k.gio + ' ' + esc(T('hours')) : '') + '</span><span>' + esc(T1('Tiền điện', '电费')) + '</span><span>' + money(k.dien) + '</span><span>' + esc(T('nangHa')) + '</span><span>' + money(k.nang) + '</span><span>' + esc(T('haCangFee')) + '</span><span>' + money(k.hacang) + '</span></div>' : '') +
+    (items.length ? '<div class="tbl" style="margin-top:8px">' + items.map(r => '<div class="tr" style="--cols:100px 110px minmax(0,1fr) 40px"><span>' + esc(r.loai) + '</span><span class="num">' + money(r.so_tien) + '</span><span class="muted ell" style="font-size:12px">' + esc(r.ghi_chu || '') + ' · ' + esc((r.tao_boi || '').split('@')[0]) + '</span>' + (isAdmin() ? '<button type="button" class="x-btn" data-act="cp-del" data-id="' + r.id + '" data-cont="' + esc(c.id) + '" aria-label="' + esc(T('delete')) + '">' + ico('x', 12) + '</button>' : '<span></span>') + '</div>').join('') + '</div>' : '') +
+    '<div class="muted" style="font-size:13px;margin-top:6px">' + esc(T('phatSinh')) + ': <b style="color:var(--ink)">' + money(k.ps) + '</b> · ' + esc(T('tongCP')) + ': <b style="color:var(--ink)">' + money(k.tong) + '</b></div>' +
+    (canWrite() ? '<div class="grid3" style="margin-top:8px;align-items:end"><label class="field">' + esc(T1('Loại phát sinh', '费用类型')) + '<select id="cp-loai">' + CP_LOAI.map(x => '<option>' + esc(x) + '</option>').join('') + '</select></label><label class="field">' + esc(T1('Số tiền', '金额')) + '<input id="cp-tien" type="number" min="0" step="1000"></label><label class="field">' + esc(T('note')) + '<input id="cp-ghichu" type="text"></label></div><div style="margin-top:8px"><button type="button" class="btn btn-sm" data-act="cp-add" data-cont="' + esc(c.id) + '">' + ico('plus', 14) + esc(T1('Thêm phát sinh', '添加费用')) + '</button></div>' : '') + '</div>';
+}
+function openCont(c) {
+  const isNew = !c.id, l = lotOf(c) || {};
+  const st = c.trang_thai || '1', order = ['1', '2', '3', '4', '5', '6'], idx = order.indexOf(st), nx = NEXT[st];
+  const title = isNew ? '<b style="font-size:20px;color:var(--pri-ink)">' + esc(T('newCont')) + '</b>' : '<span class="mono" style="font-size:22px">' + esc(c.so_cont || T('noCont')) + '</span>';
+  const sub = isNew ? '' : '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + stPill(st) + '<span class="muted" style="font-size:13px">' + esc(c.kho || '') + '</span></div>';
+  const lots = Object.keys(S.lots).sort().reverse().map(k => [k, k]);
+  if (c.lo && !S.lots[c.lo]) lots.unshift([c.lo, c.lo]);
+  const body =
+    (isNew ? '' : '<div class="steps">' + order.map((k, i) => '<div class="step' + (i < idx ? ' done' : i === idx ? ' cur' : '') + '"><b>' + (i + 1) + '</b>' + esc(stLabel(k)) + '</div>').join('') + '</div>' +
+      (nx && canWrite() ? (stBlock(c, l, nx[0]) ? '<div><button type="button" class="btn" disabled data-next-block>' + esc(T('nextStep') + ': ' + T(nx[1])) + '</button> <span style="font-size:12px;color:var(--red-ink)">' + esc(stBlock(c, l, nx[0])) + '</span></div>'
+        : '<button type="button" class="btn btn-pri" data-act="move" data-id="' + esc(c.id) + '" data-to="' + nx[0] + '">' + esc(T('nextStep') + ': ' + T(nx[1])) + ' →</button>') : '') +
+      (canWrite() && st === '3' && !stBlock(c, l, '5') ? ' <button type="button" class="btn" style="border-color:var(--teal);color:var(--teal-ink)" data-act="move" data-id="' + esc(c.id) + '" data-to="5" data-ha-thang>' + esc(T1('Hạ thẳng cảng (CLS ≤ ' + gioHaThang() + 'h)', '直接回港')) + ' →</button>' : '')) +
+    '<div class="sec"><h3>' + esc(T('containerTank')) + '</h3><div class="grid2">' +
+      fIn(T('cont'), 'so_cont', c.so_cont, 'text', ' autocapitalize="characters" style="font-family:var(--mono)"') + fIn(T('seal'), 'so_seal', c.so_seal) +
+      fSel(T('loCol'), 'lo', opt(lots, c.lo, true)) + fIn(T('madon'), 'ma_don', c.ma_don) +
+      fSel(T('kh'), 'khach_hang', opt(S.khachhang.map(x => [x.ten, x.ten]), c.khach_hang, true)) + fSel(T('kho'), 'kho', opt(khoActive(c.kho).map(x => [x.ten, x.ten]), c.kho, true)) +
+      fSel(T('status'), 'trang_thai', Object.keys(ST).map(k => { const b = isNew ? '' : stBlock(c, l, k); return '<option value="' + esc(k) + '"' + (k === st ? ' selected' : '') + (b ? ' disabled' : '') + '>' + esc(k + ' · ' + stLabel(k) + (b ? ' — ' + b : '')) + '</option>'; }).join('')) + fSel(T('carrier'), 'nha_xe', opt(nxActive(c.nha_xe).map(x => [x.ma, x.ma]), c.nha_xe, true)) +
+      fIn(T('truck'), 'so_xe', c.so_xe) + fIn(T('cskh'), 'cskh', c.cskh) +
+      fChk(T('needTem'), 'can_tem', c.can_tem) + (function () { const kc = kdCont(c.lo || l.lo); if (kc && kc.id !== c.id) return '<label class="field chkf" data-kd-lock><input type="checkbox" name="cont_kiem_dich" disabled>' + esc(T('kdCont')) + ' <span class="muted" style="font-size:11px">(' + esc(T1('lô đã có cont KD ', '本批已有检疫柜 ') + (kc.so_cont || kc.ma_don || '')) + ')</span></label>';
+        return fChk(T('kdCont'), 'cont_kiem_dich', c.cont_kiem_dich) + (c.cont_kiem_dich && l.da_kiem_dich ? '<span class="muted" style="font-size:11px">' + esc(T1('Bỏ dấu / hủy cont này → lô về chưa kiểm dịch', '取消后本批恢复未检疫')) + '</span>' : ''); })() +
+    '</div></div>' +
+    '<div class="sec"><h3>' + esc(T1('Thời gian', '时间')) + '</h3><div class="grid2">' +
+      fIn(T('callDate'), 'ngay_goi_cont', c.ngay_goi_cont || (isNew ? todayVN() : ''), 'date') + fIn(T('can'), 'ngay_can_len_kho', tsToInput(c.ngay_can_len_kho), 'datetime-local') +
+      fIn(T('gioGhiChu'), 'gio_len_kho_ghi_chu', c.gio_len_kho_ghi_chu) + fIn(T('den'), 'ngay_den_kho', c.ngay_den_kho, 'date') +
+      fIn(T('day'), 'du_kien_day', tsToInput(c.du_kien_day), 'datetime-local') + fSel(T('bai'), 'bai_tam', opt(S.bai.map(x => [x.ma, x.ma + ' · ' + (x.ten || '')]), c.bai_tam, true)) +
+      fIn(T('yardIn'), 'gio_vao_bai', tsToInput(c.gio_vao_bai), 'datetime-local') + fIn(T('yardOut'), 'gio_ra_bai', tsToInput(c.gio_ra_bai), 'datetime-local') +
+    '</div></div>' +
+    '<div class="sec"><h3>' + esc(T('money')) + '</h3><div class="grid3">' + fIn(T('price'), 'gia_bao', c.gia_bao, 'number', ' step="1000" min="0"') + fIn(T('surcharge'), 'phu_phi_xe', c.phu_phi_xe, 'number', ' step="1000" min="0"') + fIn(T('extra'), 'phi_phat_sinh', c.phi_phat_sinh, 'number', ' step="1000" min="0"') + '</div>' + (isNew ? '' : '<div class="muted" style="font-size:13px">' + esc(T('total')) + ': <b style="color:var(--ink)">' + money(c.tong_tien) + '</b></div>') + '</div>' +
+    '<label class="field">' + esc(T('note')) + '<textarea name="ghi_chu"' + (canWrite() ? '' : ' disabled') + '>' + esc(c.ghi_chu || '') + '</textarea></label>' +
+    (!isNew && (c.bai_tam || st >= '3') ? chiPhiBlock(c) : '') +
+    (l.lo ? '<div class="sec" style="background:var(--soft);border-radius:10px;padding:14px"><h3>' + esc(T('lotInfo')) + ' · <button type="button" class="lk" style="font-weight:700" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button></h3><div class="kv"><span>' + esc(T('booking')) + '</span><span class="mono" style="font-size:12px">' + esc(l.booking || '—') + '</span><span>' + esc(T('line')) + '</span><span>' + esc((l.hang_tau || '—') + (l.ten_tau ? ' · ' + l.ten_tau : '')) + '</span><span>' + esc(T('closing')) + '</span><span>' + fTs(l.closing, true) + ' ' + clChip(l.closing) + '</span><span>' + esc(T('etd')) + '</span><span>' + fDate(l.etd || l.etd_kho, true) + '</span><span>' + esc(T('kd') + ' / Eport / ' + T('tl')) + '</span><span>' + tick(l.da_kiem_dich) + ' ' + tick(l.da_khai_eport) + ' ' + tick(l.thanh_ly) + '</span></div></div>' : '') +
+    (!isNew ? historyBlock('cont', c.id) : '') +
+    (!isNew && isAdmin() && (st === '1' || st === '9' || cheDoThu()) ? '<div><button type="button" class="btn btn-danger" data-act="del-cont" data-id="' + esc(c.id) + '">' + esc(T1('Xoá đơn / cont này', '删除此订单/柜')) + '</button></div>' : '') +
+    (isNew ? '' : '<div class="faint" style="font-size:11px">ID ' + esc(c.id) + (c.cap_nhat_luc ? ' · ' + esc(T1('Cập nhật', '更新')) + ' ' + fTs(c.cap_nhat_luc, true) + (c.nguoi_cap_nhat ? ' · ' + esc(c.nguoi_cap_nhat) : '') : '') + (c.nguon ? ' · ' + esc(c.nguon) : '') + '</div>');
+  S.drawer = { kind:'cont', id:c.id || null };
+  document.getElementById('drawer').innerHTML = drawerFrame(title, sub, body, 'f-cont');
+}
+async function openContById(id) {
+  let c = S.conts.find(x => x.id === id);
+  if (!c) { try { const r = await q(sb.from('cont').select('*').eq('id', id).single()); c = r.data; if (c.lo && !S.lots[c.lo]) { const l = await q(sb.from('lo_tong_hop').select('*').eq('lo', c.lo)); if (l.data[0]) S.lots[c.lo] = normLot(l.data[0]); } } catch (e) { toast(errMsg(e), true); return; } }
+  openCont(c);
+}
+function openLo(l) {
+  const isNew = !l.lo, mine = isNew ? [] : S.conts.filter(c => c.lo === l.lo);
+  const title = '<b style="font-size:20px;color:var(--pri-ink)">' + esc(isNew ? T('newLo') : T('loCol') + ' ' + l.lo) + '</b>';
+  const sub = isNew ? '' : '<div style="display:flex;gap:8px;align-items:center">' + clChip(l.closing) + '<span class="muted" style="font-size:13px">' + esc((l.so_cont_dang_chay || 0) + ' / ' + (l.so_cont || 0) + ' cont') + '</span></div>';
+  const huyBanner = l.da_huy ? '<div class="msg err" style="display:flex;flex-direction:column;gap:8px"><b>' + esc(T1('Lô đã hủy', '批次已取消')) + '</b><span>' + esc(T1('Lý do', '原因') + ': ' + (l.ly_do_huy || '—')) + '</span><span style="font-size:12px">' + esc((l.huy_boi || '') + ' · ') + fTs(l.huy_luc, true) + '</span>' + (canPlan() ? '<div><button type="button" class="btn btn-sm" data-act="khoi-phuc-lo" data-lo="' + esc(l.lo) + '">' + esc(T1('Khôi phục lô', '恢复批次')) + '</button></div>' : '') + '</div>' : '';
+  const body = huyBanner +
+    '<div class="grid2">' + (isNew ? fIn(T('loCol') + ' *', 'lo', '', 'text', ' required') : '') + fIn(T('booking'), 'booking', l.booking) +
+      fSel(T('shipLine'), 'hang_tau', opt(S.hangtau.map(x => [x.ma, x.ma]), l.hang_tau, true)) + fIn(T('vessel'), 'ten_tau', l.ten_tau) +
+      fSel(T('pod'), 'cang_den', opt(S.cangden.map(x => [x.ma, x.ma + ' · ' + (x.ten_vn || '') + (x.ten_tq ? ' ' + x.ten_tq : '')]), l.cang_den, true)) + fSel(T('portDrop'), 'cang_ha', opt(S.cangha.map(x => [x.ten, x.ten]), l.cang_ha, true)) +
+      fIn(T('etdKho'), 'etd_kho', l.etd_kho, 'date') + fIn(T('etd'), 'etd', l.etd, 'date') + fIn(T('eta'), 'eta', l.eta, 'date') +
+      fIn(T('clsMail'), 'closing_mail', tsToInput(l.closing_mail), 'datetime-local') + fIn(T('clsTay'), 'closing', tsToInput(isNew ? l.closing : l.closing_tay), 'datetime-local') +
+      fIn(T('kdtv'), 'ma_don_kdtv', l.ma_don_kdtv) + fIn(T('tokhai'), 'so_to_khai', l.so_to_khai) + fIn(T('cskh'), 'cskh', l.cskh) +
+      fIn(T1('Số lượng cont', '柜数') + (isNew ? '' : ' (' + T1('đã có', '已有') + ' ' + (l.so_cont || 0) + ')'), 'so_luong_cont', l.so_luong_cont, 'number', ' min="0" max="200" step="1"') +
+      fIn(T1('Thứ tự (số nhỏ xếp trước)', '顺序（小的排前）'), 'thu_tu', l.thu_tu, 'number', ' step="1"') +
+    '</div>' +
+    (isNew && canWrite() ? '<div class="sec" style="background:var(--soft);border-radius:10px;padding:14px"><h3>' + esc(T1('Tạo sẵn đơn cont (chờ cắt rỗng)', '预建订单（待提空）')) + '</h3>' +
+      '<p class="muted" style="margin:0 0 4px;font-size:12px">' + esc(T1('Chọn Kho thì máy tạo sẵn đúng “Số lượng cont” dòng ở Tại kho → Chờ cắt rỗng, để gợi ý kế hoạch tính luôn. Để trống Kho nếu chưa biết — thêm sau cũng được.', '选择仓库后，系统按“柜数”自动建好待提空订单，计划建议会直接计算。未确定仓库可留空，之后再加。')) + '</p><div class="grid2">' +
+      fSel(T('kho'), 'd_kho', opt(khoActive().map(x => [x.ten, x.ten]), '', true)) + fSel(T('kh'), 'd_khach_hang', opt(S.khachhang.map(x => [x.ten, x.ten]), '', true)) +
+      fIn(T('madon'), 'd_ma_don', '') + fIn(T('can'), 'd_can', '', 'datetime-local') + '</div></div>' : '') +
+    (isNew ? '' : '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px"><div class="kv" style="font-size:13px"><span>' + esc(T('clsEport')) + '</span><span><b>' + fTs(l.closing_eport, true) + '</b>' + (l.eport_chuyen ? ' <span class="muted">· ' + esc((l.eport_cang ? eportCang(l) + ' · ' : '') + (l.eport_tau || '') + ' ' + l.eport_chuyen) + '</span>' : '') + (l.eport_ghi_chu ? '<span style="color:var(--red-ink);display:block">' + esc(l.eport_ghi_chu) + '</span>' : '') + '</span><span>' + esc(T('clsUse')) + '</span><span><b>' + fTs(l.closing, true) + '</b> <span class="muted" style="font-size:11px">' + esc(T1('(mail → ePort → nhập tay)', '（邮件→ePort→手填）')) + '</span></span></div><p class="muted" style="margin:6px 0 0;font-size:11px">' + esc(T1('CLS ePort tự cập nhật mỗi giờ theo tên tàu + số chuyến: tra ePort Cát Lái trước, không có thì tra SPITC (Hiệp Phước); mọi lô cùng tàu/chuyến được cập nhật cùng lúc.', 'ePort截关每小时按船名+航次自动更新：先查吉莱港ePort，没有再查SPITC（协福港）；同船同航次批次同时更新。')) + '</p></div>') +
+    '<div class="grid2">' + fChk(T('dongNgay') + ' ⚡', 'dong_trong_ngay', l.dong_trong_ngay) + '</div>' +
+    '<div class="grid2">' + fChk('Eport', 'da_khai_eport', l.da_khai_eport) + fChk(T('tl'), 'thanh_ly', l.thanh_ly) + '</div>' + (isNew ? '' : kdBlock(l)) +
+    '<label class="field">' + esc(T('note')) + '<textarea name="ghi_chu"' + (canWrite() ? '' : ' disabled') + '>' + esc(l.ghi_chu || '') + '</textarea></label>' +
+    (mine.length ? '<div class="sec"><h3>' + esc(T('contsOfLo')) + '</h3><div class="tbl">' + mine.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 140px">' + contBtn(c) + '<span class="ell">' + esc(c.kho || '—') + '</span><span>' + stPill(c.trang_thai) + '</span></div>').join('') + '</div></div>' : '') +
+    (canWrite() && !isNew && !l.da_huy ? '<button type="button" class="btn" data-act="new-cont" data-lo="' + esc(l.lo) + '">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') +
+    (!isNew ? historyBlock('lo', l.lo) : '') +
+    (!isNew && canPlan() && !l.da_huy ? '<div class="sec" style="border-top:1px solid var(--line);padding-top:14px"><h3>' + esc(T1('Hủy lô (không dùng nữa)', '取消批次（不再使用）')) + '</h3><p class="muted" style="margin:0;font-size:12px">' + esc(T1('Lô bị ẩn khỏi danh sách, các đơn chưa chạy chuyển sang “Hủy”, gợi ý liên quan bị bỏ. Có thể khôi phục lại. Lô đã có cont chạy thực tế thì không hủy được.', '批次将被隐藏，未执行订单转为“取消”，相关建议删除。可恢复。已实际运行的批次不能取消。')) + '</p>' +
+      '<label class="field">' + esc(T1('Lý do hủy *', '取消原因 *')) + '<input id="huy-ly-do" type="text" maxlength="200" placeholder="' + esc(T1('VD: khách hủy đơn, đổi booking…', '例：客户取消、换订舱…')) + '"></label><div><button type="button" class="btn btn-danger" data-act="huy-lo" data-lo="' + esc(l.lo) + '">' + esc(T1('Hủy lô', '取消批次')) + '</button></div></div>' : '') +
+    (isAdmin() && !isNew ? '<div class="sec" style="border-top:1px solid var(--line);padding-top:14px"><h3>' + esc(T1('Xoá hẳn (chỉ Quản lý)', '彻底删除（仅管理员）')) + '</h3><p class="muted" style="margin:0;font-size:12px">' + esc(cheDoThu() ? T1('CHẾ ĐỘ THỬ đang BẬT (Cấu hình): xoá được cả lô đã chạy tới kho / bãi / cảng / lên tàu. Dữ liệu bị xoá vẫn được lưu bản chụp trong Nhật ký. Khi chạy chính thức hãy Tắt.', '测试模式开启：可删除已运行批次。删除内容仍保留在日志中。') : T1('Chỉ dùng khi nhập nhầm / nhập thử. Dữ liệu bị xoá vẫn được lưu bản chụp trong Nhật ký. Chỉ xoá được khi các cont của lô còn ở “Chờ cắt rỗng” hoặc “Hủy”.', '仅用于录错/测试数据。删除内容仍保留在日志中。仅当柜子都处于“待提空”或“取消”时可删除。')) + '</p><div><button type="button" class="btn btn-danger" data-act="del-lo" data-lo="' + esc(l.lo) + '" data-n="' + (l.so_cont || 0) + '">' + esc(delLoLabel(l)) + '</button></div></div>' : '');
+  S.drawer = { kind:'lo', id:l.lo || null };
+  document.getElementById('drawer').innerHTML = drawerFrame(title, sub, body, 'f-lo');
+}
+function delLoLabel(l) { return l.so_cont ? T1('Xoá hẳn lô này + ' + l.so_cont + ' đơn', '彻底删除此批次及 ' + l.so_cont + ' 个订单') : T1('Xoá hẳn lô này', '彻底删除此批次'); }
+const NK_F = { lo:['Lô','批次'], booking:['Booking','订舱号'], hang_tau:['Hãng tàu','船公司'], ten_tau:['Tàu','船名'], cang_den:['Cảng đến','目的港'], etd_kho:['ETD kho','工厂ETD'], etd:['ETD','开船'], eta:['ETA','到港'], closing:['Closing','截关'], closing_mail:['Closing mail','邮件截关'], cang_ha:['Cảng hạ','还柜港'], da_kiem_dich:['Kiểm dịch','检疫'], da_khai_eport:['Eport','申报'], thanh_ly:['Thanh lý','清关'], cho_keo_ha_cang:['Cho kéo hạ cảng','可拉回港'], ma_don_kdtv:['Mã KDTV','检疫单号'], so_to_khai:['Số tờ khai','报关单号'], cskh:['CSKH','客服'], ghi_chu:['Ghi chú','备注'], so_luong_cont:['Số lượng cont','柜数'], thu_tu:['Thứ tự','顺序'], da_huy:['Đã hủy','已取消'], ly_do_huy:['Lý do hủy','取消原因'], huy_boi:['Hủy bởi','取消人'], huy_luc:['Hủy lúc','取消时间'], closing_eport:['CLS ePort','ePort截关'], eport_tau:['Tàu ePort','ePort船名'], eport_chuyen:['Chuyến ePort','ePort航次'], eport_cang:['Cảng ePort','ePort码头'], eport_ghi_chu:['Ghi chú ePort','ePort备注'], eport_luc:['Tra ePort lúc','ePort查询时间'],
+  ma_don:['Mã đơn','订单号'], khach_hang:['Khách hàng','客户'], kho:['Kho','仓库'], so_cont:['Số cont','柜号'], so_seal:['Số seal','封条号'], trang_thai:['Trạng thái','状态'], ngay_goi_cont:['Ngày gọi cont','订柜日期'], ngay_can_len_kho:['Cần lên kho','需到厂'], gio_len_kho_ghi_chu:['Giờ lên kho (ghi chú)','到厂时间备注'], ngay_den_kho:['Ngày đến kho','到厂日期'], du_kien_day:['Dự kiến đầy','预计装满'], can_tem:['Cần tem','需贴标'], cont_kiem_dich:['Cont kiểm dịch','检疫柜'], nha_xe:['Nhà xe','车队'], so_xe:['Số xe','车牌'], bai_tam:['Bãi tạm','堆场'], gio_vao_bai:['Giờ vào bãi','进场时间'], gio_ra_bai:['Giờ ra bãi','出场时间'], gia_bao:['Giá báo','报价'], phu_phi_xe:['Phụ phí xe','车队附加费'], tong_tien:['Tổng tiền','合计'], phi_phat_sinh:['Phí phát sinh','额外费用'], huy_theo_lo:['Hủy theo lô','随批次取消'], duyet:['Duyệt','确认'], nha_xe_chon:['Nhà xe chọn','选定车队'], da_ap_dung:['Đã chạy','已执行'],
+  ten:['Tên','名称'], khu_vuc:['Khu vực','区域'], sdt:['SĐT','电话'], sdt_zalo:['SĐT Zalo','Zalo'], nguoi_dieu_phoi:['Người điều phối','调度员'], ten_day_du:['Tên đầy đủ','全称'], vai_tro:['Vai trò','角色'], hoat_dong:['Hoạt động','启用'], ho_ten:['Họ tên','姓名'], gia_tri:['Giá trị','值'] };
+const NK_BANG = { lo:['Lô','批次'], cont:['Cont','柜子'], goi_y:['Gợi ý','建议'], kho:['Kho','仓库'], nha_xe:['Nhà xe','车队'], nhan_vien:['Nhân viên','员工'], cau_hinh:['Cấu hình','设置'], khach_hang:['Khách hàng','客户'], bai_tam:['Bãi tạm','堆场'], hang_tau:['Hãng tàu','船公司'], cang_den:['Cảng đến','目的港'], cang_ha:['Cảng hạ','还柜港'] };
+function nkVal(f, v) {
+  if (v == null || v === '') return '—';
+  if (typeof v === 'boolean') return v ? '✓' : '✗';
+  if (f === 'trang_thai') return stLabel(v);
+  if (['gia_bao', 'phu_phi_xe', 'tong_tien', 'phi_phat_sinh'].indexOf(f) > -1) return money(v);
+  if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(v)) return fTs(v, true);
+  if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return fDate(v, true);
+  return String(v);
+}
+function nkLine(r, showKey) {
+  const who = esc((r.nguoi || '').split('@')[0]), when = fTs(r.luc, true), d = r.thay_doi || {};
+  const head = '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline"><b style="font-size:12px">' + when + '</b><span class="muted" style="font-size:12px">' + who + '</span>' + (showKey ? '<span style="font-size:12px">' + esc(tr(NK_BANG[r.bang] || [r.bang])) + ' <b>' + esc(r.khoa) + '</b></span>' : '') + '</div>';
+  let body;
+  if (r.hanh_dong === 'them') body = '<span style="color:var(--teal-ink)">' + esc(T1('Tạo mới', '新建')) + '</span>';
+  else if (r.hanh_dong === 'xoa') body = '<span style="color:var(--red-ink)">' + esc(T1('Đã xoá hẳn', '已删除')) + '</span>' + (d.so_cont || d.booking ? ' <span class="muted">(' + esc([d.so_cont, d.booking].filter(Boolean).join(' · ')) + ')</span>' : '');
+  else body = Object.keys(d).map(f => '<div><span class="muted">' + esc(tr(NK_F[f] || [f])) + ':</span> ' + esc(nkVal(f, d[f][0])) + ' → <b>' + esc(nkVal(f, d[f][1])) + '</b></div>').join('');
+  return '<div style="padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;display:flex;flex-direction:column;gap:3px">' + head + body + '</div>';
+}
+async function loadHistory(bang, khoa, boxId) {
+  const box = document.getElementById(boxId); if (!box) return;
+  box.innerHTML = '<div class="muted">…</div>';
+  try {
+    const r = await q(sb.from('nhat_ky').select('*').eq('bang', bang).eq('khoa', khoa).order('luc', { ascending:false }).limit(100));
+    box.innerHTML = r.data.length ? r.data.map(x => nkLine(x)).join('') : '<div class="muted" style="font-size:13px">' + esc(T1('Chưa có thay đổi nào được ghi (dữ liệu nạp từ file cũ không có lịch sử).', '暂无记录（从旧文件导入的数据没有历史）。')) + '</div>';
+  } catch (e) { box.innerHTML = '<div class="msg err">' + esc(errMsg(e)) + '</div>'; }
+}
+function historyBlock(bang, khoa) {
+  return '<div class="sec"><button type="button" class="btn btn-sm" data-act="nk-load" data-bang="' + esc(bang) + '" data-khoa="' + esc(khoa) + '">' + esc(T1('Xem lịch sử thay đổi', '查看修改记录')) + '</button><div id="nk-box" style="margin-top:6px"></div></div>';
+}
+function closeDrawer() { S.drawer = null; document.getElementById('drawer').innerHTML = ''; }
+function openPw() {
+  S.navOpen = false; const a = document.getElementById('app'); if (a) a.classList.remove('nav-open');
+  S.drawer = { kind:'pw' };
+  const t = '<b style="font-size:20px;color:var(--pri-ink)">' + esc(T('pwChange')) + '</b>';
+  document.getElementById('drawer').innerHTML = '<div class="drawer-wrap"><button class="close-area" data-act="close-drawer" aria-label="' + esc(T('close')) + '"></button><aside class="drawer" role="dialog" aria-label="' + esc(T('pwChange')) + '"><div class="drawer-h"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">' + t + '<span class="muted" style="font-size:13px">' + esc((S.me && S.me.email) || '') + '</span></div><button class="x-btn" data-act="close-drawer" aria-label="' + esc(T('close')) + '">' + ico('x', 16) + '</button></div>' +
+    '<form class="drawer-b" id="f-pw" data-form="f-pw">' + pwField(T1('Mật khẩu mới', '新密码'), 'p1', 'new-password') + pwField(T1('Nhập lại mật khẩu mới', '再次输入新密码'), 'p2', 'new-password') +
+    '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Ít nhất 6 ký tự. Lần sau đăng nhập bằng mật khẩu mới này.', '至少6位。下次请用新密码登录。')) + '</p></form>' +
+    '<div class="drawer-f"><button class="btn" data-act="close-drawer">' + esc(T('cancel')) + '</button><button class="btn btn-pri" type="submit" form="f-pw" id="save-btn">' + esc(T('save')) + '</button></div></aside></div>';
+  const i = document.querySelector('#f-pw [name=p1]'); if (i) i.focus();
+}
+async function savePw(f) {
+  const p1 = f.p1.value, p2 = f.p2.value;
+  if (p1.length < 6) { toast(T1('Mật khẩu cần ít nhất 6 ký tự.', '密码至少6位。'), true); return; }
+  if (p1 !== p2) { toast(T1('Hai lần nhập không giống nhau.', '两次输入不一致。'), true); return; }
+  const btn = document.getElementById('save-btn'); if (btn) { btn.disabled = true; btn.textContent = T('saving'); }
+  try { const r = await sb.auth.updateUser({ password: p1 }); if (r.error) throw r.error; toast(T1('Đã đổi mật khẩu.', '密码已修改。')); closeDrawer(); }
+  catch (e) { const m = errMsg(e); toast(/different from the old/i.test(m) ? T1('Mật khẩu mới phải khác mật khẩu cũ.', '新密码不能与旧密码相同。') : m, true); if (btn) { btn.disabled = false; btn.textContent = T('save'); } }
+}
+
+/* ---------------- ghi dữ liệu ---------------- */
+function formObj(form) {
+  const o = {};
+  form.querySelectorAll('input[name],select[name],textarea[name]').forEach(el => {
+    if (el.type === 'checkbox') o[el.name] = el.checked;
+    else if (el.type === 'datetime-local') o[el.name] = inputToTs(el.value);
+    else if (el.type === 'number') o[el.name] = el.value === '' ? null : Number(el.value);
+    else { const v = el.value.trim(); o[el.name] = v === '' ? null : v; }
+  });
+  return o;
+}
+async function saveCont(form) {
+  const o = formObj(form); if (o.so_cont) o.so_cont = o.so_cont.toUpperCase().replace(/\s+/g, '');
+  const id = S.drawer && S.drawer.id;
+  const btn = document.getElementById('save-btn'); if (btn) { btn.disabled = true; btn.textContent = T('saving'); }
+  try {
+    if (id) await q(sb.from('cont').update(o).eq('id', id));
+    else { if (!o.kho) throw new Error(T('required') + ': ' + T('kho')); if (o.so_cont && o.lo) o.id = o.so_cont + '-' + o.lo; await q(sb.from('cont').insert(o)); }
+    closeDrawer(); await loadData();
+    if (!id) {
+      const st = o.trang_thai || '1';
+      if (['1', '2', '3'].indexOf(st) > -1) S.tkSeg = st;
+      toast(T1('Đã thêm — cont nằm ở mục “' + stLabel(st) + '”', '已新增，位于“' + stLabel(st) + '”'));
+      if (o.lo && S.lots[o.lo]) { renderMain(); openLo(S.lots[o.lo]); }
+      else if (['1', '2', '3'].indexOf(st) > -1) { S.tab = 'taikho'; renderShell(); renderMain(); }
+      else renderMain();
+    } else { toast(T('saved')); renderMain(); }
+    renderNavCounts();
+  } catch (e) { toast(errMsg(e), true); if (btn) { btn.disabled = false; btn.textContent = T('save'); } }
+}
+async function saveLo(form) {
+  const o = formObj(form), id = S.drawer && S.drawer.id;
+  const d = { kho:o.d_kho, khach_hang:o.d_khach_hang, ma_don:o.d_ma_don, ngay_can_len_kho:o.d_can };
+  ['d_kho', 'd_khach_hang', 'd_ma_don', 'd_can'].forEach(k => { delete o[k]; });
+  let nDon = 0;
+  const btn = document.getElementById('save-btn'); if (btn) { btn.disabled = true; btn.textContent = T('saving'); }
+  try {
+    if (id) await q(sb.from('lo').update(o).eq('lo', id));
+    else {
+      if (!o.lo) throw new Error(T('required') + ': ' + T('loCol'));
+      await q(sb.from('lo').insert(o));
+      if (d.kho && o.so_luong_cont > 0) {
+        const rows = []; for (let i = 0; i < o.so_luong_cont; i++) rows.push({ lo:o.lo, kho:d.kho, khach_hang:d.khach_hang, ma_don:d.ma_don, ngay_can_len_kho:d.ngay_can_len_kho, trang_thai:'1', ngay_goi_cont:todayVN(), nguon:'web' });
+        try { await q(sb.from('cont').insert(rows)); nDon = rows.length; }
+        catch (e) { toast(T1('Đã lưu lô nhưng chưa tạo được đơn: ', '批次已保存，但订单未建成：') + errMsg(e), true); }
+      }
+    }
+    closeDrawer(); await loadData(); renderMain(); renderNavCounts();
+    if (!id && S.lots[o.lo]) { openLo(S.lots[o.lo]); if (nDon || !(d.kho && o.so_luong_cont > 0)) toast(nDon ? T1('Đã thêm lô ' + o.lo + ' và ' + nDon + ' đơn chờ cắt rỗng', '已新增批次 ' + o.lo + ' 及 ' + nDon + ' 个待提空订单') : T1('Đã thêm lô ' + o.lo + ' — bấm “Thêm đơn / cont” để thêm cont vào lô', '已新增批次 ' + o.lo + '，点“新增订单/柜”添加柜子')); }
+    else toast(T('saved'));
+  } catch (e) { toast(errMsg(e), true); if (btn) { btn.disabled = false; btn.textContent = T('save'); } }
+}
+async function moveCont(id, to) {
+  const c = S.conts.find(x => x.id === id) || {}, now = new Date().toISOString(), patch = { trang_thai:to };
+  if (to === '2' && !c.ngay_den_kho) patch.ngay_den_kho = todayVN();
+  if (to === '3' && !c.du_kien_day) patch.du_kien_day = now;
+  if (to === '4') { patch.gio_vao_bai = c.gio_vao_bai || now; patch.bai_tam = c.bai_tam || S.cauhinh['Bãi tạm mặc định'] || 'HLS'; }
+  if (to === '5' && c.trang_thai === '4') patch.gio_ra_bai = now;
+  try { await q(sb.from('cont').update(patch).eq('id', id)); toast((c.so_cont || c.ma_don || id) + ' → ' + stLabel(to)); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'cont' && S.drawer.id === id) openContById(id); }
+  catch (e) { toast(errMsg(e), true); }
+}
+async function approveGy(id, val) {
+  const g = S.goiy.find(x => x.id === id); if (!g) return;
+  const nx = gyView(g).nx || null;
+  try { await q(sb.from('goi_y').update({ duyet:val, nha_xe_chon: val ? nx : g.nha_xe_chon }).eq('id', id)); Object.assign(g, { duyet:val, nha_xe_chon: val ? nx : g.nha_xe_chon }); toast((g.cont_day || g.ma_don_rong || id) + ' · ' + (val ? T('approved') : T('unapprove'))); renderMain(); renderNavCounts(); }
+  catch (e) { toast(errMsg(e), true); }
+}
+async function applyGy(id) {
+  const g = S.goiy.find(x => x.id === id); if (!g) return;
+  const now = new Date().toISOString(), nx = g.nha_xe_chon || g.nha_xe_goi_y || null;
+  try {
+    if (g.id_cont_day) {
+      const bai = (String(g.noi_ha || '').match(/Seal tạm (\w+)/) || [])[1];
+      const patch = /^Seal chính/.test(g.noi_ha || '') ? { trang_thai:'5' } : { trang_thai:'4', bai_tam: bai || S.cauhinh['Bãi tạm mặc định'] || 'HLS', gio_vao_bai: now };
+      await q(sb.from('cont').update(patch).eq('id', g.id_cont_day));
+    }
+    if (g.id_cont_rong) {
+      if (typeKey(g.loai_lenh) === 'dong') {
+        const bai = (String(g.noi_ha || '').match(/Seal tạm (\w+)/) || [])[1];
+        const toPort = /^Seal chính/.test(g.noi_ha || '');
+        await q(sb.from('cont').update(Object.assign({ ngay_den_kho: todayVN(), nha_xe: nx, du_kien_day: now }, toPort ? { trang_thai:'5' } : { trang_thai:'4', bai_tam: bai || S.cauhinh['Bãi tạm mặc định'] || 'HLS', gio_vao_bai: now })).eq('id', g.id_cont_rong));
+        toast(T1('Nhớ nhập số cont và seal cho đơn ' + (g.ma_don_rong || ''), '请补填柜号和封条'));
+      } else await q(sb.from('cont').update({ trang_thai:'2', ngay_den_kho: todayVN(), nha_xe: nx }).eq('id', g.id_cont_rong));
+    }
+    await q(sb.from('goi_y').update({ da_ap_dung:true }).eq('id', id));
+    S.confirmApply = null; toast(T('applied') + ' · ' + (g.cont_day || g.ma_don_rong || id)); await loadData(); renderMain(); renderNavCounts();
+  } catch (e) { toast(errMsg(e), true); }
+}
+async function saveDm(form) {
+  const kind = form.dataset.form, key = form.dataset.key, o = {};
+  form.querySelectorAll('[name]').forEach(el => { o[el.name] = el.type === 'checkbox' ? el.checked : el.type === 'number' ? (el.value === '' ? null : Number(el.value)) : (el.value.trim() === '' ? null : el.value.trim()); });
+  try {
+    if (kind === 'gia') {
+      const nx = key ? key.split('||')[0] : o.nha_xe, kv = key ? key.split('||')[1] : o.khu_vuc;
+      if (!nx || !kv) throw new Error(T('required'));
+      const up = [], del = [];
+      GIA_LOAI.forEach(x => { const v = o['g_' + x[0]]; if (v == null) del.push(x[0]); else up.push({ nha_xe:nx, khu_vuc:kv, loai:x[0], gia:v, ghi_chu:o.ghi_chu }); });
+      if (up.length) await q(sb.from('bang_gia_xe').upsert(up));
+      if (del.length && key) await q(sb.from('bang_gia_xe').delete().eq('nha_xe', nx).eq('khu_vuc', kv).in('loai', del));
+    } else {
+      const tbl = { nhaxe:'nha_xe', kho:'kho', nv:'nhan_vien', bai:'bai_tam' }[kind], pk = { nhaxe:'ma', kho:'ten', nv:'email', bai:'ma' }[kind];
+      if (kind === 'nv' && o.email) o.email = o.email.toLowerCase();
+      if (key) { delete o[pk]; await q(sb.from(tbl).update(o).eq(pk, key)); }
+      else { if (!o[pk]) throw new Error(T('required')); if (kind === 'nhaxe' || kind === 'bai') o[pk] = o[pk].toUpperCase(); await q(sb.from(tbl).insert(o)); }
+    }
+    toast(T('saved')); await loadCatalogs(); renderMain();
+  } catch (e) { toast(errMsg(e), true); }
+}
+async function runGoiY() {
+  const b = document.querySelector('[data-act="run-goiy"]'); if (b) b.disabled = true;
+  try {
+    const r = await sb.rpc('tao_goi_y_v3'); if (r.error) throw r.error;
+    if (r.data === -1) { toast(T('runBusy'), true); }
+    else { toast(T('runOk') + ': ' + r.data); await loadData(); renderMain(); renderNavCounts(); }
+  }
+  catch (e) { toast(errMsg(e), true); }
+  if (b) b.disabled = false;
+}
+
+/* ---------------- sự kiện ---------------- */
+const ACT = {
+  'tab': d => { S.tab = d.tab; if (d.seg) S.tkSeg = d.seg; S.navOpen = false; closeDrawer(); renderShell(); window.scrollTo(0, 0); },
+  'nav-open': () => { S.navOpen = true; document.getElementById('app').classList.add('nav-open'); },
+  'nav-close': () => { S.navOpen = false; document.getElementById('app').classList.remove('nav-open'); },
+  'lang': d => { LANG = d.lang; try { localStorage.setItem('dd_lang', LANG); } catch (e) {} renderShell(); if (S.drawer) { const dr = S.drawer; if (dr.kind === 'cont') { if (dr.id) openContById(dr.id); } else if (dr.kind === 'lo' && dr.id) openLo(S.lots[dr.id]); } },
+  'signout': async () => { await sb.auth.signOut(); location.reload(); },
+  'pw-open': () => openPw(),
+  'del-lo': async (d, el) => {
+    const l = S.lots[d.lo] || { lo:d.lo, so_cont:+d.n || 0 };
+    if (S.confirmDel !== d.lo) { S.confirmDel = d.lo; el.textContent = T1('Bấm lần nữa để xoá lô ' + d.lo + (l.so_cont ? ' và ' + l.so_cont + ' đơn' : ''), '再点一次确认删除 ' + d.lo); setTimeout(() => { if (S.confirmDel === d.lo) { S.confirmDel = null; if (el.isConnected) el.textContent = delLoLabel(l); } }, 5000); return; }
+    S.confirmDel = null; el.disabled = true;
+    try { const r = await q(sb.rpc('xoa_lo', { p_lo:d.lo })); delete S.lots[d.lo]; closeDrawer(); toast(T1('Đã xoá lô ' + d.lo + (r.data ? ' và ' + r.data + ' đơn' : ''), '已删除批次 ' + d.lo)); await loadData(); renderMain(); renderNavCounts(); }
+    catch (e) { el.disabled = false; el.textContent = delLoLabel(l); toast(errMsg(e), true); }
+  },
+  'del-cont': async (d, el) => {
+    if (S.confirmDel !== d.id) { S.confirmDel = d.id; el.textContent = T1('Bấm lần nữa để xoá', '再点一次确认删除'); setTimeout(() => { if (S.confirmDel === d.id) { S.confirmDel = null; if (el.isConnected) el.textContent = T1('Xoá đơn / cont này', '删除此订单/柜'); } }, 5000); return; }
+    S.confirmDel = null; el.disabled = true;
+    const c = S.conts.find(x => x.id === d.id) || {};
+    try { await q(sb.rpc('xoa_cont', { p_id:d.id })); closeDrawer(); toast(T1('Đã xoá', '已删除')); await loadData(); renderMain(); renderNavCounts(); if (c.lo && S.lots[c.lo]) openLo(S.lots[c.lo]); }
+    catch (e) { el.disabled = false; el.textContent = T1('Xoá đơn / cont này', '删除此订单/柜'); toast(errMsg(e), true); }
+  },
+  'nk-load': d => loadHistory(d.bang, d.khoa, 'nk-box'),
+  'eport-run': () => runEport(),
+  'kdtv-sync': () => runKdtvSync(),
+  'copy-kd': async () => { const ok = await copyText(kdPlanText(kdGroups().filter(x => x.nhom <= 2))); if (ok) { S.copied = 'kd'; renderMain(); setTimeout(() => { if (S.copied === 'kd') { S.copied = null; renderMain(); } }, 2000); } },
+  'copy-hc': async () => { const ok = await copyText(haCangText(haCangLots(S.hcAll))); if (ok) { S.copied = 'hc'; renderMain(); setTimeout(() => { if (S.copied === 'hc') { S.copied = null; renderMain(); } }, 2000); } },
+  'cp-add': async (d, el) => {
+    const loai = document.getElementById('cp-loai').value, tien = document.getElementById('cp-tien').value, gc = document.getElementById('cp-ghichu').value.trim();
+    if (tien === '' || +tien < 0) { toast(T1('Nhập số tiền phát sinh.', '请输入金额。'), true); return; }
+    el.disabled = true;
+    try { await q(sb.from('chi_phi_cont').insert({ cont_id:d.cont, loai, so_tien:+tien, ghi_chu:gc || null })); toast(T('saved')); await loadData(); renderMain(); openContById(d.cont); }
+    catch (e) { el.disabled = false; toast(errMsg(e), true); }
+  },
+  'cp-del': async d => { try { await q(sb.from('chi_phi_cont').delete().eq('id', +d.id)); toast(T1('Đã xoá', '已删除')); await loadData(); renderMain(); openContById(d.cont); } catch (e) { toast(errMsg(e), true); } },
+  'dm-del': async (d, el) => {
+    const k = d.kind + ':' + d.key;
+    if (S.confirmDel !== k) { S.confirmDel = k; el.innerHTML = '<b style="font-size:11px;color:var(--red-ink)">?</b>'; toast(T1('Bấm ✕ lần nữa để xoá ' + d.key, '再点一次删除 ' + d.key)); setTimeout(() => { if (S.confirmDel === k) { S.confirmDel = null; if (el.isConnected) el.innerHTML = ico('x', 12); } }, 4000); return; }
+    S.confirmDel = null;
+    try {
+      if (d.kind === 'nv') { await q(sb.rpc('xoa_nhan_vien', { p_email:d.key })); toast(T1('Đã xoá nhân viên ' + d.key, '已删除员工')); }
+      else { const r = await q(sb.rpc(d.kind === 'kho' ? 'xoa_kho' : 'xoa_nha_xe', d.kind === 'kho' ? { p_ten:d.key } : { p_ma:d.key })); toast(r.data === 'ngung' ? T1(d.key + ' đã có dữ liệu → chuyển “ngưng dùng”', '已有记录，已停用') : T1('Đã xoá ' + d.key, '已删除')); }
+      await loadCatalogs(); renderMain();
+    } catch (e) { toast(errMsg(e), true); }
+  },
+  'don-run': async (d, el) => {
+    const ds = Array.from(document.querySelectorAll('.don-cb:checked')).map(x => x.value);
+    if (!ds.length) { toast(T1('Chưa chọn lô nào.', '未选择批次。'), true); return; }
+    if (S.confirmDel !== 'don') { S.confirmDel = 'don'; el.textContent = T1('Bấm lần nữa để xoá ' + ds.length + ' lô', '再点一次删除 ' + ds.length + ' 批'); setTimeout(() => { if (S.confirmDel === 'don') { S.confirmDel = null; if (el.isConnected) el.textContent = T1('Xoá các lô đã chọn khỏi Supabase', '从Supabase删除所选批次'); } }, 5000); return; }
+    S.confirmDel = null; el.disabled = true;
+    try { const r = await q(sb.rpc('don_du_lieu', { p_ds:ds })); toast(T1('Đã dọn ' + r.data + ' lô khỏi Supabase', '已清理 ' + r.data + ' 批')); loadDon(); }
+    catch (e) { el.disabled = false; toast(errMsg(e), true); }
+  },
+  'huy-lo': async (d, el) => {
+    const inp = document.getElementById('huy-ly-do'), why = inp ? inp.value.trim() : '';
+    if (why.length < 3) { toast(T1('Cần ghi lý do hủy lô.', '请填写取消原因。'), true); if (inp) inp.focus(); return; }
+    if (S.confirmDel !== 'huy-' + d.lo) { S.confirmDel = 'huy-' + d.lo; el.textContent = T1('Bấm lần nữa để hủy lô ' + d.lo, '再点一次确认取消 ' + d.lo); setTimeout(() => { if (S.confirmDel === 'huy-' + d.lo) { S.confirmDel = null; if (el.isConnected) el.textContent = T1('Hủy lô', '取消批次'); } }, 5000); return; }
+    S.confirmDel = null; el.disabled = true;
+    try { const r = await q(sb.rpc('huy_lo', { p_lo:d.lo, p_ly_do:why })); toast(T1('Đã hủy lô ' + d.lo + (r.data ? ' · ' + r.data + ' đơn chuyển sang Hủy' : ''), '已取消批次 ' + d.lo)); await loadData(); renderMain(); renderNavCounts(); if (S.lots[d.lo]) openLo(S.lots[d.lo]); else closeDrawer(); }
+    catch (e) { el.disabled = false; el.textContent = T1('Hủy lô', '取消批次'); toast(errMsg(e), true); }
+  },
+  'khoi-phuc-lo': async (d, el) => {
+    el.disabled = true;
+    try { const r = await q(sb.rpc('khoi_phuc_lo', { p_lo:d.lo })); toast(T1('Đã khôi phục lô ' + d.lo + (r.data ? ' · ' + r.data + ' đơn quay lại Chờ cắt rỗng' : ''), '已恢复批次 ' + d.lo)); await loadData(); renderMain(); renderNavCounts(); if (S.lots[d.lo]) openLo(S.lots[d.lo]); }
+    catch (e) { el.disabled = false; toast(errMsg(e), true); }
+  },
+  'lo-sort': d => setLoSort(d.k, LO_SORT.k === d.k ? -LO_SORT.d : (d.k === 'moi' ? -1 : 1)),
+  'lo-dir': () => setLoSort(LO_SORT.k, -LO_SORT.d),
+
+  'run-goiy': () => runGoiY(),
+  'gy-type': d => { S.gyType = d.v; renderMain(); }, 'gy-pri': d => { S.gyPri = d.v; renderMain(); },
+  'gy-sel': d => { S.sel = d.id; renderMain(); if (window.innerWidth < 1180) { const p = document.querySelector('.panel'); if (p) p.scrollIntoView({ behavior:'smooth', block:'start' }); } },
+  'gy-approve': d => approveGy(d.id, d.v === '1'),
+  'gy-apply': d => { if (S.confirmApply === d.id) applyGy(d.id); else { S.confirmApply = d.id; renderMain(); setTimeout(() => { if (S.confirmApply === d.id) { S.confirmApply = null; renderMain(); } }, 4000); } },
+  'copy-gy': async (d, el) => { const g = S.goiy.find(x => x.id === d.id); if (!g) return; await copyText(gyView(g).text); S.copied = d.id; toast(T('copied')); if (!d.keep) renderMain(); },
+  'copy-grp': async (d) => { const t = S.goiy.filter(g => g.duyet && !g.da_ap_dung).map(gyView).filter(g => (g.nx || '—') === d.nx).map(g => g.text).join('\n\n'); await copyText(t); S.copied = 'grp-' + d.nx; toast(T('copied')); if (!d.keep) renderMain(); },
+  'tk-seg': d => { S.tkSeg = d.v; renderMain(); },
+  'move': d => moveCont(d.id, d.to),
+  'kd-done': async d => { try { await q(sb.from('lo').update({ da_kiem_dich:true }).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + T('kdDone')); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'lo' && S.drawer.id === d.lo && S.lots[d.lo]) openLo(S.lots[d.lo]); } catch (e) { toast(errMsg(e), true); } },
+  'kd-undo': async d => { try { await q(sb.from('lo').update({ da_kiem_dich:false }).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + T1('đã bỏ tích kiểm dịch', '已取消检疫勾选')); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'lo' && S.drawer.id === d.lo && S.lots[d.lo]) openLo(S.lots[d.lo]); } catch (e) { toast(errMsg(e), true); } },
+  'open-cont': d => openContById(d.id),
+  'open-lo': async d => { let l = S.lots[d.lo]; if (!l) { try { const r = await q(sb.from('lo_tong_hop').select('*').eq('lo', d.lo)); l = r.data[0]; if (l) S.lots[l.lo] = l; } catch (e) { toast(errMsg(e), true); return; } } if (l) openLo(l); },
+  'new-cont': d => openCont({ trang_thai:'1', lo: d.lo || null }),
+  'new-lo': () => openLo({}),
+  'close-drawer': () => closeDrawer(),
+  'dm-tab': d => { S.dmTab = d.v; renderMain(); if (d.v === 'nk') loadNhatKy(); if (d.v === 'don') loadDon(); }
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const act = el.dataset.act; if (!ACT[act]) return;
+  if (el.tagName !== 'A') e.preventDefault();
+  ACT[act](el.dataset, el, e);
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset.on === 'gy-hide') { S.gyHide = el.checked; renderMain(); }
+  else if (el.dataset.on === 'lo-open') { S.loOpen = el.checked; renderMain(); }
+  else if (el.dataset.on === 'lo-huy') { S.loHuy = el.checked; renderMain(); }
+  else if (el.dataset.on === 'bai-sort') { S.baiSort = el.value; renderMain(); }
+  else if (el.dataset.on === 'hc-all') { S.hcAll = el.checked; renderMain(); }
+  else if (el.dataset.on === 'don-all') { document.querySelectorAll('.don-cb').forEach(x => { x.checked = el.checked; }); }
+  else if (el.dataset.on === 'nk-bang') { S.nkBang = el.value; loadNhatKy(); }
+  else if (el.dataset.on === 'lo-sortk') setLoSort(el.value, el.value === 'moi' ? -1 : 1);
+  else if (el.dataset.on === 'gy-pick') { S.pick[el.dataset.id] = el.value; const g = S.goiy.find(x => x.id === el.dataset.id); if (g && g.duyet) { sb.from('goi_y').update({ nha_xe_chon: el.value || null }).eq('id', g.id).then(r => { if (r.error) toast(errMsg(r.error), true); else g.nha_xe_chon = el.value || null; }); } renderMain(); }
+});
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.id === 'topq' || el.id === 'bigq') {
+    S.q = el.value; S.results = null;
+    if (S.tab !== 'tim') { S.tab = 'tim'; renderShell(); const b = document.getElementById('bigq'); if (b) { b.focus(); b.setSelectionRange(b.value.length, b.value.length); } }
+    else { const other = document.getElementById(el.id === 'topq' ? 'bigq' : 'topq'); if (other) other.value = el.value; }
+    doSearch();
+  }
+});
+document.addEventListener('submit', e => {
+  const f = e.target; e.preventDefault();
+  if (f.dataset.form === 'f-cont') saveCont(f);
+  else if (f.dataset.form === 'f-lo') saveLo(f);
+  else if (['nhaxe', 'kho', 'nv', 'bai', 'gia'].indexOf(f.dataset.form) > -1) saveDm(f);
+  else if (f.id === 'login-form') doLogin(f);
+  else if (f.id === 'reset-form') doResetPw(f);
+  else if (f.dataset.form === 'f-pw') savePw(f);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.drawer) closeDrawer(); });
+
+/* ---------------- đăng nhập ---------------- */
+let LOGIN_MODE = 'in';
+let LOGIN_EMAIL = '';
+// Trang mở từ link trong mail đặt lại mật khẩu -> không vào thẳng app, bắt đặt mật khẩu mới trước
+let RECOVERY = /type=recovery/.test(location.hash || '');
+function pwField(label, name, auto) {
+  return '<div class="field">' + label + '<div class="pw-row"><input name="' + name + '" type="password" autocomplete="' + auto + '" minlength="6" required aria-label="' + esc(label) + '"><button type="button" class="pw-eye" data-act="pw-eye">Hiện 显示</button></div></div>';
+}
+function renderLogin(msg, isErr) {
+  document.getElementById('root').innerHTML = '<div class="login"><form class="login-card" id="login-form">' +
+    '<div class="brand" style="padding:0"><div class="brand-logo" style="background:var(--side)">' + ico('truck', 22, '#fff') + '</div><div><div class="brand-name" style="color:var(--pri-ink)">Điều độ 调度</div><div class="muted" style="font-size:12px">Đại Cát Lâm · cont chuối</div></div></div>' +
+    '<div class="tabs2" role="group"><button type="button" data-act="login-mode" data-v="in" aria-pressed="' + (LOGIN_MODE === 'in') + '">Đăng nhập 登录</button><button type="button" data-act="login-mode" data-v="up" aria-pressed="' + (LOGIN_MODE === 'up') + '">Tạo tài khoản 注册</button></div>' +
+    '<label class="field">Email 邮箱<input name="email" type="email" autocomplete="email" required value="' + esc(LOGIN_EMAIL) + '"></label>' +
+    pwField('Mật khẩu 密码', 'password', LOGIN_MODE === 'in' ? 'current-password' : 'new-password') +
+    (LOGIN_MODE === 'in' ? '<div style="text-align:right;margin-top:-6px"><button type="button" data-act="login-forgot" style="background:none;border:0;padding:0;color:var(--pri-ink);font-size:12px;cursor:pointer;text-decoration:underline">Quên mật khẩu? 忘记密码？</button></div>' : '') +
+    (msg ? '<div class="msg' + (isErr ? ' err' : '') + '">' + esc(msg) + '</div>' : '') +
+    '<button class="btn btn-pri" type="submit" id="login-btn" style="min-height:44px">' + (LOGIN_MODE === 'in' ? 'Đăng nhập 登录' : 'Tạo tài khoản 注册') + '</button>' +
+    '<p class="muted" style="margin:0;font-size:12px">' + (LOGIN_MODE === 'in' ? 'Chưa có tài khoản? Nhờ quản lý thêm email của bạn vào danh sách nhân viên, rồi chọn “Tạo tài khoản”. 还没有账号？请管理员先添加您的邮箱，再点“注册”。' : 'Dùng đúng email quản lý đã thêm vào danh sách nhân viên. Mật khẩu ít nhất 6 ký tự. 请使用管理员已添加的邮箱，密码至少6位。') + '</p>' +
+  '</form></div>';
+  const inp = document.querySelector(LOGIN_EMAIL ? '#login-form [name=password]' : '#login-form [name=email]'); if (inp) inp.focus();
+}
+ACT['login-mode'] = d => { const f = document.getElementById('login-form'); if (f) LOGIN_EMAIL = f.email.value.trim(); LOGIN_MODE = d.v; renderLogin(); };
+ACT['pw-eye'] = (d, el) => { const i = el.parentNode.querySelector('input'); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; el.textContent = show ? 'Ẩn 隐藏' : 'Hiện 显示'; };
+ACT['login-forgot'] = async () => {
+  const f = document.getElementById('login-form');
+  const email = (f && f.email.value.trim().toLowerCase()) || '';
+  if (!email) { renderLogin('Nhập email vào ô trên rồi bấm lại “Quên mật khẩu?”. 请先填写邮箱再点“忘记密码”。', true); return; }
+  LOGIN_EMAIL = email;
+  try {
+    const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+    if (r.error) throw r.error;
+    renderLogin('Đã gửi mail đặt lại mật khẩu tới ' + email + '. Mở hộp thư, bấm link trong mail rồi đặt mật khẩu mới. 重置密码邮件已发送，请查收。');
+  } catch (e) { renderLogin(errMsg(e), true); }
+};
+function renderResetPw(msg, isErr) {
+  document.getElementById('root').innerHTML = '<div class="login"><form class="login-card" id="reset-form">' +
+    '<div class="brand" style="padding:0"><div class="brand-logo" style="background:var(--side)">' + ico('truck', 22, '#fff') + '</div><div><div class="brand-name" style="color:var(--pri-ink)">Điều độ 调度</div><div class="muted" style="font-size:12px">Đặt mật khẩu mới 设置新密码</div></div></div>' +
+    pwField('Mật khẩu mới 新密码', 'p1', 'new-password') +
+    pwField('Nhập lại mật khẩu mới 再次输入', 'p2', 'new-password') +
+    (msg ? '<div class="msg' + (isErr ? ' err' : '') + '">' + esc(msg) + '</div>' : '') +
+    '<button class="btn btn-pri" type="submit" id="reset-btn" style="min-height:44px">Lưu mật khẩu 保存密码</button>' +
+    '<p class="muted" style="margin:0;font-size:12px">Ít nhất 6 ký tự. Lưu xong là vào thẳng trang luôn. 至少6位，保存后直接进入。</p>' +
+  '</form></div>';
+  const i = document.querySelector('#reset-form [name=p1]'); if (i) i.focus();
+}
+async function doResetPw(f) {
+  const p1 = f.p1.value, p2 = f.p2.value;
+  if (p1.length < 6) { renderResetPw('Mật khẩu cần ít nhất 6 ký tự. 密码至少6位。', true); return; }
+  if (p1 !== p2) { renderResetPw('Hai lần nhập không giống nhau. 两次输入不一致。', true); return; }
+  const b = document.getElementById('reset-btn'); if (b) { b.disabled = true; b.textContent = 'Đang lưu… 保存中…'; }
+  try {
+    const r = await sb.auth.updateUser({ password: p1 }); if (r.error) throw r.error;
+    RECOVERY = false;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    const { data } = await sb.auth.getSession();
+    if (data.session) afterLogin(data.session);
+    else { LOGIN_MODE = 'in'; renderLogin('Đã đặt mật khẩu mới — đăng nhập lại nhé. 新密码已设置，请重新登录。'); }
+  } catch (e) { renderResetPw(errMsg(e), true); }
+}
+async function doLogin(f) {
+  const email = f.email.value.trim().toLowerCase(), password = f.password.value;
+  LOGIN_EMAIL = email;
+  const b = document.getElementById('login-btn'); b.disabled = true;
+  try {
+    if (LOGIN_MODE === 'in') { const r = await sb.auth.signInWithPassword({ email, password }); if (r.error) throw r.error; }
+    else { const r = await sb.auth.signUp({ email, password }); if (r.error) throw r.error; if (!r.data.session) { LOGIN_MODE = 'in'; renderLogin('Đã tạo tài khoản. Mở email để bấm xác nhận, rồi quay lại đăng nhập. 账号已创建，请到邮箱确认后再登录。'); return; } }
+  } catch (e) {
+    const m = String(e.message || e);
+    renderLogin(/Invalid login/i.test(m) ? 'Sai email hoặc mật khẩu. 邮箱或密码错误。' : /confirm/i.test(m) ? 'Email chưa được xác nhận — mở hộp thư để bấm link xác nhận. 邮箱未确认。' : /already registered/i.test(m) ? 'Email này đã có tài khoản — chọn Đăng nhập. 该邮箱已注册，请登录。' : m, true);
+  }
+}
+async function afterLogin(session) {
+  S.session = session;
+  document.getElementById('root').innerHTML = '<div class="loading">Đang tải dữ liệu… 数据加载中…</div>';
+  try {
+    const r = await sb.rpc('toi_la_ai'); if (r.error) throw r.error;
+    S.me = r.data && r.data[0];
+    if (!S.me) { renderNoAccess(session.user.email); return; }
+    try { if (!localStorage.getItem('dd_lang') && S.me.ngon_ngu) LANG = S.me.ngon_ngu; } catch (e) { LANG = S.me.ngon_ngu || 'vi'; }
+    await loadCatalogs(); renderShell(); await loadData(); renderMain(); renderNavCounts(); startRealtime();
+  } catch (e) { document.getElementById('root').innerHTML = '<div class="login"><div class="login-card"><div class="msg err">' + esc(errMsg(e)) + '</div><button class="btn" onclick="location.reload()">Thử lại 重试</button></div></div>'; }
+}
+function renderNoAccess(email) {
+  document.getElementById('root').innerHTML = '<div class="login"><div class="login-card"><h1>Chưa được cấp quyền</h1><p class="muted" style="margin:0">Chào mừng bạn! Tài khoản <b>' + esc(email) + '</b> của bạn đã đăng ký thành công, nhưng hiện tại chưa được phân quyền truy cập dữ liệu.</p><p class="muted" style="margin:6px 0 0">Để bắt đầu sử dụng, bạn hãy nhờ Quản lý (Admin) thêm email này vào <b>Danh mục → Nhân viên</b>. Sau khi Admin thêm xong, hãy tải lại trang.</p><p class="muted" style="margin:12px 0 0">欢迎！账号 <b>' + esc(email) + '</b> 已注册，但尚未获得访问权限。请联系管理员在“基础资料 → 员工”中添加该邮箱，添加后刷新页面即可使用。</p><div style="display:flex;gap:16px;margin-top:16px"><button class="btn btn-pri" onclick="location.reload()">Tải lại 刷新</button><button class="btn" data-act="signout">Đăng xuất 退出</button></div></div></div>';
+}
+(async function init() {
+  sb.auth.onAuthStateChange((ev, session) => {
+    if (ev === 'PASSWORD_RECOVERY') { RECOVERY = true; renderResetPw(); return; }
+    if (RECOVERY) return;                       // đang đặt lại mật khẩu thì chưa cho vào app
+    if (ev === 'SIGNED_IN' && !S.session && session) afterLogin(session);
+    if (ev === 'SIGNED_OUT') { S.session = null; renderLogin(); }
+  });
+  const h = location.hash || '';
+  if (/error_description=/.test(h)) {          // link hết hạn hoặc đã dùng rồi
+    const m = decodeURIComponent((h.match(/error_description=([^&]*)/) || [])[1] || '').replace(/\+/g, ' ');
+    RECOVERY = false;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    renderLogin('Link không dùng được nữa (hết hạn hoặc đã dùng) — bấm “Quên mật khẩu?” để xin link mới. ' + m, true);
+    return;
+  }
+  const { data } = await sb.auth.getSession();
+  if (RECOVERY) { renderResetPw(); return; }
+  if (data.session) afterLogin(data.session); else renderLogin();
+})();
+</script>
+</body>
+</html>

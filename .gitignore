@@ -1,0 +1,15 @@
+# Dữ liệu thật / file sinh ra khi kiểm thử — không đưa lên GitHub
+tests/fixtures.json
+tests/test.html
+tests/shots/
+*.xlsx
+*.csv
+.env
+.env.*
+
+# Rác hệ điều hành / Python
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+desktop.ini

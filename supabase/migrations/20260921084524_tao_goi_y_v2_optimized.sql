@@ -1,0 +1,16 @@
+-- =====================================================================
+-- 20260921084524_tao_goi_y_v2_optimized  —  ĐÃ BỊ GỠ BỎ
+-- =====================================================================
+-- Bản v2 này viết lại thuật toán gợi ý theo một schema đoán sai và làm mất
+-- nhiều nghiệp vụ của tao_goi_y() (mooc riêng nhà xe, 4 loại lệnh, ngưỡng
+-- giờ trong cau_hinh, nội dung lệnh song ngữ, chi phí, nơi hạ).
+--
+-- Toàn bộ đối tượng nó tạo ra đã bị migration kế tiếp
+-- (20260921085741_don_rac_goi_y_v2_va_them_cot_phien) xoá sạch:
+--   · tao_goi_y_v2()
+--   · tinh_level_goi_y(timestamptz, boolean, boolean)
+--   · trig_huy_goi_y_khi_kd() + trigger trig_cont_kd_huy_goi_y trên cont
+--
+-- Giữ file rỗng để khớp lịch sử migration trên Supabase. Đừng chạy lại.
+-- =====================================================================
+SELECT 1;
