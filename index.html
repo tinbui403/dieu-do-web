@@ -914,12 +914,18 @@ const GIA_LOAI = [['dong_trong_ngay', 'dongNgay'], ['cat_mooc', ['Cắt mooc', '
 function khuVucList() { const s = new Set(['Tất cả']); S.kho.forEach(k => { if (k.khu_vuc) s.add(k.khu_vuc); }); S.giacuoc.forEach(g => s.add(g.khu_vuc)); return Array.from(s); }
 function vDanhMuc() {
   if (['nv', 'nk', 'don'].indexOf(S.dmTab) > -1 && !isAdmin()) S.dmTab = 'nhaxe';
-  const tabs = [['nhaxe', 'nhaxeTab'], ['kho', 'khoTab'], ['bai', 'baiTab'], ['gia', 'giaTab']].concat(isAdmin() ? [['nv', 'nvTab'], ['don', 'donTab'], ['nk', 'nkTab']] : []);
+  const tabs = [['nhaxe', 'nhaxeTab'], ['kho', 'khoTab'], ['bai', 'baiTab'], ['cangden', 'Cảng đến'], ['cangha', 'Cảng hạ'], ['gia', 'giaTab']].concat(isAdmin() ? [['nv', 'nvTab'], ['don', 'donTab'], ['nk', 'nkTab']] : []);
   const tabBar = '<div class="chips">' + tabs.map(t => '<button class="chip" data-act="dm-tab" data-v="' + t[0] + '" aria-pressed="' + (S.dmTab === t[0]) + '">' + esc(T(t[1])) + '</button>').join('') + '</div>';
   if (S.dmTab === 'nk') return '<div class="stack" style="gap:14px">' + tabBar + vNhatKy() + '</div>';
   if (S.dmTab === 'don') return '<div class="stack" style="gap:14px">' + tabBar + '<div id="don-box"><div class="muted">…</div></div></div>';
   let body = '', note = '';
-  if (S.dmTab === 'nhaxe') {
+  if (S.dmTab === 'cangden') {
+    const ro = !canWrite();
+    const cols = '--cols:100px 1fr 1fr 40px;--minw:500px';
+    note = T1('CSKH, Điều độ được thêm / sửa / xoá cảng.', '客服、调度可增删改港口。');
+    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('loCol')) + '</span><span>' + esc(T('portDrop')) + ' (VN)</span><span>' + esc(T('cnName')) + ' (CN)</span><span></span></div>' +
+      S.cangden.concat(ro ? [] : [{ _new:true }]).map(c => '<form class="tr" style="' + cols + '" data-form="cangden" data-key="' + esc(c.ma || '') + '">' + (c._new ? dmInp('ma', '', T('add') + '…') : '<b>' + esc(c.ma) + '</b>') + dmInp('ten_vn', c.ten_vn, '', ro) + dmInp('ten_tq', c.ten_tq, '', ro) + (ro ? '<span></span>' : '<button class="btn btn-sm" type="submit">' + esc(c._new ? T('add') : T('save')) + '</button>') + (!ro && !c._new ? dmDel('cangden', c.ma) : '<span></span>') + '</form>').join('');
+  } else if (S.dmTab === 'nhaxe') {
     const ro = !canCat();
     const cols = '--cols:120px minmax(160px,1fr) 150px 150px minmax(120px,1fr) 70px 80px 40px;--minw:980px';
     note = T1('Quản lý, Điều độ, CSKH được thêm / xoá nhà xe. Nhà xe đã có cont thì chỉ chuyển “ngưng dùng” để giữ lịch sử.', '管理、调度、客服可增删车队；已有记录的车队只会停用。');
@@ -1322,6 +1328,12 @@ const ACT = {
   'open-lo': async d => { let l = S.lots[d.lo]; if (!l) { try { const r = await q(sb.from('lo_tong_hop').select('*').eq('lo', d.lo)); l = r.data[0]; if (l) S.lots[l.lo] = l; } catch (e) { toast(errMsg(e), true); return; } } if (l) openLo(l); },
   'new-cont': d => openCont({ trang_thai:'1', lo: d.lo || null }),
   'new-lo': () => openLo({}),
+  'open-kd-wizard': d => KD_WIZARD.open(d.lo),
+  'close-wizard': () => KD_WIZARD.close(),
+  'kd-wizard-sel': d => KD_WIZARD.selectCont(d.id),
+  'kd-next-step': () => KD_WIZARD.nextStep(),
+  'kd-prev-step': () => KD_WIZARD.prevStep(),
+  'kd-wizard-save': () => KD_WIZARD.save(),
   'close-drawer': () => closeDrawer(),
   'dm-tab': d => { S.dmTab = d.v; renderMain(); if (d.v === 'nk') loadNhatKy(); if (d.v === 'don') loadDon(); }
 };
