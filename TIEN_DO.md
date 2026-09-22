@@ -10,9 +10,9 @@ Cập nhật lần cuối: **22/09/2026** (giờ VN)
 
 ## Bước kế tiếp
 
-1. Kiểm tra luồng Wizard thực tế trên trình duyệt.
-2. Tinh chỉnh logic `src/kiem_dich_wizard.js` (xử lý dữ liệu, API call).
-3. Kiểm thử các trường hợp chặn RLS.
+1. Mở trình duyệt, chọn 1 lô có cont tại HLS/PD/HT và nhấn "Kiểm dịch Wizard" để test luồng 3 bước.
+2. Nếu có lỗi hiển thị → debug trong console. Nếu lưu bị từ chối DB → kiểm tra RLS/trigger.
+3. Push lên GitHub: `git push origin master` (chạy trên máy local, không phải từ Cowork).
 
 ## Việc còn treo (chưa ai yêu cầu làm, chỉ ghi để nhớ)
 
@@ -22,6 +22,7 @@ Cập nhật lần cuối: **22/09/2026** (giờ VN)
 
 ## Đã xong gần đây
 
+- **22/09** — Hoàn thành KD Wizard 3-step: viết lại `kiem_dich_wizard.js` (~175 dòng, thay thế stub cũ), thêm 6 ACT handlers vào `app.src.html`, rebuild `index.html`. Commit `5e19aff`.
 - **22/09** — Hoàn thành tích hợp UI Wizard vào `src/app.src.html`, build thành công `index.html`.
 - **22/09** — Phân tích quy trình xác thực/phân quyền: Xác nhận người dùng mới cần được Admin thêm vào bảng `nhan_vien` thì mới truy cập được dữ liệu (cơ chế RLS).
 - **21/09** — Gợi ý v3: `tao_goi_y_v3()` (khoá phiên, ID có giây, cột `phien`), `canh_bao_thieu_rong()`, `kiem_thu_goi_y_v3()` đạt 19/19; cron phút :05 và nút "Chạy gợi ý" đã chuyển sang v3 (web xử lý kết quả `-1` = đang có phiên khác). `index.html` đã build lại khớp `src/app.src.html`.
@@ -39,6 +40,7 @@ Cập nhật lần cuối: **22/09/2026** (giờ VN)
 
 | Ngày | Tài khoản / phiên | Đã làm |
 |---|---|---|
+| 22/09/2026 | Cowork | Hoàn thiện KD Wizard: viết lại `kiem_dich_wizard.js` (3 bước đầy đủ), thêm 6 ACT handlers vào `app.src.html`, rebuild `index.html`, commit `5e19aff`. Cần push lên GitHub thủ công. |
 | 22/09/2026 | Cowork | Phân tích cơ chế RLS, xác nhận người dùng cần vào bảng `nhan_vien`. Sửa lỗi Realtime subscription, cập nhật UI thông báo cho người dùng mới, build lại `index.html`. Cập nhật `TIEN_DO.md`. |
 | 22/09/2026 | Cowork | Phân tích cơ chế RLS, xác nhận người dùng cần vào bảng `nhan_vien`. Lên kế hoạch thêm thông báo lỗi thân thiện. Cập nhật `TIEN_DO.md`. |
 | 21/09/2026 | Cowork (phiên đọc lại dự án) | Đọc lại toàn bộ thư mục, xác định đang dở ở bước GitHub, tạo file `TIEN_DO.md` này. Chưa sửa code, chưa commit. |
