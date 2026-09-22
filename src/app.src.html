@@ -4,28 +4,41 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#4B3C8C">
+<meta name="theme-color" content="#1E3A8A">
 <title>Điều độ · Đại Cát Lâm</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%234B3C8C'/%3E%3Cpath d='M4 15h9V8H4zM13 10.5h3l2.5 2.5v2H13z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='7' cy='17' r='1.6' fill='white'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='white'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231E3A8A'/%3E%3Cpath d='M4 15h9V8H4zM13 10.5h3l2.5 2.5v2H13z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='7' cy='17' r='1.6' fill='white'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 <style>
 :root{
-  --bg:#EFECF8;--surface:#FFFFFF;--ink:#2B2640;--muted:#625C7A;--faint:#8A849E;
-  --line:#E1DCF2;--line2:#F1EEFB;--soft:#F7F5FD;--soft2:#FAF9FE;
-  --pri:#5B4BB7;--pri-ink:#3E3190;--pri-soft:#E6E2F7;
-  --side:#4B3C8C;--side-ink:#E4DFF7;--side-h:#C7BEEE;--side-sub:#D9D3F4;
-  --red:#B42318;--red-bg:#FBE4E1;--red-ink:#A3261A;
-  --amb:#E0A43A;--amb-bg:#FBEBD5;--amb-ink:#7A4700;
-  --teal:#3E9C94;--teal-bg:#E0F1EF;--teal-ink:#10605A;--green-ink:#256B3A;
-  --lav:#EEEBF8;--lav-ink:#4B3C8C;--zalo:#0068FF;
+  /* ─── Nền & bề mặt ─── */
+  --bg:#EFF6FF;
+  --surface:rgba(255,255,255,.88);
+  --ink:#0F172A;--muted:#475569;--faint:#94A3B8;
+  --line:rgba(148,163,184,.28);--line2:rgba(148,163,184,.14);
+  --soft:rgba(255,255,255,.55);--soft2:rgba(255,255,255,.36);
+  /* ─── Xanh chính ─── */
+  --pri:#2563EB;--pri-ink:#1D4ED8;--pri-soft:#DBEAFE;
+  /* ─── Sidebar navy ─── */
+  --side:#1E3A8A;--side-ink:rgba(255,255,255,.9);
+  --side-h:rgba(255,255,255,.52);--side-sub:rgba(255,255,255,.42);
+  /* ─── Trạng thái ─── */
+  --red:#DC2626;--red-bg:rgba(220,38,38,.1);--red-ink:#B91C1C;
+  --amb:#D97706;--amb-bg:rgba(217,119,6,.1);--amb-ink:#92400E;
+  --teal:#059669;--teal-bg:rgba(5,150,105,.1);--teal-ink:#065F46;--green-ink:#14532D;
+  --lav:rgba(37,99,235,.1);--lav-ink:#1D4ED8;--zalo:#0068FF;
   --font:'Be Vietnam Pro','Noto Sans SC',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;-webkit-text-size-adjust:100%}
+body{
+  background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 30%,#BFDBFE 65%,#93C5FD 100%);
+  background-attachment:fixed;
+  color:var(--ink);font-family:var(--font);font-size:14px;
+  line-height:1.45;-webkit-text-size-adjust:100%
+}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 button:disabled{cursor:not-allowed;opacity:.55}
@@ -38,25 +51,54 @@ a{color:var(--pri-ink)}
 .hide{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* ---------- layout ---------- */
+/* ─── Layout ─── */
 .app{display:flex;min-height:100vh}
-.side{width:236px;flex-shrink:0;background:var(--side);color:#fff;display:flex;flex-direction:column;gap:20px;padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.side{
+  width:236px;flex-shrink:0;
+  background:linear-gradient(180deg,#1E3A8A 0%,#1E40AF 55%,#1D4ED8 100%);
+  color:#fff;display:flex;flex-direction:column;gap:20px;
+  padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto;
+  box-shadow:4px 0 24px rgba(30,58,138,.18)
+}
 .brand{display:flex;align-items:center;gap:10px;padding:0 6px}
-.brand-logo{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-logo{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  border:1px solid rgba(255,255,255,.25)
+}
 .brand-name{font-size:17px;font-weight:700;letter-spacing:-.01em}
 .brand-sub{font-size:12px;color:var(--side-sub)}
 .nav-h{padding:0 10px 4px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--side-h)}
 .nav-g{display:flex;flex-direction:column;gap:3px}
-.nav-i{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);font-size:14px;font-weight:500;text-align:left}
-.nav-i:hover{background:rgba(255,255,255,.10)}
-.nav-i[aria-current="page"]{background:rgba(255,255,255,.18);color:#fff;font-weight:600}
-.nav-i .cnt{margin-left:auto;min-width:24px;padding:1px 7px;border-radius:999px;font-size:12px;font-weight:600;text-align:center;background:rgba(255,255,255,.16);color:#fff}
-.nav-i[aria-current="page"] .cnt{background:#fff;color:var(--pri-ink)}
+.nav-i{
+  display:flex;align-items:center;gap:10px;width:100%;min-height:40px;
+  padding:0 10px;border:0;border-radius:8px;
+  background:transparent;color:var(--side-ink);font-size:14px;font-weight:500;text-align:left;
+  transition:background .15s
+}
+.nav-i:hover{background:rgba(255,255,255,.12)}
+.nav-i[aria-current="page"]{
+  background:rgba(255,255,255,.2);color:#fff;font-weight:600;
+  box-shadow:0 2px 8px rgba(0,0,0,.15)
+}
+.nav-i .cnt{
+  margin-left:auto;min-width:24px;padding:1px 7px;
+  border-radius:999px;font-size:12px;font-weight:600;text-align:center;
+  background:rgba(255,255,255,.18);color:#fff
+}
+.nav-i[aria-current="page"] .cnt{background:rgba(255,255,255,.95);color:var(--pri-ink)}
 .langs{display:flex;gap:4px;padding:4px;border-radius:10px;background:rgba(255,255,255,.12)}
 .langs button{flex:1;min-height:34px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);font-size:13px;font-weight:600}
-.langs button[aria-pressed="true"]{background:#fff;color:var(--pri-ink)}
-.me{display:flex;align-items:center;gap:10px;padding:12px 6px 0;border-top:1px solid rgba(255,255,255,.16)}
-.avatar{width:34px;height:34px;border-radius:999px;background:var(--pri-soft);color:var(--pri-ink);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.langs button[aria-pressed="true"]{background:rgba(255,255,255,.9);color:var(--pri-ink)}
+.me{display:flex;align-items:center;gap:10px;padding:12px 6px 0;border-top:1px solid rgba(255,255,255,.18)}
+.avatar{
+  width:34px;height:34px;border-radius:999px;
+  background:linear-gradient(135deg,#3B82F6,#1D4ED8);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:700;flex-shrink:0;box-shadow:0 2px 8px rgba(29,78,216,.35)
+}
 .me .out{border:0;background:transparent;color:var(--side-sub);font-size:12px;text-decoration:underline;padding:4px 6px;white-space:nowrap}
 .th-sort{border:0;background:transparent;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;white-space:nowrap}
 .th-sort.on{color:var(--pri-ink)}
@@ -66,40 +108,77 @@ a{color:var(--pri-ink)}
 .pw-row input{padding-right:78px!important}
 .pw-eye{position:absolute;right:4px;top:4px;bottom:4px;border:0;border-radius:6px;background:var(--soft);color:var(--pri-ink);font-size:12px;font-weight:600;padding:0 10px}
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
-.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 28px;min-height:70px}
+.top{
+  position:sticky;top:0;z-index:20;
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(20px) saturate(1.8);
+  -webkit-backdrop-filter:blur(20px) saturate(1.8);
+  border-bottom:1px solid rgba(255,255,255,.65);
+  display:flex;align-items:center;gap:14px;padding:12px 28px;min-height:70px;
+  box-shadow:0 4px 20px rgba(30,58,138,.07)
+}
 .top h1{margin:0;font-size:21px;font-weight:700;color:var(--pri-ink);letter-spacing:-.01em}
 .top .sub{font-size:12px;color:var(--muted)}
 .top .grow{flex:1;min-width:0}
-.menu-btn{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:#fff;align-items:center;justify-content:center}
+.menu-btn{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.6);align-items:center;justify-content:center}
 .search{position:relative;width:300px}
 .search svg{position:absolute;left:12px;top:12px}
-.search input{width:100%;height:40px;padding:0 12px 0 36px;border-radius:10px;border:1px solid #D8D2EE;background:var(--soft)}
+.search input{
+  width:100%;height:40px;padding:0 12px 0 36px;border-radius:10px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(255,255,255,.65);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px)
+}
 .content{padding:22px 28px 60px}
 .live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
-.live i{width:8px;height:8px;border-radius:99px;background:#9A95AE;display:inline-block}
-.live.on i{background:#2E9E63}
+.live i{width:8px;height:8px;border-radius:99px;background:#94A3B8;display:inline-block}
+.live.on i{background:#10B981;box-shadow:0 0 6px rgba(16,185,129,.5)}
 .bottom-nav{display:none}
 .scrim{display:none}
 
-/* ---------- controls ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;border-radius:10px;border:1px solid #D8D2EE;background:#fff;color:var(--pri-ink);font-weight:600;font-size:14px;white-space:nowrap;text-decoration:none}
-.btn:hover{background:var(--soft)}
-.btn-pri{background:var(--pri);border-color:var(--pri);color:#fff}
-.btn-pri:hover{background:#4E3FA6}
+/* ─── Controls ─── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:40px;padding:0 16px;border-radius:10px;
+  border:1px solid rgba(148,163,184,.4);
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:var(--pri-ink);font-weight:600;font-size:14px;white-space:nowrap;
+  text-decoration:none;transition:all .15s
+}
+.btn:hover{background:rgba(255,255,255,.92);border-color:rgba(148,163,184,.6)}
+.btn-pri{
+  background:linear-gradient(135deg,#3B82F6,#2563EB);
+  border-color:#2563EB;color:#fff;
+  box-shadow:0 2px 12px rgba(37,99,235,.35)
+}
+.btn-pri:hover{background:linear-gradient(135deg,#2563EB,#1D4ED8);box-shadow:0 4px 16px rgba(37,99,235,.45)}
 .btn-sm{min-height:34px;padding:0 11px;font-size:12px;border-radius:8px}
-.btn-ok{background:var(--teal-bg);border-color:#A9D6CF;color:var(--teal-ink)}
+.btn-ok{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.35);color:var(--teal-ink)}
 .btn-zalo{background:var(--zalo);border-color:var(--zalo);color:#fff}
 .btn-line{border-color:var(--pri);color:var(--pri-ink)}
-.btn-danger{border-color:#F0B8B1;color:var(--red-ink)}
+.btn-danger{border-color:rgba(220,38,38,.35);color:var(--red-ink)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid #D8D2EE;background:#fff;color:var(--ink);font-size:13px;font-weight:600}
-.chip[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#fff}
+.chip{
+  min-height:36px;padding:0 14px;border-radius:999px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(255,255,255,.65);backdrop-filter:blur(8px);
+  color:var(--ink);font-size:13px;font-weight:600
+}
+.chip[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#fff;box-shadow:0 2px 10px rgba(37,99,235,.35)}
 .pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
 .pri-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-size:12px;font-weight:700}
 .chk{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
 .chk input{width:18px;height:18px;accent-color:var(--pri)}
 .field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--muted)}
-.field input,.field select,.field textarea{height:40px;padding:0 10px;border-radius:8px;border:1px solid #D8D2EE;background:#fff;font-size:14px;font-weight:400;color:var(--ink);width:100%}
+.field input,.field select,.field textarea{
+  height:40px;padding:0 10px;border-radius:8px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  font-size:14px;font-weight:400;color:var(--ink);width:100%
+}
 .field textarea{height:auto;min-height:70px;padding:8px 10px;resize:vertical}
 .field input:disabled,.field select:disabled,.field textarea:disabled{background:var(--soft);color:var(--muted)}
 .field.chkf{flex-direction:row;align-items:center;gap:8px;min-height:40px}
@@ -107,89 +186,175 @@ a{color:var(--pri-ink)}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
 .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px}
 
-/* ---------- cards & tables ---------- */
+/* ─── Cards & Tables ─── */
 .stack{display:flex;flex-direction:column;gap:18px}
-.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:0 1px 2px rgba(62,49,144,.05)}
+.card{
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(16px) saturate(1.8);
+  -webkit-backdrop-filter:blur(16px) saturate(1.8);
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:14px;padding:18px 20px;
+  box-shadow:0 4px 24px rgba(30,58,138,.07),0 1px 3px rgba(30,58,138,.04)
+}
 .card h2{margin:0;font-size:15px;font-weight:700}
 .band{display:flex;align-items:center;gap:12px}
 .band span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pri)}
-.band i{flex:1;height:1px;background:#D8D2EE}
+.band i{flex:1;height:1px;background:rgba(148,163,184,.3)}
 .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .span2{grid-column:span 2}
 .tile{display:flex;flex-direction:column;gap:10px}
 .tile .lab{font-size:13px;font-weight:600;color:var(--muted)}
-.tile .val{font-size:32px;font-weight:700;letter-spacing:-.02em}
+.tile .val{font-size:32px;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
 .tile .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--faint)}
 .tag{display:inline-flex;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600}
-.tbl{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl{
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(14px) saturate(1.8);
+  -webkit-backdrop-filter:blur(14px) saturate(1.8);
+  border:1px solid rgba(255,255,255,.68);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 4px 20px rgba(30,58,138,.06)
+}
 .tbl-x{overflow-x:auto}
-.tbl-h{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--soft);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tbl-h{
+  display:flex;align-items:center;gap:10px;padding:12px 18px;
+  background:rgba(219,234,254,.45);
+  border-bottom:1px solid rgba(148,163,184,.2);flex-wrap:wrap
+}
 .tbl-h h2{margin:0;font-size:15px;font-weight:700;color:var(--pri-ink)}
-.tr{display:grid;grid-template-columns:var(--cols);gap:10px;align-items:center;padding:0 18px;min-height:44px;border-bottom:1px solid var(--line2);min-width:var(--minw,0)}
+.tr{display:grid;grid-template-columns:var(--cols);gap:10px;align-items:center;padding:0 18px;min-height:44px;border-bottom:1px solid rgba(148,163,184,.12);min-width:var(--minw,0)}
 .tr:last-child{border-bottom:0}
-.tr.th{min-height:36px;font-size:12px;font-weight:600;color:var(--muted);background:var(--soft2)}
-.tr:not(.th):hover{background:var(--soft2)}
+.tr.th{min-height:36px;font-size:12px;font-weight:600;color:var(--muted);background:rgba(219,234,254,.3)}
+.tr:not(.th):hover{background:rgba(219,234,254,.4)}
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lk{background:none;border:0;padding:0;color:var(--pri-ink);text-align:left;font-size:13px}
 .lk:hover{text-decoration:underline}
 .lk.mono{font-size:13px}
 .cnt-b{padding:1px 9px;border-radius:999px;background:var(--pri-soft);color:var(--pri-ink);font-size:12px;font-weight:700}
-.empty{padding:40px 20px;text-align:center;background:#fff;border:1px dashed #D8D2EE;border-radius:12px;color:var(--muted)}
-.bar-bg{height:10px;border-radius:5px;background:var(--line2)}
+.empty{
+  padding:40px 20px;text-align:center;
+  background:rgba(255,255,255,.55);
+  border:1px dashed rgba(148,163,184,.45);
+  border-radius:14px;color:var(--muted)
+}
+.bar-bg{height:10px;border-radius:5px;background:rgba(148,163,184,.2)}
 .bar{height:10px;border-radius:5px}
 .heat-row{display:grid;grid-template-columns:190px repeat(14,minmax(0,1fr)) 36px;gap:4px;align-items:center}
 .heat-c{height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
 .legend-i{display:flex;align-items:center;gap:10px;min-height:34px;padding:0 8px;border:0;border-radius:6px;background:transparent;width:100%;text-align:left;font-size:13px}
-.legend-i:hover{background:var(--soft)}
+.legend-i:hover{background:rgba(219,234,254,.45)}
 .todo-i{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:transparent;width:100%;text-align:left;font-size:13px}
-.todo-i:hover{background:var(--soft)}
+.todo-i:hover{background:rgba(219,234,254,.45)}
 .todo-i b{min-width:32px;padding:2px 8px;border-radius:6px;background:var(--lav);color:var(--pri-ink);text-align:center}
 
-/* ---------- suggestions ---------- */
+/* ─── Suggestions ─── */
 .gy-layout{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:20px;align-items:start}
-.gy-card{display:flex;align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(62,49,144,.05)}
-.gy-card.sel{border:2px solid var(--pri);box-shadow:0 4px 14px rgba(62,49,144,.14)}
+.gy-card{
+  display:flex;align-items:stretch;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:12px;box-shadow:0 2px 12px rgba(30,58,138,.06)
+}
+.gy-card.sel{
+  border:2px solid var(--pri);
+  box-shadow:0 4px 20px rgba(37,99,235,.2)
+}
 .gy-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;padding:12px 16px;border:0;background:transparent;text-align:left}
-.gy-side{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:10px 14px;background:var(--soft2);border-radius:0 12px 12px 0;min-width:140px}
+.gy-side{
+  display:flex;flex-direction:column;justify-content:center;gap:6px;
+  padding:10px 14px;background:rgba(219,234,254,.35);
+  border-radius:0 12px 12px 0;min-width:140px
+}
 .panel{position:sticky;top:90px;display:flex;flex-direction:column;gap:14px}
-.order{margin:0;white-space:pre-wrap;font-family:var(--mono),'Noto Sans SC',monospace;font-size:12px;line-height:1.6;background:var(--soft);border:1px solid #ECE8F8;border-radius:8px;padding:12px}
+.order{
+  margin:0;white-space:pre-wrap;font-family:var(--mono),'Noto Sans SC',monospace;
+  font-size:12px;line-height:1.6;
+  background:rgba(219,234,254,.35);
+  border:1px solid rgba(148,163,184,.25);border-radius:8px;padding:12px
+}
 .kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 10px;font-size:13px}
 .kv span:nth-child(odd){color:var(--muted)}
 
-/* ---------- drawer / modal ---------- */
-.drawer-wrap{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(43,38,64,.32)}
+/* ─── Drawer / Modal ─── */
+.drawer-wrap{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(15,23,42,.28);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
 .drawer-wrap>.close-area{flex:1;border:0;background:transparent}
-.drawer{width:560px;max-width:100%;height:100%;overflow-y:auto;background:#fff;box-shadow:-8px 0 24px rgba(43,38,64,.18);display:flex;flex-direction:column}
-.drawer-h{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:flex-start;gap:12px}
+.drawer{
+  width:560px;max-width:100%;height:100%;overflow-y:auto;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:-8px 0 40px rgba(15,23,42,.18);display:flex;flex-direction:column
+}
+.drawer-h{
+  position:sticky;top:0;z-index:2;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(148,163,184,.2);padding:16px 20px;display:flex;align-items:flex-start;gap:12px
+}
 .drawer-b{padding:18px 20px;display:flex;flex-direction:column;gap:18px}
-.drawer-f{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;display:flex;gap:10px;justify-content:flex-end}
+.drawer-f{
+  position:sticky;bottom:0;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(148,163,184,.2);
+  padding:12px 20px;display:flex;gap:10px;justify-content:flex-end
+}
 .steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
 .step{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:11px;line-height:1.3;color:var(--muted)}
-.step b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:99px;font-size:12px;background:#EEEDF3;color:#6E6985}
+.step b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:99px;font-size:12px;background:rgba(148,163,184,.15);color:var(--faint)}
 .step.done b{background:var(--pri-soft);color:var(--pri-ink)}
-.step.cur b{background:var(--pri);color:#fff}
+.step.cur b{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.35)}
 .step.cur{color:var(--ink);font-weight:600}
 .sec{display:flex;flex-direction:column;gap:12px}
 .sec>h3{margin:0;font-size:13px;font-weight:700;color:var(--pri-ink)}
-.x-btn{width:40px;height:40px;border-radius:10px;border:1px solid #D8D2EE;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.x-btn{
+  width:40px;height:40px;border-radius:10px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(255,255,255,.65);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0
+}
 
-/* ---------- toast & login ---------- */
-#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;padding:12px 18px;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(43,38,64,.3);max-width:min(640px,calc(100vw - 32px));display:none}
+/* ─── Toast & Login ─── */
+#toast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;
+  padding:12px 18px;border-radius:10px;
+  background:rgba(15,23,42,.9);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  color:#fff;font-size:13px;font-weight:500;
+  box-shadow:0 8px 32px rgba(15,23,42,.3);max-width:min(640px,calc(100vw - 32px));display:none
+}
 #toast.show{display:block}
 #toast.err{background:var(--red)}
-.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:linear-gradient(180deg,var(--side) 0 38%,var(--bg) 38% 100%)}
-.login-card{width:420px;max-width:100%;background:#fff;border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(43,38,64,.18);display:flex;flex-direction:column;gap:16px}
+.login{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;
+  background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 30%,#BFDBFE 65%,#93C5FD 100%)
+}
+.login-card{
+  width:420px;max-width:100%;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:16px;padding:28px;
+  box-shadow:0 16px 48px rgba(30,58,138,.16);
+  display:flex;flex-direction:column;gap:16px
+}
 .login-card h1{margin:0;font-size:22px;color:var(--pri-ink)}
-.tabs2{display:flex;gap:4px;padding:4px;border-radius:10px;background:var(--soft)}
+.tabs2{
+  display:flex;gap:4px;padding:4px;border-radius:10px;
+  background:rgba(219,234,254,.45)
+}
 .tabs2 button{flex:1;min-height:36px;border:0;border-radius:8px;background:transparent;font-weight:600;color:var(--muted)}
-.tabs2 button[aria-pressed="true"]{background:#fff;color:var(--pri-ink);box-shadow:0 1px 3px rgba(43,38,64,.12)}
+.tabs2 button[aria-pressed="true"]{
+  background:rgba(255,255,255,.9);color:var(--pri-ink);
+  box-shadow:0 1px 3px rgba(30,58,138,.12)
+}
 .msg{font-size:13px;padding:10px 12px;border-radius:8px;background:var(--lav);color:var(--lav-ink)}
 .msg.err{background:var(--red-bg);color:var(--red-ink)}
 .loading{padding:80px 0;text-align:center;color:var(--muted)}
 
-/* ---------- responsive ---------- */
+/* ─── Responsive ─── */
 @media (max-width:1180px){
   .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gy-layout{grid-template-columns:minmax(0,1fr)}
@@ -197,8 +362,8 @@ a{color:var(--pri-ink)}
 }
 @media (max-width:900px){
   .side{position:fixed;left:0;top:0;z-index:50;transform:translateX(-100%);transition:transform .2s ease;visibility:hidden}
-  .app.nav-open .side{transform:none;visibility:visible;box-shadow:8px 0 24px rgba(43,38,64,.25)}
-  .app.nav-open .scrim{display:block;position:fixed;inset:0;z-index:45;background:rgba(43,38,64,.32);border:0}
+  .app.nav-open .side{transform:none;visibility:visible;box-shadow:8px 0 32px rgba(30,58,138,.3)}
+  .app.nav-open .scrim{display:block;position:fixed;inset:0;z-index:45;background:rgba(15,23,42,.28);border:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
   .menu-btn{display:flex}
   .top{padding:10px 14px;min-height:60px;gap:10px}
   .top h1{font-size:18px}
@@ -210,7 +375,13 @@ a{color:var(--pri-ink)}
   .gy-card{flex-direction:column}
   .gy-side{border-radius:0 0 12px 12px;flex-direction:row;align-items:center;justify-content:space-between}
   .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);padding:4px 6px calc(8px + env(safe-area-inset-bottom))}
+  .bottom-nav{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);
+    border-top:1px solid rgba(148,163,184,.25);
+    padding:4px 6px calc(8px + env(safe-area-inset-bottom))
+  }
   .bottom-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px;border:0;background:transparent;font-size:11px;font-weight:500;color:var(--muted)}
   .bottom-nav button[aria-current="page"]{color:var(--pri);font-weight:700}
   .bottom-nav .bdg{min-width:16px;padding:0 5px;border-radius:99px;background:var(--red);color:#fff;font-size:10px;font-weight:700;line-height:16px}
@@ -253,7 +424,7 @@ const TZ = 'Asia/Ho_Chi_Minh';
 /* ---------------- ngôn ngữ ---------------- */
 const D = {
   tong:['Tổng quan','总览'], goiy:['Gợi ý chờ duyệt','待确认建议'], homnay:['Kế hoạch hôm nay','今日计划'],
-  taikho:['Tại kho','在厂'], bai:['Bãi tạm','堆场'], kd:['Kiểm dịch','检疫'], lo:['Lô / Booking','批次 / 订舱'],
+  taikho:['Tại kho','在厂'], bai:['Bãi tạm','堆场'], board:['Container','货柜'], kd:['Kiểm dịch','检疫'], lo:['Lô / Booking','批次 / 订舱'],
   tim:['Tìm cont','查柜'], danhmuc:['Danh mục','基础资料'],
   gDieuDo:['Điều độ','调度'], gTheoDoi:['Theo dõi cont','柜子跟踪'], gTraCuu:['Tra cứu','查询'],
   refresh:['Chạy lại gợi ý','重新生成建议'], searchPh:['Tìm cont, seal, lô, mã đơn…','搜索柜号、封条、批次、订单号…'],
@@ -301,6 +472,7 @@ const D = {
   runOk:['Đã tạo gợi ý mới','已生成新建议'], runBusy:['Đang có phiên chạy gợi ý khác — thử lại sau giây lát','另一个建议任务正在运行，请稍后重试'], signOut:['Đăng xuất','退出'], nkTab:['Nhật ký thay đổi','修改日志'], pwChange:['Đổi mật khẩu','修改密码'], live:['Cập nhật trực tiếp','实时更新'],
   shipped:['Đã lên tàu','已登船'], lotsOpen:['lô đang chạy','批进行中'], required:['Thiếu thông tin bắt buộc','缺少必填信息'],
   suggest:['Gợi ý','建议'], today:['Hôm nay','今日'], menu:['Menu','菜单'], search:['Tìm','查'],
+  workflow:['Điều phối','调度台'], goi_y:['Gợi ý','建议'], yard:['Tại kho','在厂'],
   hacang:['Hạ cảng','回港'], clsMail:['CLS mail','邮件截关'], clsEport:['CLS ePort','ePort截关'], clsTay:['CLS nhập tay','手填截关'], clsUse:['CLS máy dùng','计划用截关'],
   eportBtn:['Cập nhật CLS ePort','更新ePort截关'], kdtvBtn:['Cập nhật mã KDTV','更新检疫单号'], kdtvNoUrl:['Chưa cấu hình URL đồng bộ KDTV (cấu hình: URL đồng bộ KDTV)','未配置检疫单号同步URL'], baiTab:['Bãi tạm','堆场'], giaTab:['Giá cước nhà xe','车队运价'], donTab:['Dọn dữ liệu','清理数据'],
   dongNgay:['Đóng trong ngày','当天装柜'], nangHa:['Nâng hạ','吊装费'], haCangFee:['Vận chuyển hạ cảng','回港运费'], phatSinh:['Phát sinh','其他费用'], tongCP:['Tổng chi phí','费用合计'],
@@ -315,22 +487,22 @@ function T(k) { return tr(D[k] || [k, k]); }
 function T1(vi, zh) { return tr([vi, zh], LANG === 'both' ? 'vi' : LANG); }
 
 const ST = {
-  '1': { vi:'Chờ cắt rỗng', zh:'待提空', bg:'#EFECFA', fg:'#4B3C8C', dot:'#B8AEE6' },
-  '2': { vi:'Đang đóng hàng', zh:'装货中', bg:'#E6E2F7', fg:'#3E3190', dot:'#6C5DC0' },
-  '3': { vi:'Đầy chờ kéo', zh:'已装满待拉回', bg:'#FBEBD5', fg:'#7A4700', dot:'#E0A43A' },
-  '4': { vi:'Ở bãi tạm', zh:'堆场插电', bg:'#E0F1EF', fg:'#10605A', dot:'#3E9C94' },
-  '5': { vi:'Đã hạ cảng', zh:'已回港待登船', bg:'#E4E0F2', fg:'#2E2468', dot:'#3B2F7A' },
-  '6': { vi:'Đã lên tàu', zh:'已登船走船', bg:'#EEEDF3', fg:'#55516A', dot:'#A7A3B8' },
-  '9': { vi:'Hủy / đổi cont', zh:'取消换柜', bg:'#FBE4E1', fg:'#A3261A', dot:'#C4392B' }
+  '1': { vi:'Chờ cắt rỗng', zh:'待提空', bg:'#DBEAFE', fg:'#1D4ED8', dot:'#60A5FA' },
+  '2': { vi:'Đang đóng hàng', zh:'装货中', bg:'#E0E7FF', fg:'#4338CA', dot:'#6366F1' },
+  '3': { vi:'Đầy chờ kéo', zh:'已装满待拉回', bg:'#FEF3C7', fg:'#92400E', dot:'#F59E0B' },
+  '4': { vi:'Ở bãi tạm', zh:'堆场插电', bg:'#D1FAE5', fg:'#065F46', dot:'#10B981' },
+  '5': { vi:'Đã hạ cảng', zh:'已回港待登船', bg:'#CFFAFE', fg:'#155E75', dot:'#06B6D4' },
+  '6': { vi:'Đã lên tàu', zh:'已登船走船', bg:'#E2E8F0', fg:'#475569', dot:'#94A3B8' },
+  '9': { vi:'Hủy / đổi cont', zh:'取消换柜', bg:'#FEE2E2', fg:'#B91C1C', dot:'#EF4444' }
 };
 const TYPES = {
-  dong:{ vi:'Đóng trong ngày', zh:'当天装柜', bg:'#FDF1DC', fg:'#7A4700' },
-  doi:{ vi:'Đổi rỗng kéo đầy', zh:'换空拉满', bg:'#E0F1EF', fg:'#10605A' },
-  cat:{ vi:'Cắt mooc', zh:'甩挂', bg:'#F3EFFB', fg:'#5A4A9E' },
-  rut:{ vi:'Rút mooc', zh:'拉满柜', bg:'#E6E2F7', fg:'#3E3190' }
+  dong:{ vi:'Đóng trong ngày', zh:'当天装柜', bg:'#FEF3C7', fg:'#92400E' },
+  doi:{ vi:'Đổi rỗng kéo đầy', zh:'换空拉满', bg:'#D1FAE5', fg:'#065F46' },
+  cat:{ vi:'Cắt mooc', zh:'甩挂', bg:'#DBEAFE', fg:'#1D4ED8' },
+  rut:{ vi:'Rút mooc', zh:'拉满柜', bg:'#E0E7FF', fg:'#4338CA' }
 };
 function typeKey(t) { t = String(t || ''); if (t.indexOf('Đóng trong ngày') === 0) return 'dong'; if (t.indexOf('Đổi rỗng') === 0 || t.indexOf('+') > -1) return 'doi'; if (t.indexOf('Rút mooc') === 0) return 'rut'; return 'cat'; }
-const MUC = { 'Quá CLS':['#6B0A12', '#fff'], 'KD gấp':['#B42318', '#fff'], 'Sát CLS':['#FBE4E1', '#A3261A'], 'CLS gần':['#FBEBD5', '#7A4700'], 'CLS xa':['#EEEBF8', '#4B3C8C'] };
+const MUC = { 'Quá CLS':['#7F1D1D', '#fff'], 'KD gấp':['#DC2626', '#fff'], 'Sát CLS':['#FEE2E2', '#B91C1C'], 'CLS gần':['#FEF3C7', '#92400E'], 'CLS xa':['#DBEAFE', '#1D4ED8'] };
 function mucPill(m) { const c = MUC[m]; return c ? pill(m, c[0], c[1]) : ''; }
 function splitVZ(s) { s = String(s || ''); const m = s.match(/^(.*?)\s*([㐀-鿿].*)$/); return m ? [m[1].trim(), m[2].trim()] : [s, '']; }
 function stLabel(k) { const s = ST[k] || { vi:k, zh:'' }; return tr([s.vi, s.zh]); }
@@ -352,19 +524,20 @@ function stPill(k) { const s = ST[k] || ST['6']; return pill(stLabel(k), s.bg, s
 function typePill(tk) { const t = TYPES[tk]; return pill(tr([t.vi, t.zh]), t.bg, t.fg); }
 function clChip(ts) {
   const h = hLeft(ts);
-  if (h === null) return pill(T1('Chưa có closing', '无截关'), '#EEEBF8', '#4B3C8C');
-  if (h < 0) { const o = -h; return pill(o >= 48 ? T1('Quá ' + Math.round(o / 24) + ' ngày', '超' + Math.round(o / 24) + '天') : T1('Quá ' + Math.round(o) + ' giờ', '超' + Math.round(o) + '小时'), '#B42318', '#fff'); }
+  if (h === null) return pill(T1('Chưa có closing', '无截关'), '#DBEAFE', '#1D4ED8');
+  if (h < 0) { const o = -h; return pill(o >= 48 ? T1('Quá ' + Math.round(o / 24) + ' ngày', '超' + Math.round(o / 24) + '天') : T1('Quá ' + Math.round(o) + ' giờ', '超' + Math.round(o) + '小时'), '#DC2626', '#fff'); }
   const txt = h >= 48 ? T1('Còn ' + Math.round(h / 24) + ' ngày', '剩' + Math.round(h / 24) + '天') : T1('Còn ' + Math.round(h) + ' giờ', '剩' + Math.round(h) + '小时');
-  if (h < 24) return pill(txt, '#FBE4E1', '#A3261A');
-  if (h < 48) return pill(txt, '#FBEBD5', '#7A4700');
-  return pill(txt, '#EEEBF8', '#4B3C8C');
+  if (h < 24) return pill(txt, '#FEE2E2', '#B91C1C');
+  if (h < 48) return pill(txt, '#FEF3C7', '#92400E');
+  return pill(txt, '#DBEAFE', '#1D4ED8');
 }
 function tick(b) { return b ? '<span style="color:var(--green-ink);font-weight:700">✓</span>' : '<span class="faint">—</span>'; }
 const ICON = {
   tong:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+  workflow:'M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5',
   goiy:'M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z',
   homnay:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4',
-  taikho:'M3 10l9-6 9 6v10H3zM7 20v-6h10v6', bai:'M13 3L5 14h6l-1 7 8-11h-6z',
+  taikho:'M3 10l9-6 9 6v10H3zM7 20v-6h10v6', bai:'M13 3L5 14h6l-1 7 8-11h-6z', board:'M3 6h18v12H3zM3 12h18M9 6v12M15 6v12',
   kd:'M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6zM9 12l2 2 4-4',
   lo:'M3 17l2 3h14l2-3M5 17v-6h14v6M8 11V7h8v4M12 4v3', tim:'M11 4a7 7 0 1 0 0 14a7 7 0 0 0 0-14zM20 20l-4-4',
   danhmuc:'M4 5h16M4 12h16M4 19h10', truck:'M2 16h13V7H2zM15 10h4l3 3v3h-7zM6 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4zM18 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4z',
@@ -386,7 +559,8 @@ const S = {
   recent: [], shipped: 0, loaded: false, live: false,
   gyType: 'all', gyPri: 'all', gyHide: true, sel: null, pick: {}, copied: null, confirmApply: null,
   tkSeg: '2', loOpen: true, q: '', results: null, searching: false, dmTab: 'nhaxe', navOpen: false,
-  chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, eportRunning: false
+  chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, eportRunning: false,
+  kdWiz: null, boardSeg: '1'
 };
 function canWrite() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
 function canCat() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
@@ -509,11 +683,13 @@ function gyView(g) {
 const NEXT = { '1':['2','toDen'], '2':['3','toDay'], '3':['4','toBai'], '4':['5','toCang'], '5':['6','toTau'] };
 
 /* ---------------- khung trang ---------------- */
-const NAV_GROUPS = [['gDieuDo', ['tong', 'goiy', 'homnay']], ['gTheoDoi', ['taikho', 'bai', 'kd', 'hacang']], ['gTraCuu', ['lo', 'tim', 'danhmuc']]];
+const NAV_GROUPS = [['gDieuDo', ['tong', 'workflow', 'lo']], ['gTheoDoi', ['board', 'kd', 'hacang']], ['gTraCuu', ['tim', 'danhmuc']]];
 function navCount(k) {
   const n = counts();
+  if (k === 'workflow') { const pending = S.goiy.filter(g => !g.duyet).length; const ready = S.goiy.filter(g => g.duyet && !g.da_ap_dung).length; return pending + ready; }
   if (k === 'goiy') return S.goiy.filter(g => !g.duyet).length;
   if (k === 'homnay') return S.goiy.filter(g => g.duyet && !g.da_ap_dung).length;
+  if (k === 'board') return n['1'] + n['2'] + n['3'] + n['4'];
   if (k === 'taikho') return n['1'] + n['2'] + n['3'];
   if (k === 'bai') return n['4'];
   if (k === 'kd') return kdList().length;
@@ -542,7 +718,7 @@ function renderShell() {
       (canPlan() ? '<button class="btn btn-pri" data-act="run-goiy">' + ico('refresh', 16) + '<span>' + esc(T('refresh')) + '</span></button>' : '') +
     '</header><div class="content" id="main"></div></div>' +
     '<nav class="bottom-nav" aria-label="Menu">' +
-      [['goiy', 'suggest'], ['homnay', 'today'], ['taikho', 'taikho'], ['tim', 'search']].map(x => '<button data-act="tab" data-tab="' + x[0] + '" aria-current="' + (S.tab === x[0] ? 'page' : 'false') + '">' + ico(x[0], 20) + '<span>' + esc(T(x[1])) + '</span></button>').join('') +
+      [['goiy', 'suggest'], ['homnay', 'today'], ['board', 'board'], ['tim', 'search']].map(x => '<button data-act="tab" data-tab="' + x[0] + '" aria-current="' + (S.tab === x[0] ? 'page' : 'false') + '">' + ico(x[0], 20) + '<span>' + esc(T(x[1])) + '</span></button>').join('') +
       '<button data-act="nav-open">' + ico('menu', 20) + '<span>' + esc(T('menu')) + '</span></button>' +
     '</nav></div>';
   renderNavCounts();
@@ -555,7 +731,7 @@ function setTitle(t, sub) { const a = document.getElementById('title'), b = docu
 function renderMain() {
   const el = document.getElementById('main'); if (!el) return;
   if (!S.loaded) { el.innerHTML = '<div class="loading">Đang tải dữ liệu… 数据加载中…</div>'; return; }
-  const V = { tong:vTong, goiy:vGoiY, homnay:vHomNay, taikho:vTaiKho, bai:vBai, kd:vKD, hacang:vHaCang, lo:vLo, tim:vTim, danhmuc:vDanhMuc };
+  const V = { tong:vTong, workflow:vWorkflowHub, goiy:vGoiY, homnay:vHomNay, board:vBoard, taikho:vTaiKho, bai:vBai, kd:vKD, hacang:vHaCang, lo:vLo, tim:vTim, danhmuc:vDanhMuc };
   setTitle(T(S.tab), (S.me ? S.me.email : '') + (canWrite() ? '' : ' · ' + T('readOnly')));
   el.innerHTML = (V[S.tab] || vTong)();
 }
@@ -599,9 +775,9 @@ function vTong() {
   // donut
   const C = 2 * Math.PI * 52; let cum = 0;
   const segs = ['1', '2', '3', '4', '5'].filter(k => n[k] > 0).map(k => { const len = C * n[k] / Math.max(1, totalAct); const s = '<circle cx="70" cy="70" r="52" fill="none" stroke="' + ST[k].dot + '" stroke-width="18" stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-cum).toFixed(2) + '"/>'; cum += len; return s; }).join('');
-  const kpiTab = { '1':'taikho', '2':'taikho', '3':'taikho', '4':'bai', '5':'lo' };
+  const kpiTab = { '1':'board', '2':'board', '3':'board', '4':'board', '5':'lo' };
   const donut = '<section class="card stack" style="gap:14px"><h2>' + esc(T1('Cont đang chạy', '在途柜')) + '</h2><div style="display:flex;justify-content:center"><div style="position:relative;width:168px;height:168px"><svg width="168" height="168" viewBox="0 0 140 140" aria-hidden="true"><g transform="rotate(-90 70 70)"><circle cx="70" cy="70" r="52" fill="none" stroke="#F1EEFB" stroke-width="18"/>' + segs + '</g></svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:30px;font-weight:700;color:var(--pri-ink)" class="num">' + totalAct + '</span><span class="muted" style="font-size:12px">cont 柜</span></div></div></div><div>' +
-    ['1', '2', '3', '4', '5'].map(k => '<button class="legend-i" data-act="tab" data-tab="' + kpiTab[k] + '" data-seg="' + (k < '4' ? k : '') + '"><span style="width:10px;height:10px;border-radius:3px;background:' + ST[k].dot + '"></span><span style="flex:1">' + esc(stLabel(k)) + '</span><b class="num">' + n[k] + '</b><span class="muted num" style="width:40px;text-align:right">' + Math.round(n[k] / Math.max(1, totalAct) * 100) + '%</span></button>').join('') +
+    ['1', '2', '3', '4', '5'].map(k => '<button class="legend-i" data-act="tab" data-tab="' + kpiTab[k] + '" data-seg="' + (k <= '4' ? k : '') + '"><span style="width:10px;height:10px;border-radius:3px;background:' + ST[k].dot + '"></span><span style="flex:1">' + esc(stLabel(k)) + '</span><b class="num">' + n[k] + '</b><span class="muted num" style="width:40px;text-align:right">' + Math.round(n[k] / Math.max(1, totalAct) * 100) + '%</span></button>').join('') +
     '</div><div class="muted" style="font-size:12px;padding:0 8px">' + esc(T('shipped')) + ': ' + S.shipped.toLocaleString('vi-VN') + ' cont</div></section>';
   // closing 72
   const cl72 = ol.filter(l => { const h = hLeft(l.closing); return h !== null && h > -24 && h < 72; }).sort((a, b) => new Date(a.closing) - new Date(b.closing));
@@ -610,7 +786,7 @@ function vTong() {
     (cl72.length ? cl72.map(l => { const mine = S.conts.filter(c => c.lo === l.lo); const k = mine.filter(c => c.trang_thai <= '3').length, b = mine.filter(c => c.trang_thai === '4').length, p = mine.filter(c => c.trang_thai === '5').length;
       return '<div class="tr" style="' + cols + '"><button class="lk" style="font-weight:700" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button><span class="mono ell" style="font-size:12px">' + esc(l.booking || '—') + '</span><span class="ell">' + esc((l.hang_tau || '') + (l.ten_tau ? ' · ' + l.ten_tau : '')) + '</span><span>' + esc(l.cang_den || '—') + '</span><span class="num">' + fTs(l.closing) + '</span><span>' + clChip(l.closing) + '</span><span class="muted" style="font-size:12px">' + esc(LANG === 'zh' ? ('厂 ' + k + ' · 场 ' + b + ' · 港 ' + p) : (k + ' kho · ' + b + ' bãi · ' + p + ' cảng')) + '</span><span>' + tick(l.da_kiem_dich) + '</span></div>'; }).join('') : '<div class="muted" style="padding:14px 20px">' + esc(T('noClosing72')) + '</div>') +
     '</div></section>';
-  const todo = [['pendingSug', pending.length, 'goiy', ''], ['waitEmpty', n['1'], 'taikho', '1'], ['fullWait', n['3'], 'taikho', '3'], ['kdPending', kdList().length, 'kd', ''], ['closing48', cl72.filter(l => hLeft(l.closing) < 48).length, 'lo', '']];
+  const todo = [['pendingSug', pending.length, 'goiy', ''], ['waitEmpty', n['1'], 'board', '1'], ['fullWait', n['3'], 'board', '3'], ['kdPending', kdList().length, 'kd', ''], ['closing48', cl72.filter(l => hLeft(l.closing) < 48).length, 'lo', '']];
   const yards = ['HLS', 'HT', 'PD', 'DCL'].map(b => { const bi = S.bai.find(x => x.ma === b) || {}; return '<div style="border-radius:10px;background:var(--soft);border:1px solid #ECE8F8;padding:10px 12px"><div style="display:flex;align-items:baseline;justify-content:space-between"><b style="color:var(--pri-ink)">' + b + '</b><span class="num" style="font-size:22px;font-weight:700">' + S.conts.filter(c => c.trang_thai === '4' && c.bai_tam === b).length + '</span></div><div class="muted" style="font-size:11px">' + (bi.dien_moi_gio ? money(bi.dien_moi_gio) + T('perHour') : '—') + '</div></div>'; }).join('');
   const right = '<div class="stack" style="gap:16px"><section class="card"><h2 style="margin-bottom:6px">' + esc(T('todo')) + '</h2>' + todo.map(x => '<button class="todo-i" data-act="tab" data-tab="' + x[2] + '" data-seg="' + x[3] + '"><span>' + esc(T(x[0])) + '</span><b class="num">' + x[1] + '</b></button>').join('') + '</section><section class="card stack" style="gap:12px"><h2>' + esc(T('yardNow')) + '</h2><div class="g2" style="gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))">' + yards + '</div></section></div>';
   // bars
@@ -665,6 +841,97 @@ function vGoiY() {
     '<div class="gy-layout"><div class="stack">' + (list.length ? groups : '<div class="empty">' + esc(T1('Không có gợi ý nào khớp bộ lọc.', '无匹配建议。')) + '</div>') + '</div><aside class="card panel">' + panel + '</aside></div></div>';
 }
 
+
+/* ================ WORKFLOW HUB: Gợi ý + Kế hoạch hôm nay ================ */
+function vWorkflowHub() {
+  const tab = S.wfTab || 'suggestions'; // 'suggestions', 'today', 'yard'
+  const all = S.goiy.map(gyView);
+  const tc = { dong:0, doi:0, cat:0, rut:0 };
+  all.forEach(g => tc[g.tk]++);
+
+  const chip = (act, val, cur, txt) => '<button class="chip" data-act="' + act + '" data-v="' + val + '" aria-pressed="' + (cur === val) + '">' + esc(txt) + '</button>';
+
+  // ====== TAB 1: SUGGESTIONS ======
+  const renderSuggestions = () => {
+    const list = all.filter(g => (S.gyType === 'all' || g.tk === S.gyType) && (S.gyPri === 'all' || String(g.uu_tien) === S.gyPri) && !(S.gyHide && g.duyet));
+    const approved = all.filter(g => g.duyet).length;
+    let sel = all.find(g => g.id === S.sel) || list[0];
+
+    const card = g => '<article class="gy-card' + (sel && sel.id === g.id ? ' sel' : '') + '"><button class="gy-main" data-act="gy-sel" data-id="' + esc(g.id) + '"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' + priBadge(g.uu_tien) + typePill(g.tk) + mucPill(g.muc_uu_tien) + clChip(g.closing) + '<span class="muted" style="font-size:12px">' + esc(T('closing')) + ' ' + fTs(g.closing, true) + '</span>' + (g.duyet ? pill(T('approved'), 'var(--teal-bg)', 'var(--teal-ink)') : '') + '</div>' +
+      (g.cont_day ? '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span class="mono" style="font-size:14px">' + esc(g.cont_day) + '</span><span class="muted" style="font-size:12px">' + esc(T('loCol')) + ' ' + esc((g.id_cont_day || '').split('-').pop()) + '</span><span style="font-weight:500">' + esc(g.kho_day || '') + '</span><span class="muted">→ ' + esc(tr(splitVZ(g.noi_ha))) + '</span>' + (g.kdChua ? pill(T1('KD chưa kiểm', '检疫未完成'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</div>' +
+        '<div style="font-size:12px;color:var(--muted)">' + esc(T1('Mooc', '车架') + ': ') + (g.mooc ? '<b style="color:var(--ink)">' + esc(g.mooc) + '</b>' + (g.cd && g.cd.ngay_den_kho ? ' · ' + esc(T1('kéo lên', '上柜')) + ' ' + fDate(g.cd.ngay_den_kho) : '') : '<b style="color:var(--red-ink)">' + esc(T1('chưa rõ nhà xe nào', '未知')) + '</b>') + (g.cd && g.cd.so_seal ? ' · Seal <span class="mono">' + esc(g.cd.so_seal) + '</span>' : '') + '</div>' : '') +
+      (g.kho_cat_rong ? '<div style="font-size:12px;color:var(--lav-ink)">' + esc(T('rong') + ': ' + (g.ma_don_rong || '') + ' @ ' + g.kho_cat_rong + ' · ' + (g.booking_lay_rong || T('noBooking'))) + '</div>' : '') +
+      '</button><div class="gy-side"><span class="muted" style="font-size:12px;text-align:center">' + esc(T('carrier')) + ': <b style="color:var(--ink)">' + esc(g.nx || '—') + '</b>' + (g.chi_phi_uoc_tinh != null ? '<br>' + esc(money(g.chi_phi_uoc_tinh)) : '') + '</span>' + (canPlan() ? '<button class="btn btn-sm ' + (g.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(g.id) + '" data-v="' + (g.duyet ? '0' : '1') + '">' + esc(g.duyet ? T('approved') : T('approve')) + '</button>' : '') + '</div></article>';
+
+    const groups = [1, 2, 3].map(p => {
+      const items = list.filter(g => g.uu_tien === p);
+      if (!items.length) return '';
+      const nm = { 1:['gấp: KD / sát CLS / cần rỗng trong 24 giờ', '紧急'], 2:['CLS gần / cần rỗng trong 48 giờ', '两天内'], 3:['còn lại', '其他'] }[p];
+      return '<div class="stack" style="gap:10px"><div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0;font-size:14px;color:var(--pri-ink)">' + esc(T('pri') + ' ' + p + ' · ' + tr(nm)) + '</h2><span class="cnt-b">' + items.length + '</span></div>' + items.map(card).join('') + '</div>';
+    }).join('');
+
+    let panel = '<div class="muted">' + esc(T('pickOne')) + '</div>';
+    if (sel) {
+      const ph = nxPhone(sel.nx);
+      panel = '<div style="display:flex;gap:8px;flex-wrap:wrap">' + typePill(sel.tk) + clChip(sel.closing) + '</div>' +
+        (sel.cont_day ? '<div class="mono" style="font-size:20px">' + esc(sel.cont_day) + '</div>' : '') +
+        (sel.cd ? '<div class="kv" style="background:var(--soft);border-radius:10px;padding:10px 12px"><span>' + esc(T1('Cont đầy', '满柜')) + '</span><span class="mono">' + esc(sel.cd.so_cont || '—') + '</span><span>Seal</span><span class="mono">' + esc(sel.cd.so_seal || '—') + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(sel.cd.lo || '—') + '</span><span>' + esc(T1('Đang ở kho', '所在仓库')) + '</span><span>' + esc(sel.cd.kho || '—') + '</span><span>' + esc(T1('Mooc của', '车架属于')) + '</span><span><b>' + esc(sel.mooc || T1('chưa rõ', '未知')) + '</b>' + (sel.cd.ngay_den_kho ? ' · ' + esc(T1('kéo lên', '上柜')) + ' ' + fDate(sel.cd.ngay_den_kho, true) : '') + '</span><span>' + esc(T('kd')) + '</span><span>' + (sel.cd.cont_kiem_dich ? (sel.kdChua ? pill(T1('KD chưa kiểm', '检疫未完成'), 'var(--amb-bg)', 'var(--amb-ink)') : esc(T1('KD — lô đã kiểm xong', '已检疫'))) : esc(T1('Không', '否'))) + '</span></div>' : '') +
+        '<div class="kv"><span>' + esc(T('kho')) + '</span><span>' + esc(sel.kho_day || sel.kho_cat_rong || '—') + '</span><span>Nơi hạ 还柜点</span><span>' + esc(sel.noi_ha ? tr(splitVZ(sel.noi_ha)) : '—') + '</span><span>' + esc(T('closing')) + '</span><span>' + fTs(sel.closing, true) + '</span><span>' + esc(T('carrierSug')) + '</span><span>' + esc(sel.nha_xe_goi_y || '—') + '</span><span>' + esc(T1('Chi phí ước tính', '预估费用')) + '</span><span>' + (sel.chi_phi_uoc_tinh != null ? '<b>' + esc(money(sel.chi_phi_uoc_tinh)) + '</b>' : '—') + (sel.chi_phi_ghi_chu ? '<span class="muted" style="font-size:11px;display:block">' + esc(sel.chi_phi_ghi_chu) + '</span>' : '') + '</span></div>' +
+        (sel.kho_cat_rong ? '<div class="msg">' + esc(T('rong') + ': ' + (sel.ma_don_rong || '') + ' @ ' + sel.kho_cat_rong + ' · ' + (sel.booking_lay_rong || T('noBooking'))) + '</div>' : '') +
+        '<div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">' + esc(T('reason')) + '</div><ul style="margin:0;padding-left:18px;font-size:12px;line-height:1.55">' + String(sel.ly_do || '').split(';').filter(x => x.trim()).map(x => '<li>' + esc(x.trim()) + '</li>').join('') + '</ul></div>' +
+        (sel.locked ? '<div class="msg"><b>' + esc(T('pickCarrier')) + ': ' + esc(sel.mooc) + '</b> 🔒<br>' + esc(T1('Cont đang nằm trên mooc của ' + sel.mooc + ' — chỉ ' + sel.mooc + ' kéo về được. Muốn đổi, sửa nhà xe của cont trước.', '柜子在 ' + sel.mooc + ' 的车架上，只能由 ' + sel.mooc + ' 拉回。')) + '</div>' : (sel.cd ? '<div class="msg err">' + esc(T1('Chưa rõ cont nằm trên mooc nhà xe nào — hỏi kho rồi nhập nhà xe cho cont trước khi duyệt.', '未知车架属于哪个车队，请先确认。')) + '</div>' : '') +
+        '<label class="field">' + esc(T('pickCarrier')) + '<select data-on="gy-pick" data-id="' + esc(sel.id) + '"' + (canPlan() ? '' : ' disabled') + '>' + '<option value="">—</option>' + S.nhaxe.map(n => '<option value="' + esc(n.ma) + '"' + (n.ma === sel.nx ? ' selected' : '') + '>' + esc(n.ma + (n.ten_day_du && n.ten_day_du !== n.ma ? ' · ' + n.ten_day_du : '')) + '</option>').join('') + '</select></label>') +
+        '<div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">' + esc(T('orderText')) + '</div><pre class="order">' + esc(sel.text) + '</pre></div>' +
+        '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">' +
+          (canPlan() ? '<button class="btn btn-sm ' + (sel.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(sel.id) + '" data-v="' + (sel.duyet ? '0' : '1') + '">' + esc(sel.duyet ? T('approved') : T('approve')) + '</button>' : '<span></span>') +
+          '<button class="btn btn-sm" data-act="copy-gy" data-id="' + esc(sel.id) + '">' + esc(S.copied === sel.id ? T('copied') : T('copy')) + '</button>' +
+          (ph ? '<a class="btn btn-sm btn-zalo" href="' + esc(zaloUrl(ph)) + '" target="_blank" rel="noopener" data-act="copy-gy" data-id="' + esc(sel.id) + '" data-keep="1">' + esc(T('zalo')) + '</a>' : '<button class="btn btn-sm" disabled title="' + esc(T('noZalo')) + '">' + esc(T('noZalo')) + '</button>') +
+        '</div>';
+    }
+
+    return '<div class="stack" style="gap:16px"><div class="chips">' + chip('gy-type', 'all', S.gyType, T('all') + ' ' + all.length) + ['dong', 'doi', 'cat', 'rut'].map(k => chip('gy-type', k, S.gyType, tr([TYPES[k].vi, TYPES[k].zh]) + ' ' + tc[k])).join('') +
+      '<span style="width:1px;height:24px;background:#D8D2EE;margin:0 4px"></span>' + chip('gy-pri', 'all', S.gyPri, T('all')) + ['1', '2', '3'].map(p => chip('gy-pri', p, S.gyPri, T('pri') + ' ' + p)).join('') +
+      '<span style="flex:1"></span><label class="chk"><input type="checkbox" data-on="gy-hide"' + (S.gyHide ? ' checked' : '') + '>' + esc(T('hideApproved')) + '</label><span class="muted" style="font-size:13px">' + esc(LANG === 'zh' ? all.length + ' 条建议 · 已确认 ' + approved : all.length + ' gợi ý · ' + approved + ' đã duyệt') + '</span></div>' +
+      '<div class="gy-layout"><div class="stack">' + (list.length ? groups : '<div class="empty">' + esc(T1('Không có gợi ý nào khớp bộ lọc.', '无匹配建议。')) + '</div>') + '</div><aside class="card panel">' + panel + '</aside></div></div>';
+  };
+
+  // ====== TAB 2: TODAY'S PLAN ======
+  const renderToday = () => {
+    const ap = all.filter(g => g.duyet).map(x => x);
+    if (!ap.length) return '<div class="empty stack" style="align-items:center;gap:14px"><span>' + esc(T('emptyToday')) + '</span><button class="btn btn-pri" data-act="wf-tab" data-tab="suggestions">' + esc(T('goSuggest')) + '</button></div>';
+
+    const groups = {}; ap.forEach(g => { (groups[g.nx || '—'] = groups[g.nx || '—'] || []).push(g); });
+    const cols = '--cols:160px 130px minmax(0,1fr) 120px 150px;--minw:760px';
+
+    return '<div class="stack">' + Object.keys(groups).sort().map(k => {
+      const items = groups[k], ph = nxPhone(k), open = items.filter(g => !g.da_ap_dung);
+      return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:13px">' + items.length + ' ' + esc(T('orders')) + '</span><span style="flex:1"></span><button class="btn btn-sm" data-act="copy-grp" data-nx="' + esc(k) + '">' + esc(S.copied === 'grp-' + k ? T('copied') : T('copyGroup')) + '</button>' + (ph ? '<a class="btn btn-sm btn-zalo" href="' + esc(zaloUrl(ph)) + '" target="_blank" rel="noopener" data-act="copy-grp" data-nx="' + esc(k) + '" data-keep="1">' + esc(T('zalo')) + '</a>' : '<span class="faint" style="font-size:12px">' + esc(T('noZalo')) + '</span>') + '</div><div class="tbl-x">' +
+        items.map(g => '<div class="tr" style="' + cols + (g.da_ap_dung ? ';opacity:.6' : '') + '"><span>' + typePill(g.tk) + '</span><span class="mono">' + esc(g.cont_day || g.ma_don_rong || '') + '</span><span class="ell">' + esc((g.kho_day || g.kho_cat_rong || '') + (g.noi_ha ? ' → ' + tr(splitVZ(g.noi_ha)) : '')) + '</span><span>' + clChip(g.closing) + '</span><span style="display:flex;gap:6px;justify-content:flex-end">' +
+          (g.da_ap_dung ? pill(T('applied'), 'var(--teal-bg)', 'var(--teal-ink)') : (canPlan() ? '<button class="btn btn-sm btn-line" data-act="gy-apply" data-id="' + esc(g.id) + '">' + esc(S.confirmApply === g.id ? T('confirm') : T('markApplied')) + '</button><button class="btn btn-sm" data-act="gy-approve" data-id="' + esc(g.id) + '" data-v="0" title="' + esc(T('unapprove')) + '">' + ico('x', 14) + '</button>' : '')) +
+        '</span></div>').join('') + '</div></section>';
+    }).join('') + '<p class="muted" style="font-size:12px;margin:0">' + esc(T1('"Đánh dấu đã chạy" sẽ tự cập nhật trạng thái cont: cont đầy → vào bãi hoặc hạ cảng theo nơi hạ; đơn rỗng → cont đã tới kho.', '"标记已执行"会自动更新柜子状态：满柜→进堆场或回港；空柜订单→已到厂。')) + '</p></div>';
+  };
+
+  // ====== TAB 3: YARD STATUS ======
+  const renderYard = () => vTaiKho();
+
+  // ====== RENDER TABS ======
+  const tabButtons = '<div class="chips" style="gap:8px">' +
+    '<button class="chip" data-act="wf-tab" data-tab="suggestions" aria-pressed="' + (tab === 'suggestions' ? 'true' : 'false') + '">' + esc(T('goi_y') + ' (' + all.filter(g => !g.duyet).length + ')') + '</button>' +
+    '<button class="chip" data-act="wf-tab" data-tab="today" aria-pressed="' + (tab === 'today' ? 'true' : 'false') + '">' + esc(T('today') + ' (' + all.filter(g => g.duyet && !g.da_ap_dung).length + ')') + '</button>' +
+    '<button class="chip" data-act="wf-tab" data-tab="yard" aria-pressed="' + (tab === 'yard' ? 'true' : 'false') + '">' + esc(T('yard') + ' (' + S.conts.filter(c => c.trang_thai <= '3').length + ')') + '</button>' +
+  '</div>';
+
+  const content = {
+    'suggestions': renderSuggestions(),
+    'today': renderToday(),
+    'yard': renderYard()
+  }[tab] || renderSuggestions();
+
+  return '<div class="stack" style="gap:14px">' + tabButtons + content + '</div>';
+}
+
+
 /* ---------------- KẾ HOẠCH HÔM NAY ---------------- */
 function vHomNay() {
   const ap = S.goiy.filter(g => g.duyet).map(gyView);
@@ -690,20 +957,29 @@ function loOrder(a, b) {
   const r = String(a.lo || '~').localeCompare(String(b.lo || '~'), 'vi', { numeric:true });
   return r || String(a.so_cont || a.ma_don || a.id).localeCompare(String(b.so_cont || b.ma_don || b.id));
 }
-function vTaiKho() {
-  const n = counts(), seg = S.tkSeg, list = S.conts.filter(c => c.trang_thai === seg);
+function vBoard() {
+  const n = counts(), seg = S.boardSeg || '1';
+  const chips = '<div class="chips">' + ['1', '2', '3', '4'].map(k => '<button class="chip" data-act="board-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Lọc container theo trạng thái', '按柜状态筛选')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>';
+  const body = seg === '4' ? baiBody() : taiKhoBody(seg);
+  return '<div class="stack" style="gap:16px">' + chips + body + '</div>';
+}
+function taiKhoBody(seg) {
+  const list = S.conts.filter(c => c.trang_thai === seg);
   const g = {}; list.forEach(c => { (g[c.kho || '—'] = g[c.kho || '—'] || []).push(c); });
   const cols = '--cols:150px 60px 96px 88px 110px 110px 44px minmax(190px,1fr) 124px;--minw:1040px';
   const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('madon')) + '</span><span>' + esc(seg === '1' ? T('can') : T('den')) + '</span><span>' + esc(T('day')) + '</span><span>' + esc(T('carrier')) + '</span><span>' + esc(T('kdShort')) + '</span><span>' + esc(T('clsUse') + ' · ' + T('clsMail') + ' / ' + T('clsEport')) + '</span><span></span></div>';
-  return '<div class="stack" style="gap:16px"><div class="chips">' + ['1', '2', '3'].map(k => '<button class="chip" data-act="tk-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Mỗi kho xếp theo thứ tự lô', '各仓库按批次排序')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>' +
-    (list.length ? Object.keys(g).sort((a, b) => g[b].length - g[a].length).map(k => { const ki = S.kho.find(x => x.ten === k) || {};
+  return (list.length ? Object.keys(g).sort((a, b) => g[b].length - g[a].length).map(k => { const ki = S.kho.find(x => x.ten === k) || {};
       return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:12px">' + esc([ki.khu_vuc, ki.ten_tq].filter(Boolean).join(' · ')) + '</span><span style="flex:1"></span><span class="cnt-b">' + g[k].length + '</span></div><div class="tbl-x">' + head +
         g[k].slice().sort(loOrder).map(c => { const l = lotOf(c); return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + (l && l.dong_trong_ngay ? ' <span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + '</span><span>' + esc(c.ma_don || '—') + '</span><span data-l="' + esc(seg === '1' ? T('can') : T('den')) + '">' + (seg === '1' ? fTs(c.ngay_can_len_kho) : fDate(c.ngay_den_kho)) + '</span><span data-l="' + esc(T('day')) + '" style="' + (c.du_kien_day ? '' : 'color:#8A5A00;font-style:italic') + '">' + (c.du_kien_day ? fTs(c.du_kien_day) : esc(T('notEntered'))) + '</span><span data-l="' + esc(T('carrier')) + '">' + esc(c.nha_xe || '—') + '</span><span>' + (c.cont_kiem_dich ? pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('')
-      : '<div class="empty">' + esc(T1('Không có cont nào ở bước này.', '没有柜子处于此状态。')) + '</div>') + '</div>';
+      : '<div class="empty">' + esc(T1('Không có cont nào ở bước này.', '没有柜子处于此状态。')) + '</div>');
+}
+function vTaiKho() {
+  const n = counts(), seg = S.tkSeg;
+  return '<div class="stack" style="gap:16px"><div class="chips">' + ['1', '2', '3'].map(k => '<button class="chip" data-act="tk-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Mỗi kho xếp theo thứ tự lô', '各仓库按批次排序')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>' + taiKhoBody(seg) + '</div>';
 }
 
 /* ---------------- BÃI TẠM ---------------- */
-function vBai() {
+function baiBody() {
   const list = S.conts.filter(c => c.trang_thai === '4');
   const sorters = { vao:(a, b) => new Date(a.gio_vao_bai || 0) - new Date(b.gio_vao_bai || 0), cls:(a, b) => { const la = lotOf(a), lb = lotOf(b); return (la && la.closing ? new Date(la.closing) : 9e15) - (lb && lb.closing ? new Date(lb.closing) : 9e15); }, lo:loOrder, tien:(a, b) => baiCost(b).tong - baiCost(a).tong };
   const bais = S.bai.map(b => b.ma).concat(list.some(c => !c.bai_tam) ? ['—'] : []);
@@ -712,14 +988,15 @@ function vBai() {
   const sortSel = '<label class="chk" style="gap:6px">' + esc(T1('Sắp xếp trong bãi', '堆场内排序')) + '<select data-on="bai-sort" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff">' + [['vao', T1('Giờ vào bãi', '进场时间')], ['cls', T1('CLS gần nhất', '截关')], ['lo', T1('Thứ tự lô', '批次')], ['tien', T1('Chi phí cao nhất', '费用最高')]].map(o => '<option value="' + o[0] + '"' + (S.baiSort === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select></label>';
   const cards = '<div class="g4">' + S.bai.map(bi => { const cs = list.filter(c => c.bai_tam === bi.ma), tong = cs.reduce((a, c) => a + baiCost(c).tong, 0);
     return '<section class="card" style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;align-items:baseline;justify-content:space-between"><b style="font-size:16px;color:var(--pri-ink)">' + esc(bi.ma) + '</b><span class="num" style="font-size:28px;font-weight:700">' + cs.length + '</span></div><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span class="muted" style="font-size:12px">' + esc(T1('Điện', '电费')) + ' ' + (bi.dien_moi_gio ? money(bi.dien_moi_gio) + T('perHour') : '—') + ' · ' + esc(T('nangHa')) + ' ' + money(bi.nang_ha) + ' · ' + esc(T1('Hạ cảng', '回港')) + ' ' + money(bi.trucking) + '</span><span style="font-size:13px">' + esc(T('tongCP')) + ': <b>' + money(tong) + '</b></span></section>'; }).join('') + '</div>';
-  return '<div class="stack" style="gap:16px">' + cards + '<div class="chips">' + sortSel + '<span class="muted" style="font-size:12px">' + esc(T1('Điện tính theo giờ thực tế (làm tròn lên), nâng hạ 1 lần khi hạ vào bãi, hạ cảng theo giá từng bãi.', '电费按实际小时（向上取整），吊装一次，回港按堆场价。')) + '</span></div>' +
+  return cards + '<div class="chips">' + sortSel + '<span class="muted" style="font-size:12px">' + esc(T1('Điện tính theo giờ thực tế (làm tròn lên), nâng hạ 1 lần khi hạ vào bãi, hạ cảng theo giá từng bãi.', '电费按实际小时（向上取整），吊装一次，回港按堆场价。')) + '</span></div>' +
     bais.map(ma => { const cs = list.filter(c => (c.bai_tam || '—') === ma).sort(sorters[S.baiSort] || sorters.vao); if (!cs.length) return '';
       const tong = cs.reduce((a, c) => a + baiCost(c).tong, 0), bi = S.bai.find(x => x.ma === ma) || {};
       return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(ma) + '</h2><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span style="flex:1"></span><span class="muted" style="font-size:13px">' + esc(T('tongCP')) + ' <b style="color:var(--ink)">' + money(tong) + '</b></span><span class="cnt-b">' + cs.length + '</span></div><div class="tbl-x">' + head +
         cs.map(c => { const l = lotOf(c), k = baiCost(c);
           return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + '</span><span data-l="' + esc(T('yardIn')) + '">' + fTs(c.gio_vao_bai) + '</span><span class="num" data-l="' + esc(T('hours')) + '">' + (k.gio === null ? '—' : k.gio) + '</span><span class="num" data-l="' + esc(T1('Tiền điện', '电费')) + '">' + money(k.dien) + '</span><span class="num" data-l="' + esc(T('nangHa')) + '">' + money(k.nang) + '</span><span class="num" data-l="' + esc(T('haCangFee')) + '">' + money(k.hacang) + '</span><span class="num" data-l="' + esc(T('phatSinh')) + '">' + (k.ps ? money(k.ps) : '—') + '</span><span class="num" style="font-weight:700" data-l="' + esc(T('tongCP')) + '">' + money(k.tong) + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span><span style="text-align:center">' + tick(l && (l.cho_keo_ha_cang || l.da_kiem_dich)) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('') +
-    (list.length ? '' : '<div class="empty">' + esc(T1('Không có cont nào ở bãi tạm.', '堆场没有柜子。')) + '</div>') + '</div>';
+    (list.length ? '' : '<div class="empty">' + esc(T1('Không có cont nào ở bãi tạm.', '堆场没有柜子。')) + '</div>');
 }
+function vBai() { return '<div class="stack" style="gap:16px">' + baiBody() + '</div>'; }
 
 /* ---------------- KIỂM DỊCH ---------------- */
 function kdGroups() {
@@ -737,19 +1014,20 @@ function kdPlanText(items) {
     x.cs.map(c => '   ' + (c.so_cont || '—') + (c.so_seal ? ' · Seal ' + c.so_seal : '') + ' · ' + (c.trang_thai === '4' ? 'Bãi ' + (c.bai_tam || '') : 'Kho ' + (c.kho || '') + ' (đang kéo về)')).join('\n')).join('\n');
 }
 function vKD() {
+  const wiz = (S.kdWiz && S.lots[S.kdWiz] && typeof KD_WIZARD !== 'undefined') ? KD_WIZARD.bodyHTML() : '';
   const all = kdGroups();
   const chuaChon = openLots().filter(l => !l.da_huy && !l.da_kiem_dich && !kdCont(l.lo)).sort((a, b) => (hLeft(a.closing) ?? 9e9) - (hLeft(b.closing) ?? 9e9));
   const sai = openLots().filter(l => nPortNoKd(l) > 0);
   const warn = (sai.length ? '<section class="tbl" data-kd-sai style="border-color:var(--red-ink)"><div class="tbl-h"><h2 style="color:var(--red-ink)">⚠ ' + esc(T1('Sai quy trình: có cont ở cảng khi lô chưa kiểm dịch', '流程错误：未检疫已回港')) + '</h2><span class="cnt-b">' + sai.length + '</span></div><div style="padding:8px 16px 12px;display:flex;gap:8px;flex-wrap:wrap">' + sai.map(l => '<button class="btn btn-sm" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + ' · ' + nPortNoKd(l) + ' cont</button>').join('') + '</div></section>' : '') +
     (chuaChon.length ? '<section class="tbl" data-kd-chua-chon><div class="tbl-h"><h2>' + esc(T1('Lô chưa chọn cont kiểm dịch (chưa được hạ cảng)', '未选检疫柜的批次（不可回港）')) + '</h2><span class="cnt-b">' + chuaChon.length + '</span></div><div style="padding:8px 16px 12px;display:flex;gap:8px;flex-wrap:wrap">' + chuaChon.map(l => '<button class="btn btn-sm" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + (l.closing ? ' · CLS ' + fTs(l.closing) : '') + '</button>').join('') + '</div></section>' : '');
-  if (!all.length) return warn ? '<div class="stack" style="gap:18px">' + warn + '<div class="empty">' + esc(T('noKd')) + '</div></div>' : '<div class="empty">' + esc(T('noKd')) + '</div>';
+  if (!all.length) return (wiz || warn) ? '<div class="stack" style="gap:18px">' + wiz + warn + '<div class="empty">' + esc(T('noKd')) + '</div></div>' : '<div class="empty">' + esc(T('noKd')) + '</div>';
   const plan = all.filter(x => x.nhom <= 2);
   const nhomTen = { 1:T1('Sẵn sàng kiểm: cont KD đã ở bãi (chỉ HLS / PD / HT được kiểm)', '可检疫：检疫柜已在堆场（仅HLS/PD/HT）'), 2:T1('Đang kéo về bãi (lệnh đã duyệt)', '正在拉回堆场'), 3:T1('Còn ở kho', '仍在仓库') };
-  const card = x => '<section class="tbl"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + x.k) + '</h2>' + clChip(x.l.closing) + (x.gap && x.nhom === 3 ? pill(T1('KD gấp – cần rút mooc', '检疫紧急'), '#B42318', '#fff') : '') + '<span class="muted" style="font-size:12px">' + esc(x.l.ma_don_kdtv ? T('kdtv') + ' ' + x.l.ma_don_kdtv : T('noKdtv')) + '</span><span style="flex:1"></span>' + (canKd() && x.k !== '—' && x.nhom === 1 ? '<button class="btn btn-sm" style="border-color:var(--teal);color:var(--teal-ink)" data-act="kd-done" data-lo="' + esc(x.k) + '"' + (x.why ? ' disabled title="' + esc(x.why) + '"' : '') + '>' + esc(T('kdDone')) + ' ✓</button>' : '') + '</div>' +
+  const card = x => '<section class="tbl"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + x.k) + '</h2>' + clChip(x.l.closing) + (x.gap && x.nhom === 3 ? pill(T1('KD gấp – cần rút mooc', '检疫紧急'), '#B42318', '#fff') : '') + '<span class="muted" style="font-size:12px">' + esc(x.l.ma_don_kdtv ? T('kdtv') + ' ' + x.l.ma_don_kdtv : T('noKdtv')) + '</span><span style="flex:1"></span>' + (canKd() && x.k !== '—' ? '<button class="btn btn-sm btn-pri" data-act="open-kd-wizard" data-lo="' + esc(x.k) + '">' + esc(T1('Kiểm dịch', '检疫')) + ' ▸</button>' : '') + (canKd() && x.k !== '—' && x.nhom === 1 ? '<button class="btn btn-sm" style="border-color:var(--teal);color:var(--teal-ink)" data-act="kd-done" data-lo="' + esc(x.k) + '"' + (x.why ? ' disabled title="' + esc(x.why) + '"' : '') + '>' + esc(T('kdDone')) + ' ✓</button>' : '') + '</div>' +
     '<div class="kv" style="padding:6px 16px 10px;font-size:12px"><span>' + esc(T('clsUse')) + '</span><span><b>' + fTs(x.l.closing, true) + '</b></span><span>' + esc(T('clsMail')) + '</span><span>' + fTs(x.l.closing_mail, true) + '</span><span>' + esc(T('clsEport')) + '</span><span>' + fTs(x.l.closing_eport, true) + (x.l.closing_eport && x.l.eport_cang ? ' <span class="muted">' + esc(eportCang(x.l)) + '</span>' : '') + (x.l.eport_ghi_chu ? ' <span style="color:var(--red-ink)">' + esc(x.l.eport_ghi_chu) + '</span>' : '') + '</span><span>' + esc(T('vessel')) + '</span><span>' + esc(x.l.ten_tau || '—') + '</span></div>' +
     (x.nhom === 1 && x.why ? '<p style="margin:0;padding:0 16px 8px;font-size:12px;color:var(--red-ink)" data-kd-why>' + esc(x.why) + '</p>' : '') +
     x.cs.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 150px">' + contBtn(c) + '<span class="ell">' + esc(c.trang_thai === '4' ? T('bai') + ' ' + (c.bai_tam || '') : (c.kho || '—')) + '</span><span>' + stPill(c.trang_thai) + '</span></div>').join('') + '</section>';
-  return '<div class="stack" style="gap:18px">' + warn + '<div class="chips"><b style="font-size:15px;color:var(--pri-ink)">' + esc(T1('Kế hoạch kiểm dịch', '检疫计划')) + '</b><span class="muted" style="font-size:13px">' + plan.length + ' ' + esc(T1('lô ở bãi / đang kéo về, xếp theo CLS gần nhất', '批（在堆场/拉回中），按截关排序')) + '</span><span style="flex:1"></span>' +
+  return '<div class="stack" style="gap:18px">' + wiz + warn + '<div class="chips"><b style="font-size:15px;color:var(--pri-ink)">' + esc(T1('Kế hoạch kiểm dịch', '检疫计划')) + '</b><span class="muted" style="font-size:13px">' + plan.length + ' ' + esc(T1('lô ở bãi / đang kéo về, xếp theo CLS gần nhất', '批（在堆场/拉回中），按截关排序')) + '</span><span style="flex:1"></span>' +
       (plan.length ? '<button class="btn btn-sm" data-act="copy-kd">' + esc(S.copied === 'kd' ? T('copied') : T1('Chép kế hoạch KD', '复制检疫计划')) + '</button>' : '') + (canWrite() ? eportBtn() : '') + '</div>' +
     [1, 2, 3].map(nh => { const xs = all.filter(x => x.nhom === nh); if (!xs.length) return '';
       return '<div class="stack" style="gap:10px"><div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0;font-size:14px;color:var(--pri-ink)">' + esc(nhomTen[nh]) + '</h2><span class="cnt-b">' + xs.length + '</span></div><div class="g2" style="align-items:start">' + xs.map(card).join('') + '</div></div>'; }).join('') + '</div>';
@@ -1137,9 +1415,10 @@ async function saveCont(form) {
     if (!id) {
       const st = o.trang_thai || '1';
       if (['1', '2', '3'].indexOf(st) > -1) S.tkSeg = st;
+      if (['1', '2', '3', '4'].indexOf(st) > -1) S.boardSeg = st;
       toast(T1('Đã thêm — cont nằm ở mục “' + stLabel(st) + '”', '已新增，位于“' + stLabel(st) + '”'));
       if (o.lo && S.lots[o.lo]) { renderMain(); openLo(S.lots[o.lo]); }
-      else if (['1', '2', '3'].indexOf(st) > -1) { S.tab = 'taikho'; renderShell(); renderMain(); }
+      else if (['1', '2', '3', '4'].indexOf(st) > -1) { S.tab = 'board'; renderShell(); renderMain(); }
       else renderMain();
     } else { toast(T('saved')); renderMain(); }
     renderNavCounts();
@@ -1236,7 +1515,7 @@ async function runGoiY() {
 
 /* ---------------- sự kiện ---------------- */
 const ACT = {
-  'tab': d => { S.tab = d.tab; if (d.seg) S.tkSeg = d.seg; S.navOpen = false; closeDrawer(); renderShell(); window.scrollTo(0, 0); },
+  'tab': d => { S.tab = d.tab; if (d.seg) { S.tkSeg = d.seg; S.boardSeg = d.seg; } S.navOpen = false; closeDrawer(); renderShell(); window.scrollTo(0, 0); },
   'nav-open': () => { S.navOpen = true; document.getElementById('app').classList.add('nav-open'); },
   'nav-close': () => { S.navOpen = false; document.getElementById('app').classList.remove('nav-open'); },
   'lang': d => { LANG = d.lang; try { localStorage.setItem('dd_lang', LANG); } catch (e) {} renderShell(); if (S.drawer) { const dr = S.drawer; if (dr.kind === 'cont') { if (dr.id) openContById(dr.id); } else if (dr.kind === 'lo' && dr.id) openLo(S.lots[dr.id]); } },
@@ -1311,6 +1590,7 @@ const ACT = {
   'copy-gy': async (d, el) => { const g = S.goiy.find(x => x.id === d.id); if (!g) return; await copyText(gyView(g).text); S.copied = d.id; toast(T('copied')); if (!d.keep) renderMain(); },
   'copy-grp': async (d) => { const t = S.goiy.filter(g => g.duyet && !g.da_ap_dung).map(gyView).filter(g => (g.nx || '—') === d.nx).map(g => g.text).join('\n\n'); await copyText(t); S.copied = 'grp-' + d.nx; toast(T('copied')); if (!d.keep) renderMain(); },
   'tk-seg': d => { S.tkSeg = d.v; renderMain(); },
+  'board-seg': d => { S.boardSeg = d.v; renderMain(); },
   'move': d => moveCont(d.id, d.to),
   'kd-done': async d => { try { await q(sb.from('lo').update({ da_kiem_dich:true }).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + T('kdDone')); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'lo' && S.drawer.id === d.lo && S.lots[d.lo]) openLo(S.lots[d.lo]); } catch (e) { toast(errMsg(e), true); } },
   'kd-undo': async d => { try { await q(sb.from('lo').update({ da_kiem_dich:false }).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + T1('đã bỏ tích kiểm dịch', '已取消检疫勾选')); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'lo' && S.drawer.id === d.lo && S.lots[d.lo]) openLo(S.lots[d.lo]); } catch (e) { toast(errMsg(e), true); } },

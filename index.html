@@ -4,28 +4,41 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#4B3C8C">
+<meta name="theme-color" content="#1E3A8A">
 <title>Điều độ · Đại Cát Lâm</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%234B3C8C'/%3E%3Cpath d='M4 15h9V8H4zM13 10.5h3l2.5 2.5v2H13z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='7' cy='17' r='1.6' fill='white'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='white'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231E3A8A'/%3E%3Cpath d='M4 15h9V8H4zM13 10.5h3l2.5 2.5v2H13z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='7' cy='17' r='1.6' fill='white'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 <style>
 :root{
-  --bg:#EFECF8;--surface:#FFFFFF;--ink:#2B2640;--muted:#625C7A;--faint:#8A849E;
-  --line:#E1DCF2;--line2:#F1EEFB;--soft:#F7F5FD;--soft2:#FAF9FE;
-  --pri:#5B4BB7;--pri-ink:#3E3190;--pri-soft:#E6E2F7;
-  --side:#4B3C8C;--side-ink:#E4DFF7;--side-h:#C7BEEE;--side-sub:#D9D3F4;
-  --red:#B42318;--red-bg:#FBE4E1;--red-ink:#A3261A;
-  --amb:#E0A43A;--amb-bg:#FBEBD5;--amb-ink:#7A4700;
-  --teal:#3E9C94;--teal-bg:#E0F1EF;--teal-ink:#10605A;--green-ink:#256B3A;
-  --lav:#EEEBF8;--lav-ink:#4B3C8C;--zalo:#0068FF;
+  /* ─── Nền & bề mặt ─── */
+  --bg:#EFF6FF;
+  --surface:rgba(255,255,255,.88);
+  --ink:#0F172A;--muted:#475569;--faint:#94A3B8;
+  --line:rgba(148,163,184,.28);--line2:rgba(148,163,184,.14);
+  --soft:rgba(255,255,255,.55);--soft2:rgba(255,255,255,.36);
+  /* ─── Xanh chính ─── */
+  --pri:#2563EB;--pri-ink:#1D4ED8;--pri-soft:#DBEAFE;
+  /* ─── Sidebar navy ─── */
+  --side:#1E3A8A;--side-ink:rgba(255,255,255,.9);
+  --side-h:rgba(255,255,255,.52);--side-sub:rgba(255,255,255,.42);
+  /* ─── Trạng thái ─── */
+  --red:#DC2626;--red-bg:rgba(220,38,38,.1);--red-ink:#B91C1C;
+  --amb:#D97706;--amb-bg:rgba(217,119,6,.1);--amb-ink:#92400E;
+  --teal:#059669;--teal-bg:rgba(5,150,105,.1);--teal-ink:#065F46;--green-ink:#14532D;
+  --lav:rgba(37,99,235,.1);--lav-ink:#1D4ED8;--zalo:#0068FF;
   --font:'Be Vietnam Pro','Noto Sans SC',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;-webkit-text-size-adjust:100%}
+body{
+  background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 30%,#BFDBFE 65%,#93C5FD 100%);
+  background-attachment:fixed;
+  color:var(--ink);font-family:var(--font);font-size:14px;
+  line-height:1.45;-webkit-text-size-adjust:100%
+}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 button:disabled{cursor:not-allowed;opacity:.55}
@@ -38,25 +51,54 @@ a{color:var(--pri-ink)}
 .hide{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* ---------- layout ---------- */
+/* ─── Layout ─── */
 .app{display:flex;min-height:100vh}
-.side{width:236px;flex-shrink:0;background:var(--side);color:#fff;display:flex;flex-direction:column;gap:20px;padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.side{
+  width:236px;flex-shrink:0;
+  background:linear-gradient(180deg,#1E3A8A 0%,#1E40AF 55%,#1D4ED8 100%);
+  color:#fff;display:flex;flex-direction:column;gap:20px;
+  padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto;
+  box-shadow:4px 0 24px rgba(30,58,138,.18)
+}
 .brand{display:flex;align-items:center;gap:10px;padding:0 6px}
-.brand-logo{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-logo{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  border:1px solid rgba(255,255,255,.25)
+}
 .brand-name{font-size:17px;font-weight:700;letter-spacing:-.01em}
 .brand-sub{font-size:12px;color:var(--side-sub)}
 .nav-h{padding:0 10px 4px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--side-h)}
 .nav-g{display:flex;flex-direction:column;gap:3px}
-.nav-i{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);font-size:14px;font-weight:500;text-align:left}
-.nav-i:hover{background:rgba(255,255,255,.10)}
-.nav-i[aria-current="page"]{background:rgba(255,255,255,.18);color:#fff;font-weight:600}
-.nav-i .cnt{margin-left:auto;min-width:24px;padding:1px 7px;border-radius:999px;font-size:12px;font-weight:600;text-align:center;background:rgba(255,255,255,.16);color:#fff}
-.nav-i[aria-current="page"] .cnt{background:#fff;color:var(--pri-ink)}
+.nav-i{
+  display:flex;align-items:center;gap:10px;width:100%;min-height:40px;
+  padding:0 10px;border:0;border-radius:8px;
+  background:transparent;color:var(--side-ink);font-size:14px;font-weight:500;text-align:left;
+  transition:background .15s
+}
+.nav-i:hover{background:rgba(255,255,255,.12)}
+.nav-i[aria-current="page"]{
+  background:rgba(255,255,255,.2);color:#fff;font-weight:600;
+  box-shadow:0 2px 8px rgba(0,0,0,.15)
+}
+.nav-i .cnt{
+  margin-left:auto;min-width:24px;padding:1px 7px;
+  border-radius:999px;font-size:12px;font-weight:600;text-align:center;
+  background:rgba(255,255,255,.18);color:#fff
+}
+.nav-i[aria-current="page"] .cnt{background:rgba(255,255,255,.95);color:var(--pri-ink)}
 .langs{display:flex;gap:4px;padding:4px;border-radius:10px;background:rgba(255,255,255,.12)}
 .langs button{flex:1;min-height:34px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);font-size:13px;font-weight:600}
-.langs button[aria-pressed="true"]{background:#fff;color:var(--pri-ink)}
-.me{display:flex;align-items:center;gap:10px;padding:12px 6px 0;border-top:1px solid rgba(255,255,255,.16)}
-.avatar{width:34px;height:34px;border-radius:999px;background:var(--pri-soft);color:var(--pri-ink);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.langs button[aria-pressed="true"]{background:rgba(255,255,255,.9);color:var(--pri-ink)}
+.me{display:flex;align-items:center;gap:10px;padding:12px 6px 0;border-top:1px solid rgba(255,255,255,.18)}
+.avatar{
+  width:34px;height:34px;border-radius:999px;
+  background:linear-gradient(135deg,#3B82F6,#1D4ED8);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:700;flex-shrink:0;box-shadow:0 2px 8px rgba(29,78,216,.35)
+}
 .me .out{border:0;background:transparent;color:var(--side-sub);font-size:12px;text-decoration:underline;padding:4px 6px;white-space:nowrap}
 .th-sort{border:0;background:transparent;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;white-space:nowrap}
 .th-sort.on{color:var(--pri-ink)}
@@ -66,40 +108,77 @@ a{color:var(--pri-ink)}
 .pw-row input{padding-right:78px!important}
 .pw-eye{position:absolute;right:4px;top:4px;bottom:4px;border:0;border-radius:6px;background:var(--soft);color:var(--pri-ink);font-size:12px;font-weight:600;padding:0 10px}
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
-.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 28px;min-height:70px}
+.top{
+  position:sticky;top:0;z-index:20;
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(20px) saturate(1.8);
+  -webkit-backdrop-filter:blur(20px) saturate(1.8);
+  border-bottom:1px solid rgba(255,255,255,.65);
+  display:flex;align-items:center;gap:14px;padding:12px 28px;min-height:70px;
+  box-shadow:0 4px 20px rgba(30,58,138,.07)
+}
 .top h1{margin:0;font-size:21px;font-weight:700;color:var(--pri-ink);letter-spacing:-.01em}
 .top .sub{font-size:12px;color:var(--muted)}
 .top .grow{flex:1;min-width:0}
-.menu-btn{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:#fff;align-items:center;justify-content:center}
+.menu-btn{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.6);align-items:center;justify-content:center}
 .search{position:relative;width:300px}
 .search svg{position:absolute;left:12px;top:12px}
-.search input{width:100%;height:40px;padding:0 12px 0 36px;border-radius:10px;border:1px solid #D8D2EE;background:var(--soft)}
+.search input{
+  width:100%;height:40px;padding:0 12px 0 36px;border-radius:10px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(255,255,255,.65);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px)
+}
 .content{padding:22px 28px 60px}
 .live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
-.live i{width:8px;height:8px;border-radius:99px;background:#9A95AE;display:inline-block}
-.live.on i{background:#2E9E63}
+.live i{width:8px;height:8px;border-radius:99px;background:#94A3B8;display:inline-block}
+.live.on i{background:#10B981;box-shadow:0 0 6px rgba(16,185,129,.5)}
 .bottom-nav{display:none}
 .scrim{display:none}
 
-/* ---------- controls ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;border-radius:10px;border:1px solid #D8D2EE;background:#fff;color:var(--pri-ink);font-weight:600;font-size:14px;white-space:nowrap;text-decoration:none}
-.btn:hover{background:var(--soft)}
-.btn-pri{background:var(--pri);border-color:var(--pri);color:#fff}
-.btn-pri:hover{background:#4E3FA6}
+/* ─── Controls ─── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:40px;padding:0 16px;border-radius:10px;
+  border:1px solid rgba(148,163,184,.4);
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:var(--pri-ink);font-weight:600;font-size:14px;white-space:nowrap;
+  text-decoration:none;transition:all .15s
+}
+.btn:hover{background:rgba(255,255,255,.92);border-color:rgba(148,163,184,.6)}
+.btn-pri{
+  background:linear-gradient(135deg,#3B82F6,#2563EB);
+  border-color:#2563EB;color:#fff;
+  box-shadow:0 2px 12px rgba(37,99,235,.35)
+}
+.btn-pri:hover{background:linear-gradient(135deg,#2563EB,#1D4ED8);box-shadow:0 4px 16px rgba(37,99,235,.45)}
 .btn-sm{min-height:34px;padding:0 11px;font-size:12px;border-radius:8px}
-.btn-ok{background:var(--teal-bg);border-color:#A9D6CF;color:var(--teal-ink)}
+.btn-ok{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.35);color:var(--teal-ink)}
 .btn-zalo{background:var(--zalo);border-color:var(--zalo);color:#fff}
 .btn-line{border-color:var(--pri);color:var(--pri-ink)}
-.btn-danger{border-color:#F0B8B1;color:var(--red-ink)}
+.btn-danger{border-color:rgba(220,38,38,.35);color:var(--red-ink)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid #D8D2EE;background:#fff;color:var(--ink);font-size:13px;font-weight:600}
-.chip[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#fff}
+.chip{
+  min-height:36px;padding:0 14px;border-radius:999px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(255,255,255,.65);backdrop-filter:blur(8px);
+  color:var(--ink);font-size:13px;font-weight:600
+}
+.chip[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#fff;box-shadow:0 2px 10px rgba(37,99,235,.35)}
 .pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
 .pri-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-size:12px;font-weight:700}
 .chk{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
 .chk input{width:18px;height:18px;accent-color:var(--pri)}
 .field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--muted)}
-.field input,.field select,.field textarea{height:40px;padding:0 10px;border-radius:8px;border:1px solid #D8D2EE;background:#fff;font-size:14px;font-weight:400;color:var(--ink);width:100%}
+.field input,.field select,.field textarea{
+  height:40px;padding:0 10px;border-radius:8px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  font-size:14px;font-weight:400;color:var(--ink);width:100%
+}
 .field textarea{height:auto;min-height:70px;padding:8px 10px;resize:vertical}
 .field input:disabled,.field select:disabled,.field textarea:disabled{background:var(--soft);color:var(--muted)}
 .field.chkf{flex-direction:row;align-items:center;gap:8px;min-height:40px}
@@ -107,89 +186,175 @@ a{color:var(--pri-ink)}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
 .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px}
 
-/* ---------- cards & tables ---------- */
+/* ─── Cards & Tables ─── */
 .stack{display:flex;flex-direction:column;gap:18px}
-.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:0 1px 2px rgba(62,49,144,.05)}
+.card{
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(16px) saturate(1.8);
+  -webkit-backdrop-filter:blur(16px) saturate(1.8);
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:14px;padding:18px 20px;
+  box-shadow:0 4px 24px rgba(30,58,138,.07),0 1px 3px rgba(30,58,138,.04)
+}
 .card h2{margin:0;font-size:15px;font-weight:700}
 .band{display:flex;align-items:center;gap:12px}
 .band span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pri)}
-.band i{flex:1;height:1px;background:#D8D2EE}
+.band i{flex:1;height:1px;background:rgba(148,163,184,.3)}
 .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .span2{grid-column:span 2}
 .tile{display:flex;flex-direction:column;gap:10px}
 .tile .lab{font-size:13px;font-weight:600;color:var(--muted)}
-.tile .val{font-size:32px;font-weight:700;letter-spacing:-.02em}
+.tile .val{font-size:32px;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
 .tile .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--faint)}
 .tag{display:inline-flex;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600}
-.tbl{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl{
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(14px) saturate(1.8);
+  -webkit-backdrop-filter:blur(14px) saturate(1.8);
+  border:1px solid rgba(255,255,255,.68);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 4px 20px rgba(30,58,138,.06)
+}
 .tbl-x{overflow-x:auto}
-.tbl-h{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--soft);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tbl-h{
+  display:flex;align-items:center;gap:10px;padding:12px 18px;
+  background:rgba(219,234,254,.45);
+  border-bottom:1px solid rgba(148,163,184,.2);flex-wrap:wrap
+}
 .tbl-h h2{margin:0;font-size:15px;font-weight:700;color:var(--pri-ink)}
-.tr{display:grid;grid-template-columns:var(--cols);gap:10px;align-items:center;padding:0 18px;min-height:44px;border-bottom:1px solid var(--line2);min-width:var(--minw,0)}
+.tr{display:grid;grid-template-columns:var(--cols);gap:10px;align-items:center;padding:0 18px;min-height:44px;border-bottom:1px solid rgba(148,163,184,.12);min-width:var(--minw,0)}
 .tr:last-child{border-bottom:0}
-.tr.th{min-height:36px;font-size:12px;font-weight:600;color:var(--muted);background:var(--soft2)}
-.tr:not(.th):hover{background:var(--soft2)}
+.tr.th{min-height:36px;font-size:12px;font-weight:600;color:var(--muted);background:rgba(219,234,254,.3)}
+.tr:not(.th):hover{background:rgba(219,234,254,.4)}
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lk{background:none;border:0;padding:0;color:var(--pri-ink);text-align:left;font-size:13px}
 .lk:hover{text-decoration:underline}
 .lk.mono{font-size:13px}
 .cnt-b{padding:1px 9px;border-radius:999px;background:var(--pri-soft);color:var(--pri-ink);font-size:12px;font-weight:700}
-.empty{padding:40px 20px;text-align:center;background:#fff;border:1px dashed #D8D2EE;border-radius:12px;color:var(--muted)}
-.bar-bg{height:10px;border-radius:5px;background:var(--line2)}
+.empty{
+  padding:40px 20px;text-align:center;
+  background:rgba(255,255,255,.55);
+  border:1px dashed rgba(148,163,184,.45);
+  border-radius:14px;color:var(--muted)
+}
+.bar-bg{height:10px;border-radius:5px;background:rgba(148,163,184,.2)}
 .bar{height:10px;border-radius:5px}
 .heat-row{display:grid;grid-template-columns:190px repeat(14,minmax(0,1fr)) 36px;gap:4px;align-items:center}
 .heat-c{height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
 .legend-i{display:flex;align-items:center;gap:10px;min-height:34px;padding:0 8px;border:0;border-radius:6px;background:transparent;width:100%;text-align:left;font-size:13px}
-.legend-i:hover{background:var(--soft)}
+.legend-i:hover{background:rgba(219,234,254,.45)}
 .todo-i{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:transparent;width:100%;text-align:left;font-size:13px}
-.todo-i:hover{background:var(--soft)}
+.todo-i:hover{background:rgba(219,234,254,.45)}
 .todo-i b{min-width:32px;padding:2px 8px;border-radius:6px;background:var(--lav);color:var(--pri-ink);text-align:center}
 
-/* ---------- suggestions ---------- */
+/* ─── Suggestions ─── */
 .gy-layout{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:20px;align-items:start}
-.gy-card{display:flex;align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(62,49,144,.05)}
-.gy-card.sel{border:2px solid var(--pri);box-shadow:0 4px 14px rgba(62,49,144,.14)}
+.gy-card{
+  display:flex;align-items:stretch;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:12px;box-shadow:0 2px 12px rgba(30,58,138,.06)
+}
+.gy-card.sel{
+  border:2px solid var(--pri);
+  box-shadow:0 4px 20px rgba(37,99,235,.2)
+}
 .gy-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;padding:12px 16px;border:0;background:transparent;text-align:left}
-.gy-side{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:10px 14px;background:var(--soft2);border-radius:0 12px 12px 0;min-width:140px}
+.gy-side{
+  display:flex;flex-direction:column;justify-content:center;gap:6px;
+  padding:10px 14px;background:rgba(219,234,254,.35);
+  border-radius:0 12px 12px 0;min-width:140px
+}
 .panel{position:sticky;top:90px;display:flex;flex-direction:column;gap:14px}
-.order{margin:0;white-space:pre-wrap;font-family:var(--mono),'Noto Sans SC',monospace;font-size:12px;line-height:1.6;background:var(--soft);border:1px solid #ECE8F8;border-radius:8px;padding:12px}
+.order{
+  margin:0;white-space:pre-wrap;font-family:var(--mono),'Noto Sans SC',monospace;
+  font-size:12px;line-height:1.6;
+  background:rgba(219,234,254,.35);
+  border:1px solid rgba(148,163,184,.25);border-radius:8px;padding:12px
+}
 .kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 10px;font-size:13px}
 .kv span:nth-child(odd){color:var(--muted)}
 
-/* ---------- drawer / modal ---------- */
-.drawer-wrap{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(43,38,64,.32)}
+/* ─── Drawer / Modal ─── */
+.drawer-wrap{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(15,23,42,.28);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
 .drawer-wrap>.close-area{flex:1;border:0;background:transparent}
-.drawer{width:560px;max-width:100%;height:100%;overflow-y:auto;background:#fff;box-shadow:-8px 0 24px rgba(43,38,64,.18);display:flex;flex-direction:column}
-.drawer-h{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:flex-start;gap:12px}
+.drawer{
+  width:560px;max-width:100%;height:100%;overflow-y:auto;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:-8px 0 40px rgba(15,23,42,.18);display:flex;flex-direction:column
+}
+.drawer-h{
+  position:sticky;top:0;z-index:2;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(148,163,184,.2);padding:16px 20px;display:flex;align-items:flex-start;gap:12px
+}
 .drawer-b{padding:18px 20px;display:flex;flex-direction:column;gap:18px}
-.drawer-f{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;display:flex;gap:10px;justify-content:flex-end}
+.drawer-f{
+  position:sticky;bottom:0;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(148,163,184,.2);
+  padding:12px 20px;display:flex;gap:10px;justify-content:flex-end
+}
 .steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
 .step{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:11px;line-height:1.3;color:var(--muted)}
-.step b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:99px;font-size:12px;background:#EEEDF3;color:#6E6985}
+.step b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:99px;font-size:12px;background:rgba(148,163,184,.15);color:var(--faint)}
 .step.done b{background:var(--pri-soft);color:var(--pri-ink)}
-.step.cur b{background:var(--pri);color:#fff}
+.step.cur b{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.35)}
 .step.cur{color:var(--ink);font-weight:600}
 .sec{display:flex;flex-direction:column;gap:12px}
 .sec>h3{margin:0;font-size:13px;font-weight:700;color:var(--pri-ink)}
-.x-btn{width:40px;height:40px;border-radius:10px;border:1px solid #D8D2EE;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.x-btn{
+  width:40px;height:40px;border-radius:10px;
+  border:1px solid rgba(148,163,184,.35);
+  background:rgba(255,255,255,.65);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0
+}
 
-/* ---------- toast & login ---------- */
-#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;padding:12px 18px;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(43,38,64,.3);max-width:min(640px,calc(100vw - 32px));display:none}
+/* ─── Toast & Login ─── */
+#toast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;
+  padding:12px 18px;border-radius:10px;
+  background:rgba(15,23,42,.9);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  color:#fff;font-size:13px;font-weight:500;
+  box-shadow:0 8px 32px rgba(15,23,42,.3);max-width:min(640px,calc(100vw - 32px));display:none
+}
 #toast.show{display:block}
 #toast.err{background:var(--red)}
-.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:linear-gradient(180deg,var(--side) 0 38%,var(--bg) 38% 100%)}
-.login-card{width:420px;max-width:100%;background:#fff;border-radius:16px;padding:28px;box-shadow:0 10px 40px rgba(43,38,64,.18);display:flex;flex-direction:column;gap:16px}
+.login{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;
+  background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 30%,#BFDBFE 65%,#93C5FD 100%)
+}
+.login-card{
+  width:420px;max-width:100%;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:16px;padding:28px;
+  box-shadow:0 16px 48px rgba(30,58,138,.16);
+  display:flex;flex-direction:column;gap:16px
+}
 .login-card h1{margin:0;font-size:22px;color:var(--pri-ink)}
-.tabs2{display:flex;gap:4px;padding:4px;border-radius:10px;background:var(--soft)}
+.tabs2{
+  display:flex;gap:4px;padding:4px;border-radius:10px;
+  background:rgba(219,234,254,.45)
+}
 .tabs2 button{flex:1;min-height:36px;border:0;border-radius:8px;background:transparent;font-weight:600;color:var(--muted)}
-.tabs2 button[aria-pressed="true"]{background:#fff;color:var(--pri-ink);box-shadow:0 1px 3px rgba(43,38,64,.12)}
+.tabs2 button[aria-pressed="true"]{
+  background:rgba(255,255,255,.9);color:var(--pri-ink);
+  box-shadow:0 1px 3px rgba(30,58,138,.12)
+}
 .msg{font-size:13px;padding:10px 12px;border-radius:8px;background:var(--lav);color:var(--lav-ink)}
 .msg.err{background:var(--red-bg);color:var(--red-ink)}
 .loading{padding:80px 0;text-align:center;color:var(--muted)}
 
-/* ---------- responsive ---------- */
+/* ─── Responsive ─── */
 @media (max-width:1180px){
   .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gy-layout{grid-template-columns:minmax(0,1fr)}
@@ -197,8 +362,8 @@ a{color:var(--pri-ink)}
 }
 @media (max-width:900px){
   .side{position:fixed;left:0;top:0;z-index:50;transform:translateX(-100%);transition:transform .2s ease;visibility:hidden}
-  .app.nav-open .side{transform:none;visibility:visible;box-shadow:8px 0 24px rgba(43,38,64,.25)}
-  .app.nav-open .scrim{display:block;position:fixed;inset:0;z-index:45;background:rgba(43,38,64,.32);border:0}
+  .app.nav-open .side{transform:none;visibility:visible;box-shadow:8px 0 32px rgba(30,58,138,.3)}
+  .app.nav-open .scrim{display:block;position:fixed;inset:0;z-index:45;background:rgba(15,23,42,.28);border:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
   .menu-btn{display:flex}
   .top{padding:10px 14px;min-height:60px;gap:10px}
   .top h1{font-size:18px}
@@ -210,7 +375,13 @@ a{color:var(--pri-ink)}
   .gy-card{flex-direction:column}
   .gy-side{border-radius:0 0 12px 12px;flex-direction:row;align-items:center;justify-content:space-between}
   .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);padding:4px 6px calc(8px + env(safe-area-inset-bottom))}
+  .bottom-nav{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);
+    border-top:1px solid rgba(148,163,184,.25);
+    padding:4px 6px calc(8px + env(safe-area-inset-bottom))
+  }
   .bottom-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px;border:0;background:transparent;font-size:11px;font-weight:500;color:var(--muted)}
   .bottom-nav button[aria-current="page"]{color:var(--pri);font-weight:700}
   .bottom-nav .bdg{min-width:16px;padding:0 5px;border-radius:99px;background:var(--red);color:#fff;font-size:10px;font-weight:700;line-height:16px}
@@ -246,7 +417,233 @@ a{color:var(--pri-ink)}
 `))throw Error(`@supabase/auth-js: Invalid SIWE message field "statement". Statement must not include '\\n'. Provided value: ${e.statement}`);let f=Ci(e.address),p=`${l?`${l}://${n}`:n} wants you to sign in with your Ethereum account:\n${f}\n\n${e.statement?`${e.statement}\n`:``}`,m=`URI: ${u}\nVersion: ${d}\nChain ID: ${t}${a?`\nNonce: ${a}`:``}\nIssued At: ${i.toISOString()}`;if(r&&(m+=`\nExpiration Time: ${r.toISOString()}`),o&&(m+=`\nNot Before: ${o.toISOString()}`),s&&(m+=`\nRequest ID: ${s}`),c){let e=`
 Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/auth-js: Invalid SIWE message field "resources". Every resource must be a valid string. Provided value: ${t}`);e+=`\n- ${t}`}m+=e}return`${p}\n${m}`}var $=class extends Error{constructor({message:e,code:t,cause:n,name:r}){super(e,{cause:n}),this.__isWebAuthnError=!0,this.name=r??(n instanceof Error?n.name:void 0)??`Unknown Error`,this.code=t}toJSON(){return{name:this.name,message:this.message,code:this.code}}},Di=class extends ${constructor(e,t){super({code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:t,message:e}),this.name=`WebAuthnUnknownError`,this.originalError=t}};function Oi({error:e,options:t}){let{publicKey:n}=t;if(!n)throw Error(`options was missing required publicKey property`);if(e.name===`AbortError`){if(t.signal instanceof AbortSignal)return new $({message:`Registration ceremony was sent an abort signal`,code:`ERROR_CEREMONY_ABORTED`,cause:e})}else if(e.name===`ConstraintError`){if(n.authenticatorSelection?.requireResidentKey===!0)return new $({message:`Discoverable credentials were required but no available authenticator supported it`,code:`ERROR_AUTHENTICATOR_MISSING_DISCOVERABLE_CREDENTIAL_SUPPORT`,cause:e});if(t.mediation===`conditional`&&n.authenticatorSelection?.userVerification===`required`)return new $({message:`User verification was required during automatic registration but it could not be performed`,code:`ERROR_AUTO_REGISTER_USER_VERIFICATION_FAILURE`,cause:e});if(n.authenticatorSelection?.userVerification===`required`)return new $({message:`User verification was required but no available authenticator supported it`,code:`ERROR_AUTHENTICATOR_MISSING_USER_VERIFICATION_SUPPORT`,cause:e})}else if(e.name===`InvalidStateError`)return new $({message:`The authenticator was previously registered`,code:`ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED`,cause:e});else if(e.name===`NotAllowedError`)return new $({message:e.message,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e});else if(e.name===`NotSupportedError`)return n.pubKeyCredParams.filter(e=>e.type===`public-key`).length===0?new $({message:`No entry in pubKeyCredParams was of type "public-key"`,code:`ERROR_MALFORMED_PUBKEYCREDPARAMS`,cause:e}):new $({message:`No available authenticator supported any of the specified pubKeyCredParams algorithms`,code:`ERROR_AUTHENTICATOR_NO_SUPPORTED_PUBKEYCREDPARAMS_ALG`,cause:e});else if(e.name===`SecurityError`){let t=window.location.hostname;if(Fi(t)){if(n.rp.id!==t)return new $({message:`The RP ID "${n.rp.id}" is invalid for this domain`,code:`ERROR_INVALID_RP_ID`,cause:e})}else return new $({message:`${window.location.hostname} is an invalid domain`,code:`ERROR_INVALID_DOMAIN`,cause:e})}else if(e.name===`TypeError`){if(n.user.id.byteLength<1||n.user.id.byteLength>64)return new $({message:`User ID was not between 1 and 64 characters`,code:`ERROR_INVALID_USER_ID_LENGTH`,cause:e})}else if(e.name===`UnknownError`)return new $({message:`The authenticator was unable to process the specified options, or could not create a new credential`,code:`ERROR_AUTHENTICATOR_GENERAL_ERROR`,cause:e});return new $({message:`a Non-Webauthn related error has occurred`,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e})}function ki({error:e,options:t}){let{publicKey:n}=t;if(!n)throw Error(`options was missing required publicKey property`);if(e.name===`AbortError`){if(t.signal instanceof AbortSignal)return new $({message:`Authentication ceremony was sent an abort signal`,code:`ERROR_CEREMONY_ABORTED`,cause:e})}else if(e.name===`NotAllowedError`)return new $({message:e.message,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e});else if(e.name===`SecurityError`){let t=window.location.hostname;if(Fi(t)){if(n.rpId!==t)return new $({message:`The RP ID "${n.rpId}" is invalid for this domain`,code:`ERROR_INVALID_RP_ID`,cause:e})}else return new $({message:`${window.location.hostname} is an invalid domain`,code:`ERROR_INVALID_DOMAIN`,cause:e})}else if(e.name===`UnknownError`)return new $({message:`The authenticator was unable to process the specified options, or could not create a new assertion signature`,code:`ERROR_AUTHENTICATOR_GENERAL_ERROR`,cause:e});return new $({message:`a Non-Webauthn related error has occurred`,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e})}let Ai=new class{createNewAbortSignal(){if(this.controller){let e=Error(`Cancelling existing WebAuthn API call for new one`);e.name=`AbortError`,this.controller.abort(e)}let e=new AbortController;return this.controller=e,e.signal}cancelCeremony(){if(this.controller){let e=Error(`Manually cancelling existing WebAuthn API call`);e.name=`AbortError`,this.controller.abort(e),this.controller=void 0}}};function ji(e){if(!e)throw Error(`Credential creation options are required`);if(typeof PublicKeyCredential<`u`&&`parseCreationOptionsFromJSON`in PublicKeyCredential&&typeof PublicKeyCredential.parseCreationOptionsFromJSON==`function`)return PublicKeyCredential.parseCreationOptionsFromJSON(e);let{challenge:n,user:r,excludeCredentials:i}=e,a=t(e,[`challenge`,`user`,`excludeCredentials`]),o=R(n).buffer,s=Object.assign(Object.assign({},r),{id:R(r.id).buffer}),c=Object.assign(Object.assign({},a),{challenge:o,user:s});if(i&&i.length>0){c.excludeCredentials=Array(i.length);for(let e=0;e<i.length;e++){let t=i[e];c.excludeCredentials[e]=Object.assign(Object.assign({},t),{id:R(t.id).buffer,type:t.type||`public-key`,transports:t.transports})}}return c}function Mi(e){if(!e)throw Error(`Credential request options are required`);if(typeof PublicKeyCredential<`u`&&`parseRequestOptionsFromJSON`in PublicKeyCredential&&typeof PublicKeyCredential.parseRequestOptionsFromJSON==`function`)return PublicKeyCredential.parseRequestOptionsFromJSON(e);let{challenge:n,allowCredentials:r}=e,i=t(e,[`challenge`,`allowCredentials`]),a=R(n).buffer,o=Object.assign(Object.assign({},i),{challenge:a});if(r&&r.length>0){o.allowCredentials=Array(r.length);for(let e=0;e<r.length;e++){let t=r[e];o.allowCredentials[e]=Object.assign(Object.assign({},t),{id:R(t.id).buffer,type:t.type||`public-key`,transports:t.transports})}}return o}function Ni(e){if(`toJSON`in e&&typeof e.toJSON==`function`)return e.toJSON();let t=e;return{id:e.id,rawId:e.id,response:{attestationObject:z(new Uint8Array(e.response.attestationObject)),clientDataJSON:z(new Uint8Array(e.response.clientDataJSON))},type:`public-key`,clientExtensionResults:e.getClientExtensionResults(),authenticatorAttachment:t.authenticatorAttachment??void 0}}function Pi(e){if(`toJSON`in e&&typeof e.toJSON==`function`)return e.toJSON();let t=e,n=e.getClientExtensionResults(),r=e.response;return{id:e.id,rawId:e.id,response:{authenticatorData:z(new Uint8Array(r.authenticatorData)),clientDataJSON:z(new Uint8Array(r.clientDataJSON)),signature:z(new Uint8Array(r.signature)),userHandle:r.userHandle?z(new Uint8Array(r.userHandle)):void 0},type:`public-key`,clientExtensionResults:n,authenticatorAttachment:t.authenticatorAttachment??void 0}}function Fi(e){return e===`localhost`||/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i.test(e)}function Ii(){return!!(B()&&`PublicKeyCredential`in window&&window.PublicKeyCredential&&`credentials`in navigator&&typeof(navigator==null?void 0:navigator.credentials)?.create==`function`&&typeof(navigator==null?void 0:navigator.credentials)?.get==`function`)}async function Li(e){try{let t=await navigator.credentials.create(e);return t?t instanceof PublicKeyCredential?{data:t,error:null}:{data:null,error:new Di(`Browser returned unexpected credential type`,t)}:{data:null,error:new Di(`Empty credential response`,t)}}catch(t){return{data:null,error:Oi({error:t,options:e})}}}async function Ri(e){try{let t=await navigator.credentials.get(e);return t?t instanceof PublicKeyCredential?{data:t,error:null}:{data:null,error:new Di(`Browser returned unexpected credential type`,t)}:{data:null,error:new Di(`Empty credential response`,t)}}catch(t){return{data:null,error:ki({error:t,options:e})}}}let zi={hints:[`security-key`],authenticatorSelection:{authenticatorAttachment:`cross-platform`,requireResidentKey:!1,userVerification:`preferred`,residentKey:`discouraged`},attestation:`direct`},Bi={userVerification:`preferred`,hints:[`security-key`],attestation:`direct`};function Vi(...e){let t=e=>typeof e==`object`&&!!e&&!Array.isArray(e),n=e=>e instanceof ArrayBuffer||ArrayBuffer.isView(e),r={};for(let i of e)if(i)for(let e in i){let a=i[e];if(a!==void 0)if(Array.isArray(a))r[e]=a;else if(n(a))r[e]=a;else if(t(a)){let n=r[e];t(n)?r[e]=Vi(n,a):r[e]=Vi(a)}else r[e]=a}return r}function Hi(e,t){return Vi(zi,e,t||{})}function Ui(e,t){return Vi(Bi,e,t||{})}var Wi=class{constructor(e){this.client=e,this.enroll=this._enroll.bind(this),this.challenge=this._challenge.bind(this),this.verify=this._verify.bind(this),this.authenticate=this._authenticate.bind(this),this.register=this._register.bind(this)}async _enroll(e){return this.client.mfa.enroll(Object.assign(Object.assign({},e),{factorType:`webauthn`}))}async _challenge({factorId:e,webauthn:t,friendlyName:n,signal:r},i){try{let{data:a,error:o}=await this.client.mfa.challenge({factorId:e,webauthn:t});if(!a)return{data:null,error:o};let s=r??Ai.createNewAbortSignal();if(a.webauthn.type===`create`){let{user:e}=a.webauthn.credential_options.publicKey;if(!e.name){let t=n;if(t)e.name=`${e.id}:${t}`;else{let t=(await this.client.getUser()).data.user,n=t?.user_metadata?.name||t?.email||t?.id||`User`;e.name=`${e.id}:${n}`}}e.displayName||=e.name}switch(a.webauthn.type){case`create`:{let{data:t,error:n}=await Li({publicKey:Hi(a.webauthn.credential_options.publicKey,i?.create),signal:s});return t?{data:{factorId:e,challengeId:a.id,webauthn:{type:a.webauthn.type,credential_response:t}},error:null}:{data:null,error:n}}case`request`:{let t=Ui(a.webauthn.credential_options.publicKey,i?.request),{data:n,error:r}=await Ri(Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:t,signal:s}));return n?{data:{factorId:e,challengeId:a.id,webauthn:{type:a.webauthn.type,credential_response:n}},error:null}:{data:null,error:r}}}}catch(e){return N(e)?{data:null,error:e}:{data:null,error:new P(`Unexpected error in challenge`,e)}}}async _verify({challengeId:e,factorId:t,webauthn:n}){return this.client.mfa.verify({factorId:t,challengeId:e,webauthn:n})}async _authenticate({factorId:e,webauthn:{rpId:t=typeof window<`u`?window.location.hostname:void 0,rpOrigins:n=typeof window<`u`?[window.location.origin]:void 0,signal:r}={}},i){if(!t)return{data:null,error:new Zn(`rpId is required for WebAuthn authentication`)};try{if(!Ii())return{data:null,error:new P(`Browser does not support WebAuthn`,null)};let{data:a,error:o}=await this.challenge({factorId:e,webauthn:{rpId:t,rpOrigins:n},signal:r},{request:i});if(!a)return{data:null,error:o};let{webauthn:s}=a;return this._verify({factorId:e,challengeId:a.challengeId,webauthn:{type:s.type,rpId:t,rpOrigins:n,credential_response:s.credential_response}})}catch(e){return N(e)?{data:null,error:e}:{data:null,error:new P(`Unexpected error in authenticate`,e)}}}async _register({friendlyName:e,webauthn:{rpId:t=typeof window<`u`?window.location.hostname:void 0,rpOrigins:n=typeof window<`u`?[window.location.origin]:void 0,signal:r}={}},i){if(!t)return{data:null,error:new Zn(`rpId is required for WebAuthn registration`)};try{if(!Ii())return{data:null,error:new P(`Browser does not support WebAuthn`,null)};let{data:a,error:o}=await this._enroll({friendlyName:e});if(!a)return await this.client.mfa.listFactors().then(t=>t.data?.all.find(t=>t.factor_type===`webauthn`&&t.friendly_name===e&&t.status===`unverified`)).then(e=>e?this.client.mfa.unenroll({factorId:e?.id}):void 0),{data:null,error:o};let{data:s,error:c}=await this._challenge({factorId:a.id,friendlyName:a.friendly_name,webauthn:{rpId:t,rpOrigins:n},signal:r},{create:i});return s?this._verify({factorId:a.id,challengeId:s.challengeId,webauthn:{rpId:t,rpOrigins:n,type:s.webauthn.type,credential_response:s.webauthn.credential_response}}):{data:null,error:c}}catch(e){return N(e)?{data:null,error:e}:{data:null,error:new P(`Unexpected error in register`,e)}}}};Si();let Gi={url:`http://localhost:9999`,storageKey:`supabase.auth.token`,autoRefreshToken:!0,persistSession:!0,detectSessionInUrl:!0,headers:qn,flowType:`implicit`,debug:!1,hasCustomAuthorizationHeader:!1,throwOnError:!1,lockAcquireTimeout:5e3,skipAutoInitialize:!1,experimental:{}},Ki={},qi=!1;var Ji=class e{get jwks(){return Ki[this.storageKey]?.jwks??{keys:[]}}set jwks(e){Ki[this.storageKey]=Object.assign(Object.assign({},Ki[this.storageKey]),{jwks:e})}get jwks_cached_at(){return Ki[this.storageKey]?.cachedAt??-(2**53-1)}set jwks_cached_at(e){Ki[this.storageKey]=Object.assign(Object.assign({},Ki[this.storageKey]),{cachedAt:e})}constructor(t){var n;this.userStorage=null,this.memoryStorage=null,this.stateChangeEmitters=new Map,this.autoRefreshTicker=null,this.autoRefreshTickTimeout=null,this.visibilityChangedCallback=null,this.refreshingDeferred=null,this.lastRefreshFailure=null,this._sessionRemovalEpoch=0,this.initializePromise=null,this._pendingInitNotifications=null,this.detectSessionInUrl=!0,this.hasCustomAuthorizationHeader=!1,this.suppressGetSessionWarning=!1,this.lock=null,this.lockAcquired=!1,this.pendingInLock=[],this.broadcastChannel=null,this.logger=console.log;let r=Object.assign(Object.assign({},Gi),t);if(this.storageKey=r.storageKey,this.instanceID=e.nextInstanceID[this.storageKey]??0,e.nextInstanceID[this.storageKey]=this.instanceID+1,this.logDebugMessages=!!r.debug,typeof r.debug==`function`&&(this.logger=r.debug),this.instanceID>0&&B()){let e=`${this._logPrefix()} Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.`;console.warn(e),this.logDebugMessages&&console.trace(e)}if(this.persistSession=r.persistSession,this.autoRefreshToken=r.autoRefreshToken,this.experimental=r.experimental??{},this.admin=new mi({url:r.url,headers:r.headers,fetch:r.fetch,experimental:this.experimental}),this.url=r.url,this.headers=r.headers,this.fetch=Or(r.fetch),this.detectSessionInUrl=r.detectSessionInUrl,this.flowType=r.flowType,this.hasCustomAuthorizationHeader=r.hasCustomAuthorizationHeader,this.throwOnError=r.throwOnError,this.lockAcquireTimeout=r.lockAcquireTimeout,r.lock!=null&&(this.lock=r.lock,qi||(qi=!0,console.warn(`${this._logPrefix()} The "lock" option is deprecated and will be removed in v3. The client now coordinates session refreshes without a lock, so most apps can drop the option. See https://github.com/supabase/supabase-js/blob/master/packages/core/auth-js/migrations/lockless-coordination.md`))),this.jwks||(this.jwks={keys:[]},this.jwks_cached_at=-(2**53-1)),this.mfa={verify:this._verify.bind(this),enroll:this._enroll.bind(this),unenroll:this._unenroll.bind(this),challenge:this._challenge.bind(this),listFactors:this._listFactors.bind(this),challengeAndVerify:this._challengeAndVerify.bind(this),getAuthenticatorAssuranceLevel:this._getAuthenticatorAssuranceLevel.bind(this),webauthn:new Wi(this),recoveryCodes:{getStatus:this._getRecoveryCodesStatus.bind(this),generate:this._generateRecoveryCodes.bind(this),verify:this._verifyRecoveryCode.bind(this),regenerate:this._regenerateRecoveryCodes.bind(this),unenroll:this._unenrollRecoveryCodes.bind(this)}},this.oauth={getAuthorizationDetails:this._getAuthorizationDetails.bind(this),approveAuthorization:this._approveAuthorization.bind(this),denyAuthorization:this._denyAuthorization.bind(this),listGrants:this._listOAuthGrants.bind(this),revokeGrant:this._revokeOAuthGrant.bind(this)},this.passkey={startRegistration:this._startPasskeyRegistration.bind(this),verifyRegistration:this._verifyPasskeyRegistration.bind(this),startAuthentication:this._startPasskeyAuthentication.bind(this),verifyAuthentication:this._verifyPasskeyAuthentication.bind(this),list:this._listPasskeys.bind(this),update:this._updatePasskey.bind(this),delete:this._deletePasskey.bind(this)},this.persistSession?(r.storage?this.storage=r.storage:Er()?this.storage=globalThis.localStorage:(this.memoryStorage={},this.storage=hi(this.memoryStorage)),r.userStorage&&(this.userStorage=r.userStorage)):(this.memoryStorage={},this.storage=hi(this.memoryStorage)),B()&&globalThis.BroadcastChannel&&this.persistSession&&this.storageKey){try{this.broadcastChannel=new globalThis.BroadcastChannel(this.storageKey)}catch(e){console.error(`Failed to create a new BroadcastChannel, multi-tab state changes will not be available`,e)}(n=this.broadcastChannel)==null||n.addEventListener(`message`,async e=>{this._debug(`received broadcast notification from other tab or client`,e),(e.data.event===`TOKEN_REFRESHED`||e.data.event===`SIGNED_IN`)&&(this.lastRefreshFailure=null);try{await this._notifyAllSubscribers(e.data.event,e.data.session,!1)}catch(e){this._debug(`#broadcastChannel`,`error`,e)}})}r.skipAutoInitialize||this.initialize().catch(e=>{this._debug(`#initialize()`,`error`,e)})}isThrowOnErrorEnabled(){return this.throwOnError}_returnResult(e){if(this.throwOnError&&e&&e.error)throw e.error;return e}_logPrefix(){return`GoTrueClient@${this.storageKey}:${this.instanceID} (${Gn}) ${new Date().toISOString()}`}_debug(...e){return this.logDebugMessages&&this.logger(this._logPrefix(),...e),this}async initialize(){if(this.initializePromise)return await this.initializePromise;this._pendingInitNotifications=[],this.initializePromise=(async()=>this.lock==null?await this._initialize():await this._acquireLock(this.lockAcquireTimeout,async()=>await this._initialize()))();let e=await this.initializePromise,t=this._pendingInitNotifications??[];this._pendingInitNotifications=null;for(let e of t)await this._notifyAllSubscribers(e.event,e.session,e.broadcast);return e}async _initialize(){try{let e={},t=`none`;if(B()&&(e=Dr(window.location.href),this._isImplicitGrantCallback(e)?t=`implicit`:await this._isPKCECallback(e)&&(t=`pkce`)),B()&&this.detectSessionInUrl&&t!==`none`){let{data:n,error:r}=await this._getSessionFromURL(e,t);if(r){if(this._debug(`#_initialize()`,`error detecting session from URL`,r),rr(r)){let e=r.details?.code;if(e===`identity_already_exists`||e===`identity_not_found`||e===`single_identity_not_deletable`)return{error:r}}return{error:r}}let{session:i,redirectType:a}=n;return this._debug(`#_initialize()`,`detected session in URL`,i,`redirect type`,a),await this._saveSession(i),setTimeout(async()=>{a===`recovery`?await this._notifyAllSubscribers(`PASSWORD_RECOVERY`,i):await this._notifyAllSubscribers(`SIGNED_IN`,i)},0),{error:null}}return await this._recoverAndRefresh(),{error:null}}catch(e){return N(e)?this._returnResult({error:e}):this._returnResult({error:new P(`Unexpected error during initialization`,e)})}finally{await this._handleVisibilityChange(),this._debug(`#_initialize()`,`end`)}}async signInAnonymously(e){try{let{data:t,error:n}=await Y(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,body:{data:e?.options?.data??{},gotrue_meta_security:{captcha_token:e?.options?.captchaToken}},xform:X});if(n||!t)return this._returnResult({data:{user:null,session:null},error:n});let r=t.session,i=t.user;return t.session&&(await this._saveSession(t.session),await this._notifyAllSubscribers(`SIGNED_IN`,r)),this._returnResult({data:{user:i,session:r},error:null})}catch(e){if(N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signUp(e){let t=null;try{let n;if(`email`in e){let{email:r,password:i,options:a}=e,o=null,s=null;this.flowType===`pkce`&&([o,s,t]=await this._getCodeChallengeAndMethod()),n=await Y(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(a?.emailRedirectTo,t),body:{email:r,password:i,data:a?.data??{},gotrue_meta_security:{captcha_token:a?.captchaToken},code_challenge:o,code_challenge_method:s},xform:X})}else if(`phone`in e){let{phone:t,password:r,options:i}=e;n=await Y(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,body:{phone:t,password:r,data:i?.data??{},channel:i?.channel??`sms`,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:X})}else throw new tr(`You must provide either an email or phone number and a password`);let{data:r,error:i}=n;if(i||!r)return await G(this.storage,this.storageKey,t),this._returnResult({data:{user:null,session:null},error:i});let a=r.session,o=r.user;return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,a)),this._returnResult({data:{user:o,session:a},error:null})}catch(e){if(await G(this.storage,this.storageKey,t),N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithPassword(e){try{let t;if(`email`in e){let{email:n,password:r,options:i}=e;t=await Y(this.fetch,`POST`,`${this.url}/token?grant_type=password`,{headers:this.headers,body:{email:n,password:r,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:ci})}else if(`phone`in e){let{phone:n,password:r,options:i}=e;t=await Y(this.fetch,`POST`,`${this.url}/token?grant_type=password`,{headers:this.headers,body:{phone:n,password:r,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:ci})}else throw new tr(`You must provide either an email or phone number and a password`);let{data:n,error:r}=t;if(r)return this._returnResult({data:{user:null,session:null},error:r});if(!n||!n.session||!n.user){let e=new L;return this._returnResult({data:{user:null,session:null},error:e})}return n.session&&(await this._saveSession(n.session),await this._notifyAllSubscribers(`SIGNED_IN`,n.session)),this._returnResult({data:Object.assign({user:n.user,session:n.session},n.weak_password?{weakPassword:n.weak_password}:null),error:r})}catch(e){if(N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithOAuth(e){return await this._handleProviderSignIn(e.provider,{redirectTo:e.options?.redirectTo,scopes:e.options?.scopes,queryParams:e.options?.queryParams,skipBrowserRedirect:e.options?.skipBrowserRedirect})}async exchangeCodeForSession(e,t){return await this.initializePromise,this.lock==null?this._exchangeCodeForSession(e,t):this._acquireLock(this.lockAcquireTimeout,async()=>this._exchangeCodeForSession(e,t))}async signInWithWeb3(e){let{chain:t}=e;switch(t){case`ethereum`:return await this.signInWithEthereum(e);case`solana`:return await this.signInWithSolana(e);default:throw Error(`@supabase/auth-js: Unsupported chain "${t}"`)}}async signInWithEthereum(e){let t,n;if(`message`in e)t=e.message,n=e.signature;else{let{chain:r,wallet:i,statement:a,options:o}=e,s;if(B())if(typeof i==`object`)s=i;else{let e=window;if(`ethereum`in e&&typeof e.ethereum==`object`&&`request`in e.ethereum&&typeof e.ethereum.request==`function`)s=e.ethereum;else throw Error(`@supabase/auth-js: No compatible Ethereum wallet interface on the window object (window.ethereum) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'ethereum', wallet: resolvedUserWallet }) instead.`)}else{if(typeof i!=`object`||!o?.url)throw Error(`@supabase/auth-js: Both wallet and url must be specified in non-browser environments.`);s=i}let c=new URL(o?.url??window.location.href),l=await s.request({method:`eth_requestAccounts`}).then(e=>e).catch(()=>{throw Error(`@supabase/auth-js: Wallet method eth_requestAccounts is missing or invalid`)});if(!l||l.length===0)throw Error(`@supabase/auth-js: No accounts available. Please ensure the wallet is connected.`);let u=Ci(l[0]),d=o?.signInWithEthereum?.chainId;d||=wi(await s.request({method:`eth_chainId`})),t=Ei({domain:c.host,address:u,statement:a,uri:c.href,version:`1`,chainId:d,nonce:o?.signInWithEthereum?.nonce,issuedAt:o?.signInWithEthereum?.issuedAt??new Date,expirationTime:o?.signInWithEthereum?.expirationTime,notBefore:o?.signInWithEthereum?.notBefore,requestId:o?.signInWithEthereum?.requestId,resources:o?.signInWithEthereum?.resources}),n=await s.request({method:`personal_sign`,params:[Ti(t),u]})}try{let{data:r,error:i}=await Y(this.fetch,`POST`,`${this.url}/token?grant_type=web3`,{headers:this.headers,body:Object.assign({chain:`ethereum`,message:t,signature:n},e.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options?.captchaToken}}:null),xform:X});if(i)throw i;if(!r||!r.session||!r.user){let e=new L;return this._returnResult({data:{user:null,session:null},error:e})}return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,r.session)),this._returnResult({data:Object.assign({},r),error:i})}catch(e){if(N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithSolana(e){let t,n;if(`message`in e)t=e.message,n=e.signature;else{let{chain:r,wallet:i,statement:a,options:o}=e,s;if(B())if(typeof i==`object`)s=i;else{let e=window;if(`solana`in e&&typeof e.solana==`object`&&(`signIn`in e.solana&&typeof e.solana.signIn==`function`||`signMessage`in e.solana&&typeof e.solana.signMessage==`function`))s=e.solana;else throw Error(`@supabase/auth-js: No compatible Solana wallet interface on the window object (window.solana) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'solana', wallet: resolvedUserWallet }) instead.`)}else{if(typeof i!=`object`||!o?.url)throw Error(`@supabase/auth-js: Both wallet and url must be specified in non-browser environments.`);s=i}let c=new URL(o?.url??window.location.href);if(`signIn`in s&&s.signIn){let e=await s.signIn(Object.assign(Object.assign(Object.assign({issuedAt:new Date().toISOString()},o?.signInWithSolana),{version:`1`,domain:c.host,uri:c.href}),a?{statement:a}:null)),r;if(Array.isArray(e)&&e[0]&&typeof e[0]==`object`)r=e[0];else if(e&&typeof e==`object`&&`signedMessage`in e&&`signature`in e)r=e;else throw Error(`@supabase/auth-js: Wallet method signIn() returned unrecognized value`);if(`signedMessage`in r&&`signature`in r&&(typeof r.signedMessage==`string`||r.signedMessage instanceof Uint8Array)&&r.signature instanceof Uint8Array)t=typeof r.signedMessage==`string`?r.signedMessage:new TextDecoder().decode(r.signedMessage),n=r.signature;else throw Error(`@supabase/auth-js: Wallet method signIn() API returned object without signedMessage and signature fields`)}else{if(!(`signMessage`in s)||typeof s.signMessage!=`function`||!(`publicKey`in s)||typeof s!=`object`||!s.publicKey||!(`toBase58`in s.publicKey)||typeof s.publicKey.toBase58!=`function`)throw Error(`@supabase/auth-js: Wallet does not have a compatible signMessage() and publicKey.toBase58() API`);t=[`${c.host} wants you to sign in with your Solana account:`,s.publicKey.toBase58(),...a?[``,a,``]:[``],`Version: 1`,`URI: ${c.href}`,`Issued At: ${o?.signInWithSolana?.issuedAt??new Date().toISOString()}`,...o?.signInWithSolana?.notBefore?[`Not Before: ${o.signInWithSolana.notBefore}`]:[],...o?.signInWithSolana?.expirationTime?[`Expiration Time: ${o.signInWithSolana.expirationTime}`]:[],...o?.signInWithSolana?.chainId?[`Chain ID: ${o.signInWithSolana.chainId}`]:[],...o?.signInWithSolana?.nonce?[`Nonce: ${o.signInWithSolana.nonce}`]:[],...o?.signInWithSolana?.requestId?[`Request ID: ${o.signInWithSolana.requestId}`]:[],...o?.signInWithSolana?.resources?.length?[`Resources`,...o.signInWithSolana.resources.map(e=>`- ${e}`)]:[]].join(`
 `);let e=await s.signMessage(new TextEncoder().encode(t),`utf8`);if(!e||!(e instanceof Uint8Array))throw Error(`@supabase/auth-js: Wallet signMessage() API returned an recognized value`);n=e}}try{let{data:r,error:i}=await Y(this.fetch,`POST`,`${this.url}/token?grant_type=web3`,{headers:this.headers,body:Object.assign({chain:`solana`,message:t,signature:z(n)},e.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options?.captchaToken}}:null),xform:X});if(i)throw i;if(!r||!r.session||!r.user){let e=new L;return this._returnResult({data:{user:null,session:null},error:e})}return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,r.session)),this._returnResult({data:Object.assign({},r),error:i})}catch(e){if(N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async _exchangeCodeForSession(e,t){let n=t?.flowId!=null,r=n?zr(t?.flowId):B()?zr(Dr(window.location.href)[M]):null;n&&!r&&this._debug(`#_exchangeCodeForSession()`,`provided flowId is not a valid flow id`,t?.flowId);let{verifier:i,flowId:a}=n&&!r?{verifier:null,flowId:null}:await Gr(this.storage,this.storageKey,r),[o,s]=(i??``).split(`/`);try{if(!o&&this.flowType===`pkce`)throw new ar;let{data:t,error:n}=await Y(this.fetch,`POST`,`${this.url}/token?grant_type=pkce`,{headers:this.headers,body:{auth_code:e,code_verifier:o},xform:X});if(await G(this.storage,this.storageKey,a),n)throw n;if(!t||!t.session||!t.user){let e=new L;return this._returnResult({data:{user:null,session:null,redirectType:null},error:e})}return t.session&&(await this._saveSession(t.session),await this._notifyAllSubscribers(s===`recovery`?`PASSWORD_RECOVERY`:`SIGNED_IN`,t.session)),this._returnResult({data:Object.assign(Object.assign({},t),{redirectType:s??null}),error:n})}catch(e){if(await G(this.storage,this.storageKey,a),N(e))return this._returnResult({data:{user:null,session:null,redirectType:null},error:e});throw e}}async signInWithIdToken(e){try{let{options:t,provider:n,token:r,access_token:i,nonce:a}=e,{data:o,error:s}=await Y(this.fetch,`POST`,`${this.url}/token?grant_type=id_token`,{headers:this.headers,body:{provider:n,id_token:r,access_token:i,nonce:a,gotrue_meta_security:{captcha_token:t?.captchaToken}},xform:X});if(s)return this._returnResult({data:{user:null,session:null},error:s});if(!o||!o.session||!o.user){let e=new L;return this._returnResult({data:{user:null,session:null},error:e})}return o.session&&(await this._saveSession(o.session),await this._notifyAllSubscribers(`SIGNED_IN`,o.session)),this._returnResult({data:o,error:s})}catch(e){if(N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithOtp(e){let t=null;try{if(`email`in e){let{email:n,options:r}=e,i=null,a=null;this.flowType===`pkce`&&([i,a,t]=await this._getCodeChallengeAndMethod());let{error:o}=await Y(this.fetch,`POST`,`${this.url}/otp`,{headers:this.headers,body:{email:n,data:r?.data??{},create_user:r?.shouldCreateUser??!0,gotrue_meta_security:{captcha_token:r?.captchaToken},code_challenge:i,code_challenge_method:a},redirectTo:this._maybeAppendFlowIdToRedirect(r?.emailRedirectTo,t)});return this._returnResult({data:{user:null,session:null},error:o})}if(`phone`in e){let{phone:t,options:n}=e,{data:r,error:i}=await Y(this.fetch,`POST`,`${this.url}/otp`,{headers:this.headers,body:{phone:t,data:n?.data??{},create_user:n?.shouldCreateUser??!0,gotrue_meta_security:{captcha_token:n?.captchaToken},channel:n?.channel??`sms`}});return this._returnResult({data:{user:null,session:null,messageId:r?.message_id},error:i})}throw new tr(`You must provide either an email or phone number.`)}catch(e){if(await G(this.storage,this.storageKey,t),N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async verifyOtp(e){try{let t,n;`options`in e&&(t=e.options?.redirectTo,n=e.options?.captchaToken);let{data:r,error:i}=await Y(this.fetch,`POST`,`${this.url}/verify`,{headers:this.headers,body:Object.assign(Object.assign({},e),{gotrue_meta_security:{captcha_token:n}}),redirectTo:t,xform:X});if(i)throw i;if(!r)throw Error(`An error occurred on token verification.`);let a=r.session,o=r.user;return a?.access_token&&(await this._saveSession(a),await this._notifyAllSubscribers(e.type==`recovery`?`PASSWORD_RECOVERY`:`SIGNED_IN`,a)),this._returnResult({data:{user:o,session:a},error:null})}catch(e){if(N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithSSO(e){let t=null;try{let n=null,r=null;this.flowType===`pkce`&&([n,r,t]=await this._getCodeChallengeAndMethod());let i=await Y(this.fetch,`POST`,`${this.url}/sso`,{body:Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({},`providerId`in e?{provider_id:e.providerId}:null),`domain`in e?{domain:e.domain}:null),{redirect_to:this._maybeAppendFlowIdToRedirect(e.options?.redirectTo,t)}),e?.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options.captchaToken}}:null),{skip_http_redirect:!0,code_challenge:n,code_challenge_method:r}),headers:this.headers,xform:li});return i.data?.url&&B()&&!e.options?.skipBrowserRedirect&&window.location.assign(i.data.url),this._returnResult(i)}catch(e){if(await G(this.storage,this.storageKey,t),N(e))return this._returnResult({data:null,error:e});throw e}}async reauthenticate(){return await this.initializePromise,this.lock==null?await this._reauthenticate():await this._acquireLock(this.lockAcquireTimeout,async()=>await this._reauthenticate())}async _reauthenticate(){try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;if(n)throw n;if(!t)throw new I;let{error:r}=await Y(this.fetch,`GET`,`${this.url}/reauthenticate`,{headers:this.headers,jwt:t.access_token});return this._returnResult({data:{user:null,session:null},error:r})})}catch(e){if(N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async resend(e){let t=null;try{let n=`${this.url}/resend`;if(`email`in e){let{email:r,type:i,options:a}=e,o=null,s=null;this.flowType===`pkce`&&([o,s,t]=await this._getCodeChallengeAndMethod());let{error:c}=await Y(this.fetch,`POST`,n,{headers:this.headers,body:{email:r,type:i,gotrue_meta_security:{captcha_token:a?.captchaToken},code_challenge:o,code_challenge_method:s},redirectTo:this._maybeAppendFlowIdToRedirect(a?.emailRedirectTo,t)});return c&&await G(this.storage,this.storageKey,t),this._returnResult({data:{user:null,session:null},error:c})}else if(`phone`in e){let{phone:t,type:r,options:i}=e,{data:a,error:o}=await Y(this.fetch,`POST`,n,{headers:this.headers,body:{phone:t,type:r,gotrue_meta_security:{captcha_token:i?.captchaToken}}});return this._returnResult({data:{user:null,session:null,messageId:a?.message_id},error:o})}throw new tr(`You must provide either an email or phone number and a type`)}catch(e){if(await G(this.storage,this.storageKey,t),N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async getSession(){return await this.initializePromise,this.lock==null?await this._useSession(async e=>e):await this._acquireLock(this.lockAcquireTimeout,async()=>this._useSession(async e=>e))}async _acquireLock(e,t){this._debug(`#_acquireLock`,`begin`,e);try{if(this.lockAcquired){let e=this.pendingInLock.length?this.pendingInLock[this.pendingInLock.length-1]:Promise.resolve(),n=(async()=>(await e,await t()))();return this.pendingInLock.push((async()=>{try{await n}catch{}})()),n}return await this.lock(`lock:${this.storageKey}`,e,async()=>{this._debug(`#_acquireLock`,`lock acquired for storage key`,this.storageKey);try{this.lockAcquired=!0;let e=t();for(this.pendingInLock.push((async()=>{try{await e}catch{}})()),await e;this.pendingInLock.length;){let e=[...this.pendingInLock];await Promise.all(e),this.pendingInLock.splice(0,e.length)}return await e}finally{this._debug(`#_acquireLock`,`lock released for storage key`,this.storageKey),this.lockAcquired=!1}})}finally{this._debug(`#_acquireLock`,`end`)}}async _useSession(e){this._debug(`#_useSession`,`begin`);try{return await e(await this.__loadSession())}finally{this._debug(`#_useSession`,`end`)}}async __loadSession(){this._debug(`#__loadSession()`,`begin`),this.lock!=null&&!this.lockAcquired&&this._debug(`#__loadSession()`,`used outside of an acquired lock!`,Error().stack);try{let e=null,t=await U(this.storage,this.storageKey);if(this._debug(`#getSession()`,`session from storage`,t),t!==null&&(this._isValidSession(t)?e=t:(this._debug(`#getSession()`,`session from storage is not valid`),await this._removeSession())),!e)return{data:{session:null},error:null};let n=e.expires_at?e.expires_at*1e3-Date.now()<Kn:!1;if(this._debug(`#__loadSession()`,`session has${n?``:` not`} expired`,`expires_at`,e.expires_at),!n){if(this.userStorage){let t=await U(this.userStorage,this.storageKey+`-user`);t?.user?e.user=t.user:e.user=ti()}if(this.storage.isServer&&e.user&&!e.user.__isUserNotAvailableProxy){let t={value:this.suppressGetSessionWarning};e.user=ni(e.user,t),t.value&&(this.suppressGetSessionWarning=!0)}return{data:{session:e},error:null}}let{data:r,error:i}=await this._callRefreshToken(e.refresh_token);if(i){if(e.expires_at&&e.expires_at*1e3>Date.now()){let t=await U(this.storage,this.storageKey);if(t&&t.refresh_token===e.refresh_token)return this._returnResult({data:{session:e},error:null})}return this._returnResult({data:{session:null},error:i})}return this._returnResult({data:{session:r},error:null})}finally{this._debug(`#__loadSession()`,`end`)}}async getUser(e){if(e)return await this._getUser(e);await this.initializePromise;let t;return t=this.lock==null?await this._getUser():await this._acquireLock(this.lockAcquireTimeout,async()=>await this._getUser()),t.data.user&&(this.suppressGetSessionWarning=!0),t}async _getUser(e){try{return e?await Y(this.fetch,`GET`,`${this.url}/user`,{headers:this.headers,jwt:e,xform:Z}):await this._useSession(async e=>{let{data:t,error:n}=e;if(n)throw n;return!t.session?.access_token&&!this.hasCustomAuthorizationHeader?{data:{user:null},error:new I}:await Y(this.fetch,`GET`,`${this.url}/user`,{headers:this.headers,jwt:t.session?.access_token??void 0,xform:Z})})}catch(e){if(N(e))return er(e)&&await this._removeSession(),this._returnResult({data:{user:null},error:e});throw e}}async updateUser(e,t={}){return await this.initializePromise,this.lock==null?await this._updateUser(e,t):await this._acquireLock(this.lockAcquireTimeout,async()=>await this._updateUser(e,t))}async _updateUser(e,t={}){let n=null;try{return await this._useSession(async r=>{let{data:i,error:a}=r;if(a)throw a;if(!i.session)throw new I;let o=i.session,s=null,c=null;this.flowType===`pkce`&&e.email!=null&&([s,c,n]=await this._getCodeChallengeAndMethod());let{data:l,error:u}=await Y(this.fetch,`PUT`,`${this.url}/user`,{headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(t?.emailRedirectTo,n),body:Object.assign(Object.assign({},e),{code_challenge:s,code_challenge_method:c}),jwt:o.access_token,xform:Z});if(u)throw u;return o.user=l.user,await this._saveSession(o),await this._notifyAllSubscribers(`USER_UPDATED`,o),this._returnResult({data:{user:o.user},error:null})})}catch(e){if(await G(this.storage,this.storageKey,n),N(e))return this._returnResult({data:{user:null},error:e});throw e}}async setSession(e){return await this.initializePromise,this.lock==null?await this._setSession(e):await this._acquireLock(this.lockAcquireTimeout,async()=>await this._setSession(e))}async _setSession(e){try{if(!e.access_token||!e.refresh_token)throw new I;let t=Date.now()/1e3,n=t,r=!0,i=null,{payload:a}=jr(e.access_token);if(a.exp&&(n=a.exp,r=n<=t),r){let{data:t,error:n}=await this._callRefreshToken(e.refresh_token);if(n)return this._returnResult({data:{user:null,session:null},error:n});if(!t)return{data:{user:null,session:null},error:null};i=t}else{let{data:r,error:a}=await this._getUser(e.access_token);if(a)return this._returnResult({data:{user:null,session:null},error:a});i={access_token:e.access_token,refresh_token:e.refresh_token,user:r.user,token_type:`bearer`,expires_in:n-t,expires_at:n},await this._saveSession(i),await this._notifyAllSubscribers(`SIGNED_IN`,i)}return this._returnResult({data:{user:i.user,session:i},error:null})}catch(e){if(N(e))return this._returnResult({data:{session:null,user:null},error:e});throw e}}async refreshSession(e){return await this.initializePromise,this.lock==null?await this._refreshSession(e):await this._acquireLock(this.lockAcquireTimeout,async()=>await this._refreshSession(e))}async _refreshSession(e){try{return await this._useSession(async t=>{if(!e){let{data:n,error:r}=t;if(r)throw r;e=n.session??void 0}if(!e?.refresh_token)throw new I;let{data:n,error:r}=await this._callRefreshToken(e.refresh_token);return r?this._returnResult({data:{user:null,session:null},error:r}):n?this._returnResult({data:{user:n.user,session:n},error:null}):this._returnResult({data:{user:null,session:null},error:null})})}catch(e){if(N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async _getSessionFromURL(e,t){try{if(!B())throw new nr(`No browser detected.`);if(e.error||e.error_description||e.error_code)throw new nr(e.error_description||`Error in URL with unspecified error_description`,{error:e.error||`unspecified_error`,code:e.error_code||`unspecified_code`});switch(t){case`implicit`:if(this.flowType===`pkce`)throw new ir(`Not a valid PKCE flow url.`);break;case`pkce`:if(this.flowType===`implicit`)throw new nr(`Not a valid implicit grant flow url.`);break;default:}if(t===`pkce`){if(this._debug(`#_initialize()`,`begin`,`is PKCE flow`,!0),!e.code)throw new ir(`No code detected.`);let{data:t,error:n}=await this._exchangeCodeForSession(e.code,{flowId:e[M]});if(n)throw n;let r=new URL(window.location.href);return r.searchParams.delete(`code`),r.searchParams.delete(M),window.history.replaceState(window.history.state,``,r.toString()),{data:{session:t.session,redirectType:t.redirectType??null},error:null}}let{provider_token:n,provider_refresh_token:r,access_token:i,refresh_token:a,expires_in:o,expires_at:s,token_type:c}=e;if(!i||!o||!a||!c)throw new nr(`No session defined in URL`);let l=Math.round(Date.now()/1e3),u=parseInt(o),d=l+u;s&&(d=parseInt(s));let f=d-l;f*1e3<=j&&console.warn(`@supabase/gotrue-js: Session as retrieved from URL expires in ${f}s, should have been closer to ${u}s`);let p=d-u;l-p>=120?console.warn(`@supabase/gotrue-js: Session as retrieved from URL was issued over 120s ago, URL could be stale`,p,d,l):l-p<0&&console.warn(`@supabase/gotrue-js: Session as retrieved from URL was issued in the future? Check the device clock for skew`,p,d,l);let{data:m,error:h}=await this._getUser(i);if(h)throw h;let g={provider_token:n,provider_refresh_token:r,access_token:i,expires_in:u,expires_at:d,refresh_token:a,token_type:c,user:m.user};return window.location.hash=``,this._debug(`#_getSessionFromURL()`,`clearing window.location.hash`),this._returnResult({data:{session:g,redirectType:e.type},error:null})}catch(e){if(N(e))return this._returnResult({data:{session:null,redirectType:null},error:e});throw e}}_isImplicitGrantCallback(e){return typeof this.detectSessionInUrl==`function`?this.detectSessionInUrl(new URL(window.location.href),e):!!(e.access_token||e.error||e.error_description||e.error_code)}async _isPKCECallback(e){if(!e.code)return!1;let t=zr(e[M]);return t&&await U(this.storage,Vr(this.storageKey,t))?!0:!!await U(this.storage,`${this.storageKey}-code-verifier`)}async signOut(e={scope:`global`}){return await this.initializePromise,this.lock==null?await this._signOut(e):await this._acquireLock(this.lockAcquireTimeout,async()=>await this._signOut(e))}async _signOut({scope:e}={scope:`global`}){return await this._useSession(async t=>{let n=async()=>{await this._removeSession()},{data:r,error:i}=t;if(i&&!er(i))return this._returnResult({error:i});let a=r.session?.access_token;if(a){let{error:t}=await this.admin.signOut(a,e);if(t&&!($n(t)&&(t.status===404||t.status===401||t.status===403)||er(t)))return e!==`others`&&await n(),this._returnResult({error:t})}return e!==`others`&&await n(),this._returnResult({error:null})})}onAuthStateChange(e){let t=Tr(),n={id:t,callback:e,unsubscribe:()=>{this._debug(`#unsubscribe()`,`state change callback with id removed`,t),this.stateChangeEmitters.delete(t)}};return this._debug(`#onAuthStateChange()`,`registered callback with id`,t),this.stateChangeEmitters.set(t,n),(async()=>{await this.initializePromise,this.lock==null?await this._emitInitialSession(t):await this._acquireLock(this.lockAcquireTimeout,async()=>{this._emitInitialSession(t)})})(),{data:{subscription:n}}}async _emitInitialSession(e){return await this._useSession(async t=>{try{let{data:{session:n},error:r}=t;if(r)throw r;await this.stateChangeEmitters.get(e)?.callback(`INITIAL_SESSION`,n),this._debug(`INITIAL_SESSION`,`callback id`,e,`session`,n)}catch(t){if(await this.stateChangeEmitters.get(e)?.callback(`INITIAL_SESSION`,null),this._debug(`INITIAL_SESSION`,`callback id`,e,`error`,t),ur(t))return;er(t)||cr(t)||$n(t)&&(t.code===`refresh_token_not_found`||t.code===`refresh_token_already_used`||t.code===`session_expired`)?console.warn(t):console.error(t)}})}async resetPasswordForEmail(e,t={}){let n=null,r=null,i=null;this.flowType===`pkce`&&([n,r,i]=await this._getCodeChallengeAndMethod(!0));try{return await Y(this.fetch,`POST`,`${this.url}/recover`,{body:{email:e,code_challenge:n,code_challenge_method:r,gotrue_meta_security:{captcha_token:t.captchaToken}},headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(t.redirectTo,i)})}catch(e){if(await G(this.storage,this.storageKey,i),N(e))return this._returnResult({data:null,error:e});throw e}}async getUserIdentities(){try{let{data:e,error:t}=await this.getUser();if(t)throw t;return this._returnResult({data:{identities:e.user.identities??[]},error:null})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async linkIdentity(e){return`token`in e?this.linkIdentityIdToken(e):this.linkIdentityOAuth(e)}async linkIdentityOAuth(e){let t=null;try{let{data:n,error:r}=await this._useSession(async n=>{let{data:r,error:i}=n;if(i)throw i;let{url:a,flowId:o}=await this._getUrlForProvider(`${this.url}/user/identities/authorize`,e.provider,{redirectTo:e.options?.redirectTo,scopes:e.options?.scopes,queryParams:e.options?.queryParams,skipBrowserRedirect:!0});return t=o,await Y(this.fetch,`GET`,a,{headers:this.headers,jwt:r.session?.access_token??void 0})});if(r)throw r;return B()&&!e.options?.skipBrowserRedirect&&window.location.assign(n?.url),this._returnResult({data:{provider:e.provider,url:n?.url,flowId:t},error:null})}catch(n){if(N(n))return this._returnResult({data:{provider:e.provider,url:null,flowId:t},error:n});throw n}}async linkIdentityIdToken(e){return await this._useSession(async t=>{try{let{error:n,data:{session:r}}=t;if(n)throw n;let{options:i,provider:a,token:o,access_token:s,nonce:c}=e,{data:l,error:u}=await Y(this.fetch,`POST`,`${this.url}/token?grant_type=id_token`,{headers:this.headers,jwt:r?.access_token??void 0,body:{provider:a,id_token:o,access_token:s,nonce:c,link_identity:!0,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:X});return u?this._returnResult({data:{user:null,session:null},error:u}):!l||!l.session||!l.user?this._returnResult({data:{user:null,session:null},error:new L}):(l.session&&(await this._saveSession(l.session),await this._notifyAllSubscribers(`USER_UPDATED`,l.session)),this._returnResult({data:l,error:u}))}catch(e){if(await G(this.storage,this.storageKey,null),N(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}})}async unlinkIdentity(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)throw r;return await Y(this.fetch,`DELETE`,`${this.url}/user/identities/${e.identity_id}`,{headers:this.headers,jwt:n.session?.access_token??void 0})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _refreshAccessToken(e){let t=`#_refreshAccessToken()`;this._debug(t,`begin`);try{let n=Date.now();return await Nr(async n=>(n>0&&await Mr(200*2**(n-1)),this._debug(t,`refreshing attempt`,n),await Y(this.fetch,`POST`,`${this.url}/token?grant_type=refresh_token`,{body:{refresh_token:e},headers:this.headers,xform:X})),(e,t)=>{let r=200*2**e;return t&&cr(t)&&Date.now()+r-n<j})}catch(e){if(this._debug(t,`error`,e),N(e))return this._returnResult({data:{session:null,user:null},error:e});throw e}finally{this._debug(t,`end`)}}_isValidSession(e){return typeof e==`object`&&!!e&&`access_token`in e&&`refresh_token`in e&&`expires_at`in e}async _handleProviderSignIn(e,t){let{url:n,flowId:r}=await this._getUrlForProvider(`${this.url}/authorize`,e,{redirectTo:t.redirectTo,scopes:t.scopes,queryParams:t.queryParams});return this._debug(`#_handleProviderSignIn()`,`provider`,e,`options`,t,`url`,n),B()&&!t.skipBrowserRedirect&&window.location.assign(n),{data:{provider:e,url:n,flowId:r},error:null}}async _recoverAndRefresh(){let e=`#_recoverAndRefresh()`;this._debug(e,`begin`);try{let t=await U(this.storage,this.storageKey);if(t&&this.userStorage){let e=await U(this.userStorage,this.storageKey+`-user`);!this.storage.isServer&&Object.is(this.storage,this.userStorage)&&!e&&(e={user:t.user},await H(this.userStorage,this.storageKey+`-user`,e)),t.user=e?.user??ti()}else if(t&&!t.user&&!t.user){let e=await U(this.storage,this.storageKey+`-user`);e&&e?.user?(t.user=e.user,await W(this.storage,this.storageKey+`-user`),await H(this.storage,this.storageKey,t)):t.user=ti()}if(this._debug(e,`session from storage`,t),!this._isValidSession(t)){this._debug(e,`session is not valid`),t!==null&&await this._removeSession();return}let n=(t.expires_at??1/0)*1e3-Date.now()<Kn;if(this._debug(e,`session has${n?``:` not`} expired with margin of ${Kn}s`),n){if(this.autoRefreshToken&&t.refresh_token){let{error:n}=await this._callRefreshToken(t.refresh_token);n&&(ur(n)?this._debug(e,`refresh discarded by commit guard`,n):this._debug(e,`refresh failed`,n))}}else if(t.user&&t.user.__isUserNotAvailableProxy===!0)try{let{data:n,error:r}=await this._getUser(t.access_token);!r&&n?.user?(t.user=n.user,await this._saveSession(t),await this._notifyAllSubscribers(`SIGNED_IN`,t)):this._debug(e,`could not get user data, skipping SIGNED_IN notification`)}catch(t){console.error(`Error getting user data:`,t),this._debug(e,`error getting user data, skipping SIGNED_IN notification`,t)}else await this._notifyAllSubscribers(`SIGNED_IN`,t)}catch(t){this._debug(e,`error`,t),cr(t)?console.warn(t):console.error(t);return}finally{this._debug(e,`end`)}}async _callRefreshToken(e){var t,n;if(!e)throw new I;if(this.refreshingDeferred)return this.refreshingDeferred.promise;if(this.lastRefreshFailure&&this.lastRefreshFailure.refreshToken===e&&Date.now()<this.lastRefreshFailure.expiresAt)return this._debug(`#_callRefreshToken()`,`returning cached failure (cooldown active)`),this.lastRefreshFailure.result;let r=`#_callRefreshToken()`;this._debug(r,`begin`);try{this.refreshingDeferred=new Ar,this.refreshingDeferred.promise.then(void 0,()=>{});let t=await U(this.storage,this.storageKey),{data:n,error:i}=await this._refreshAccessToken(e);if(i)throw i;if(!n.session)throw new I;let a=await U(this.storage,this.storageKey);if(t!==null&&(a===null||a.refresh_token!==t.refresh_token)){this._debug(r,`commit guard: storage changed since refresh started, discarding rotated tokens`,{startedWith:`present`,nowHolds:a?`replaced`:`cleared`});let e={data:null,error:new lr};return this.refreshingDeferred.resolve(e),e}let o=this._sessionRemovalEpoch;if(await this._saveSession(n.session),this._sessionRemovalEpoch!==o){this._debug(r,`commit guard (post-save): _removeSession ran during _saveSession, undoing write`),await W(this.storage,this.storageKey),this.userStorage&&await W(this.userStorage,this.storageKey+`-user`);let e={data:null,error:new lr};return this.refreshingDeferred.resolve(e),e}await this._notifyAllSubscribers(`TOKEN_REFRESHED`,n.session);let s={data:n.session,error:null};return this.lastRefreshFailure=null,this.refreshingDeferred.resolve(s),s}catch(i){if(this._debug(r,`error`,i),N(i)){let n={data:null,error:i};if(!cr(i)){let e=await U(this.storage,this.storageKey);e?.expires_at&&e.expires_at*1e3>Date.now()?this._debug(r,`proactive refresh failed, access token still valid — preserving session`):await this._removeSession()}return this.lastRefreshFailure={refreshToken:e,result:n,expiresAt:Date.now()+6e4},(t=this.refreshingDeferred)==null||t.resolve(n),n}throw(n=this.refreshingDeferred)==null||n.reject(i),i}finally{this.refreshingDeferred=null,this._debug(r,`end`)}}async _notifyAllSubscribers(e,t,n=!0){if(this._pendingInitNotifications!==null&&n){this._pendingInitNotifications.push({event:e,session:t,broadcast:n});return}let r=`#_notifyAllSubscribers(${e})`;this._debug(r,`begin`,t,`broadcast = ${n}`);try{this.broadcastChannel&&n&&this.broadcastChannel.postMessage({event:e,session:t});let r=[],i=Array.from(this.stateChangeEmitters.values()).map(async n=>{try{await n.callback(e,t)}catch(e){r.push(e)}});if(await Promise.all(i),r.length>0){for(let e=0;e<r.length;e+=1)console.error(r[e]);throw r[0]}}finally{this._debug(r,`end`)}}async _saveSession(e){this._debug(`#_saveSession()`,e),this.suppressGetSessionWarning=!0;let t=Object.assign({},e),n=t.user&&t.user.__isUserNotAvailableProxy===!0;if(this.userStorage){!n&&t.user&&await H(this.userStorage,this.storageKey+`-user`,{user:t.user});let e=Object.assign({},t);delete e.user;let r=ri(e);await H(this.storage,this.storageKey,r)}else{let e=ri(t);await H(this.storage,this.storageKey,e)}}async _removeSession(){this._sessionRemovalEpoch+=1,this._debug(`#_removeSession()`),this.lastRefreshFailure=null,this.suppressGetSessionWarning=!1,await W(this.storage,this.storageKey),await Kr(this.storage,this.storageKey),await W(this.storage,this.storageKey+`-user`),this.userStorage&&await W(this.userStorage,this.storageKey+`-user`),await this._notifyAllSubscribers(`SIGNED_OUT`,null)}_removeVisibilityChangedCallback(){this._debug(`#_removeVisibilityChangedCallback()`);let e=this.visibilityChangedCallback;this.visibilityChangedCallback=null;try{e&&B()&&window!=null&&window.removeEventListener&&window.removeEventListener(`visibilitychange`,e)}catch(e){console.error(`removing visibilitychange callback failed`,e)}}async _startAutoRefresh(){await this._stopAutoRefresh(),this._debug(`#_startAutoRefresh()`);let e=setInterval(()=>this._autoRefreshTokenTick(),j);this.autoRefreshTicker=e,e&&typeof e==`object`&&typeof e.unref==`function`?e.unref():typeof Deno<`u`&&typeof Deno.unrefTimer==`function`&&Deno.unrefTimer(e);let t=setTimeout(async()=>{await this.initializePromise,await this._autoRefreshTokenTick()},0);this.autoRefreshTickTimeout=t,t&&typeof t==`object`&&typeof t.unref==`function`?t.unref():typeof Deno<`u`&&typeof Deno.unrefTimer==`function`&&Deno.unrefTimer(t)}async _stopAutoRefresh(){this._debug(`#_stopAutoRefresh()`);let e=this.autoRefreshTicker;this.autoRefreshTicker=null,e&&clearInterval(e);let t=this.autoRefreshTickTimeout;this.autoRefreshTickTimeout=null,t&&clearTimeout(t)}async startAutoRefresh(){this._removeVisibilityChangedCallback(),await this._startAutoRefresh()}async stopAutoRefresh(){this._removeVisibilityChangedCallback(),await this._stopAutoRefresh()}async dispose(){var e;this._removeVisibilityChangedCallback(),await this._stopAutoRefresh(),(e=this.broadcastChannel)==null||e.close(),this.broadcastChannel=null,this.stateChangeEmitters.clear()}async _autoRefreshTokenTick(){if(this._debug(`#_autoRefreshTokenTick()`,`begin`),this.lock!=null){try{await this._acquireLock(0,async()=>{try{let e=Date.now();try{return await this._useSession(async t=>{let{data:{session:n}}=t;if(!n||!n.refresh_token||!n.expires_at){this._debug(`#_autoRefreshTokenTick()`,`no session`);return}let r=Math.floor((n.expires_at*1e3-e)/j);this._debug(`#_autoRefreshTokenTick()`,`access token expires in ${r} ticks, a tick lasts ${j}ms, refresh threshold is 3 ticks`),r<=3&&await this._callRefreshToken(n.refresh_token)})}catch(e){console.error(`Auto refresh tick failed with error. This is likely a transient error.`,e)}}finally{this._debug(`#_autoRefreshTokenTick()`,`end`)}})}catch(e){if(e instanceof gi)this._debug(`auto refresh token tick lock not available`);else throw e}return}if(this.refreshingDeferred!==null){this._debug(`#_autoRefreshTokenTick()`,`refresh already in flight, skipping`);return}try{let e=Date.now();try{await this._useSession(async t=>{let{data:{session:n}}=t;if(!n||!n.refresh_token||!n.expires_at){this._debug(`#_autoRefreshTokenTick()`,`no session`);return}let r=Math.floor((n.expires_at*1e3-e)/j);this._debug(`#_autoRefreshTokenTick()`,`access token expires in ${r} ticks, a tick lasts ${j}ms, refresh threshold is 3 ticks`),r<=3&&await this._callRefreshToken(n.refresh_token)})}catch(e){console.error(`Auto refresh tick failed with error. This is likely a transient error.`,e)}}finally{this._debug(`#_autoRefreshTokenTick()`,`end`)}}async _handleVisibilityChange(){if(this._debug(`#_handleVisibilityChange()`),!B()||!(window!=null&&window.addEventListener))return this.autoRefreshToken&&this.startAutoRefresh(),!1;try{this.visibilityChangedCallback=async()=>{try{await this._onVisibilityChanged(!1)}catch(e){this._debug(`#visibilityChangedCallback`,`error`,e)}},window==null||window.addEventListener(`visibilitychange`,this.visibilityChangedCallback),await this._onVisibilityChanged(!0)}catch(e){console.error(`_handleVisibilityChange`,e)}}async _onVisibilityChanged(e){let t=`#_onVisibilityChanged(${e})`;if(this._debug(t,`visibilityState`,document.visibilityState),document.visibilityState===`visible`){if(this.autoRefreshToken&&this._startAutoRefresh(),!e)if(await this.initializePromise,this.lock!=null)await this._acquireLock(this.lockAcquireTimeout,async()=>{if(document.visibilityState!==`visible`){this._debug(t,`acquired the lock to recover the session, but the browser visibilityState is no longer visible, aborting`);return}await this._recoverAndRefresh()});else{if(document.visibilityState!==`visible`){this._debug(t,`visibilityState is no longer visible, skipping recovery`);return}await this._recoverAndRefresh()}}else document.visibilityState===`hidden`&&this.autoRefreshToken&&this._stopAutoRefresh()}async _getUrlForProvider(e,t,n){let r=n?.redirectTo,i=null,a=null,o=null;this.flowType===`pkce`&&([i,a,o]=await this._getCodeChallengeAndMethod(),r=this._maybeAppendFlowIdToRedirect(r,o));let s=[`provider=${encodeURIComponent(t)}`];if(r&&s.push(`redirect_to=${encodeURIComponent(r)}`),n?.scopes&&s.push(`scopes=${encodeURIComponent(n.scopes)}`),i!=null&&a!=null){let e=new URLSearchParams({code_challenge:`${encodeURIComponent(i)}`,code_challenge_method:`${encodeURIComponent(a)}`});s.push(e.toString())}if(n?.queryParams){let e=new URLSearchParams(n.queryParams);s.push(e.toString())}return n?.skipBrowserRedirect&&s.push(`skip_http_redirect=${n.skipBrowserRedirect}`),{url:`${e}?${s.join(`&`)}`,flowId:o}}_maybeAppendFlowIdToRedirect(e,t){return!e||!t||!this.experimental.appendPkceFlowIdToRedirects?e??void 0:qr(e,t)}async _getCodeChallengeAndMethod(e=!1){return Jr(this.storage,this.storageKey,e,e=>this._debug(`#_getCodeChallengeAndMethod()`,`evicted oldest pending PKCE verifier slot`,e))}async _unenroll(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;return r?this._returnResult({data:null,error:r}):await Y(this.fetch,`DELETE`,`${this.url}/factors/${e.factorId}`,{headers:this.headers,jwt:n?.session?.access_token})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _enroll(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=Object.assign({friendly_name:e.friendlyName,factor_type:e.factorType},e.factorType===`phone`?{phone:e.phone}:e.factorType===`totp`?{issuer:e.issuer}:{}),{data:a,error:o}=await Y(this.fetch,`POST`,`${this.url}/factors`,{body:i,headers:this.headers,jwt:n?.session?.access_token});return o?this._returnResult({data:null,error:o}):(e.factorType===`totp`&&a.type===`totp`&&a?.totp?.qr_code&&(a.totp.qr_code=`data:image/svg+xml;utf-8,${a.totp.qr_code}`),this._returnResult({data:a,error:null}))})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _verify(e){let t=async()=>{try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=Object.assign({challenge_id:e.challengeId},`webauthn`in e?{webauthn:Object.assign(Object.assign({},e.webauthn),{credential_response:e.webauthn.type===`create`?Ni(e.webauthn.credential_response):Pi(e.webauthn.credential_response)})}:{code:e.code}),{data:a,error:o}=await Y(this.fetch,`POST`,`${this.url}/factors/${e.factorId}/verify`,{body:i,headers:this.headers,jwt:n?.session?.access_token});return o?this._returnResult({data:null,error:o}):(await this._saveSession(Object.assign({expires_at:Math.round(Date.now()/1e3)+a.expires_in},a)),await this._notifyAllSubscribers(`MFA_CHALLENGE_VERIFIED`,a),this._returnResult({data:a,error:o}))})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}};return this.lock==null?t():this._acquireLock(this.lockAcquireTimeout,t)}async _challenge(e){let t=async()=>{try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=await Y(this.fetch,`POST`,`${this.url}/factors/${e.factorId}/challenge`,{body:e,headers:this.headers,jwt:n?.session?.access_token});if(i.error)return i;let{data:a}=i;if(a.type!==`webauthn`)return{data:a,error:null};switch(a.webauthn.type){case`create`:return{data:Object.assign(Object.assign({},a),{webauthn:Object.assign(Object.assign({},a.webauthn),{credential_options:Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:ji(a.webauthn.credential_options.publicKey)})})}),error:null};case`request`:return{data:Object.assign(Object.assign({},a),{webauthn:Object.assign(Object.assign({},a.webauthn),{credential_options:Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:Mi(a.webauthn.credential_options.publicKey)})})}),error:null}}})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}};return this.lock==null?t():this._acquireLock(this.lockAcquireTimeout,t)}async _challengeAndVerify(e){let{data:t,error:n}=await this._challenge({factorId:e.factorId});return n?this._returnResult({data:null,error:n}):await this._verify({factorId:e.factorId,challengeId:t.id,code:e.code})}async _listFactors(){let{data:{user:e},error:t}=await this.getUser();if(t)return{data:null,error:t};let n={all:[],phone:[],totp:[],webauthn:[],recovery_code:[]};for(let t of e?.factors??[])n.all.push(t),t.status===`verified`&&t.factor_type in n&&Array.isArray(n[t.factor_type])&&n[t.factor_type].push(t);return{data:n,error:null}}async _getAuthenticatorAssuranceLevel(e){if(e)try{let{payload:t}=jr(e),n=null;t.aal&&(n=t.aal);let r=n,{data:{user:i},error:a}=await this.getUser(e);if(a)return this._returnResult({data:null,error:a});((i?.factors)?.filter(e=>e.status===`verified`)??[]).length>0&&(r=`aal2`);let o=t.amr||[];return{data:{currentLevel:n,nextLevel:r,currentAuthenticationMethods:o},error:null}}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}let{data:{session:t},error:n}=await this.getSession();if(n)return this._returnResult({data:null,error:n});if(!t)return{data:{currentLevel:null,nextLevel:null,currentAuthenticationMethods:[]},error:null};let{payload:r}=jr(t.access_token),i=null;r.aal&&(i=r.aal);let a=i;(t.user.factors?.filter(e=>e.status===`verified`)??[]).length>0&&(a=`aal2`);let o=r.amr||[];return{data:{currentLevel:i,nextLevel:a,currentAuthenticationMethods:o},error:null}}async _getRecoveryCodesStatus(){ei(this.experimental);try{return await this._useSession(async e=>{let{data:t,error:n}=e;if(n)return this._returnResult({data:null,error:n});let{data:r,error:i}=await Y(this.fetch,`GET`,`${this.url}/factors/recovery-codes`,{headers:this.headers,jwt:t?.session?.access_token});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _generateRecoveryCodes(e){ei(this.experimental);try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let{data:i,error:a}=await Y(this.fetch,`POST`,`${this.url}/factors/recovery-codes`,{body:e?.friendlyName?{friendly_name:e.friendlyName}:void 0,headers:this.headers,jwt:n?.session?.access_token});return a?this._returnResult({data:null,error:a}):this._returnResult({data:i,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _verifyRecoveryCode(e){ei(this.experimental);let t=async()=>{try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let{data:i,error:a}=await Y(this.fetch,`POST`,`${this.url}/factors/recovery-codes/verify`,{body:{code:e.code},headers:this.headers,jwt:n?.session?.access_token});if(a)return this._returnResult({data:null,error:a});let o=Object.assign({expires_at:wr(i.expires_in)},i);return await this._saveSession(o),await this._notifyAllSubscribers(`MFA_CHALLENGE_VERIFIED`,o),this._returnResult({data:i,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}};return this.lock==null?t():this._acquireLock(this.lockAcquireTimeout,t)}async _regenerateRecoveryCodes(){ei(this.experimental);try{return await this._useSession(async e=>{let{data:t,error:n}=e;if(n)return this._returnResult({data:null,error:n});let{data:r,error:i}=await Y(this.fetch,`POST`,`${this.url}/factors/recovery-codes/regenerate`,{headers:this.headers,jwt:t?.session?.access_token});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _unenrollRecoveryCodes(){ei(this.experimental);try{return await this._useSession(async e=>{let{data:t,error:n}=e;if(n)return this._returnResult({data:null,error:n});let{data:r,error:i}=await Y(this.fetch,`DELETE`,`${this.url}/factors/recovery-codes`,{headers:this.headers,jwt:t?.session?.access_token});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _getAuthorizationDetails(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;return r?this._returnResult({data:null,error:r}):n?await Y(this.fetch,`GET`,`${this.url}/oauth/authorizations/${e}`,{headers:this.headers,jwt:n.access_token,xform:e=>({data:e,error:null})}):this._returnResult({data:null,error:new I})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _approveAuthorization(e,t){try{return await this._useSession(async n=>{let{data:{session:r},error:i}=n;if(i)return this._returnResult({data:null,error:i});if(!r)return this._returnResult({data:null,error:new I});let a=await Y(this.fetch,`POST`,`${this.url}/oauth/authorizations/${e}/consent`,{headers:this.headers,jwt:r.access_token,body:{action:`approve`},xform:e=>({data:e,error:null})});return a.data&&a.data.redirect_url&&B()&&!t?.skipBrowserRedirect&&window.location.assign(a.data.redirect_url),a})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _denyAuthorization(e,t){try{return await this._useSession(async n=>{let{data:{session:r},error:i}=n;if(i)return this._returnResult({data:null,error:i});if(!r)return this._returnResult({data:null,error:new I});let a=await Y(this.fetch,`POST`,`${this.url}/oauth/authorizations/${e}/consent`,{headers:this.headers,jwt:r.access_token,body:{action:`deny`},xform:e=>({data:e,error:null})});return a.data&&a.data.redirect_url&&B()&&!t?.skipBrowserRedirect&&window.location.assign(a.data.redirect_url),a})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _listOAuthGrants(){try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;return n?this._returnResult({data:null,error:n}):t?await Y(this.fetch,`GET`,`${this.url}/user/oauth/grants`,{headers:this.headers,jwt:t.access_token,xform:e=>({data:e,error:null})}):this._returnResult({data:null,error:new I})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _revokeOAuthGrant(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;return r?this._returnResult({data:null,error:r}):n?(await Y(this.fetch,`DELETE`,`${this.url}/user/oauth/grants`,{headers:this.headers,jwt:n.access_token,query:{client_id:e.clientId},noResolveJson:!0}),{data:{},error:null}):this._returnResult({data:null,error:new I})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async fetchJwk(e,t={keys:[]}){let n=t.keys.find(t=>t.kid===e);if(n)return n;let r=Date.now();if(n=this.jwks.keys.find(t=>t.kid===e),n&&this.jwks_cached_at+6e5>r)return n;let{data:i,error:a}=await Y(this.fetch,`GET`,`${this.url}/.well-known/jwks.json`,{headers:this.headers});if(a)throw a;return!i.keys||i.keys.length===0||(this.jwks=i,this.jwks_cached_at=r,n=i.keys.find(t=>t.kid===e),!n)?null:n}async getClaims(e,t={}){try{let n=e;if(!n){let{data:e,error:t}=await this.getSession();if(t||!e.session)return this._returnResult({data:null,error:t});n=e.session.access_token}let{header:r,payload:i,signature:a,raw:{header:o,payload:s}}=jr(n);if(!t?.allowExpired)try{Zr(i.exp)}catch(e){throw new pr(e instanceof Error?e.message:`JWT validation failed`)}let c=!r.alg||r.alg.startsWith(`HS`)||!r.kid||!(`crypto`in globalThis&&`subtle`in globalThis.crypto)?null:await this.fetchJwk(r.kid,t?.keys?{keys:t.keys}:t?.jwks);if(!c){let{error:e}=await this.getUser(n);if(e)throw e;return{data:{claims:i,header:r,signature:a},error:null}}let l=Qr(r.alg),u=await crypto.subtle.importKey(`jwk`,c,l,!0,[`verify`]);if(!await crypto.subtle.verify(l,u,a,Cr(`${o}.${s}`)))throw new pr(`Invalid JWT signature`);return{data:{claims:i,header:r,signature:a},error:null}}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async signInWithPasskey(e){q(this.experimental);try{if(!Ii())return this._returnResult({data:null,error:new P(`Browser does not support WebAuthn`,null)});let{data:t,error:n}=await this._startPasskeyAuthentication({options:{captchaToken:e?.options?.captchaToken}});if(n||!t)return this._returnResult({data:null,error:n});let{data:r,error:i}=await Ri({publicKey:Mi(t.options),signal:e?.options?.signal??Ai.createNewAbortSignal()});if(i||!r)return this._returnResult({data:null,error:i??new P(`WebAuthn ceremony failed`,null)});let a=Pi(r);return this._verifyPasskeyAuthentication({challengeId:t.challenge_id,credential:a})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async registerPasskey(e){q(this.experimental);try{if(!Ii())return this._returnResult({data:null,error:new P(`Browser does not support WebAuthn`,null)});let{data:t,error:n}=await this._startPasskeyRegistration();if(n||!t)return this._returnResult({data:null,error:n});let{data:r,error:i}=await Li({publicKey:ji(t.options),signal:e?.options?.signal??Ai.createNewAbortSignal()});if(i||!r)return this._returnResult({data:null,error:i??new P(`WebAuthn ceremony failed`,null)});let a=Ni(r);return this._verifyPasskeyRegistration({challengeId:t.challenge_id,credential:a})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _startPasskeyRegistration(){q(this.experimental);try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;if(n)return this._returnResult({data:null,error:n});if(!t)return this._returnResult({data:null,error:new I});let{data:r,error:i}=await Y(this.fetch,`POST`,`${this.url}/passkeys/registration/options`,{headers:this.headers,jwt:t.access_token,body:{}});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _verifyPasskeyRegistration(e){q(this.experimental);try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;if(r)return this._returnResult({data:null,error:r});if(!n)return this._returnResult({data:null,error:new I});let{data:i,error:a}=await Y(this.fetch,`POST`,`${this.url}/passkeys/registration/verify`,{headers:this.headers,jwt:n.access_token,body:{challenge_id:e.challengeId,credential:e.credential}});return a?this._returnResult({data:null,error:a}):this._returnResult({data:i,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _startPasskeyAuthentication(e){q(this.experimental);try{let{data:t,error:n}=await Y(this.fetch,`POST`,`${this.url}/passkeys/authentication/options`,{headers:this.headers,body:{gotrue_meta_security:{captcha_token:e?.options?.captchaToken}}});return n?this._returnResult({data:null,error:n}):this._returnResult({data:t,error:null})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _verifyPasskeyAuthentication(e){q(this.experimental);try{let{data:t,error:n}=await Y(this.fetch,`POST`,`${this.url}/passkeys/authentication/verify`,{headers:this.headers,body:{challenge_id:e.challengeId,credential:e.credential},xform:X});return n?this._returnResult({data:null,error:n}):(t.session&&(await this._saveSession(t.session),await this._notifyAllSubscribers(`SIGNED_IN`,t.session)),this._returnResult({data:t,error:null}))}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _listPasskeys(){q(this.experimental);try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;if(n)return this._returnResult({data:null,error:n});if(!t)return this._returnResult({data:null,error:new I});let{data:r,error:i}=await Y(this.fetch,`GET`,`${this.url}/passkeys`,{headers:this.headers,jwt:t.access_token,xform:e=>({data:e,error:null})});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _updatePasskey(e){q(this.experimental);try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;if(r)return this._returnResult({data:null,error:r});if(!n)return this._returnResult({data:null,error:new I});let{data:i,error:a}=await Y(this.fetch,`PATCH`,`${this.url}/passkeys/${e.passkeyId}`,{headers:this.headers,jwt:n.access_token,body:{friendly_name:e.friendlyName}});return a?this._returnResult({data:null,error:a}):this._returnResult({data:i,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}async _deletePasskey(e){q(this.experimental);try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;if(r)return this._returnResult({data:null,error:r});if(!n)return this._returnResult({data:null,error:new I});let{error:i}=await Y(this.fetch,`DELETE`,`${this.url}/passkeys/${e.passkeyId}`,{headers:this.headers,jwt:n.access_token,noResolveJson:!0});return i?this._returnResult({data:null,error:i}):this._returnResult({data:null,error:null})})}catch(e){if(N(e))return this._returnResult({data:null,error:e});throw e}}};Ji.nextInstanceID={};var Yi=Ji,Xi=mi,Zi=Yi,Qi=class extends Zi{constructor(e){super(e)}},$i=class{constructor(e,t,n){this.supabaseUrl=e,this.supabaseKey=t;let r=Wn(e);if(!t)throw Error(`supabaseKey is required.`);Pn(t),Hn(n),this.realtimeUrl=new URL(`realtime/v1`,r),this.realtimeUrl.protocol=this.realtimeUrl.protocol.replace(`http`,`ws`),this.authUrl=new URL(`auth/v1`,r),this.storageUrl=new URL(`storage/v1`,r),this.functionsUrl=new URL(`functions/v1`,r);let i=`sb-${r.hostname.split(`.`)[0]}-auth-token`,a={db:bn,realtime:Sn,auth:{...xn,storageKey:i},global:yn,tracePropagation:Cn},o=Un(n??{},a);this.settings=o,this.storageKey=o.auth.storageKey??``,this.headers=o.global.headers??{},o.accessToken?(this.accessToken=o.accessToken,this.auth=new Proxy({},{get:(e,t)=>{throw Error(`@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(t)} is not possible`)}})):this.auth=this._initSupabaseAuthClient(o.auth??{},this.headers,o.global.fetch),this.fetch=Fn(t,e,this._getSessionToken.bind(this),o.global.fetch,o.tracePropagation),this.functionsFetch=Fn(t,e,this._getSessionToken.bind(this),o.global.fetch,o.tracePropagation,{omitApiKeyAsBearer:!0}),this.realtime=this._initRealtimeClient({headers:this.headers,accessToken:this._getAccessToken.bind(this),fetch:this.fetch,...o.realtime}),this.accessToken&&Promise.resolve(this.accessToken()).then(e=>this.realtime.setAuth(e)).catch(e=>console.warn(`Failed to set initial Realtime auth token:`,e)),this.rest=new de(new URL(`rest/v1`,r).href,{headers:this.headers,schema:o.db.schema,fetch:this.fetch,timeout:o.db.timeout,urlLengthLimit:o.db.urlLengthLimit,retry:o.db.retry}),this.storage=new hn(this.storageUrl.href,this.headers,this.fetch,n?.storage),o.accessToken||this._listenForAuthEvents()}get functions(){return new l(this.functionsUrl.href,{headers:this.headers,customFetch:this.functionsFetch})}from(e){return this.rest.from(e)}schema(e){return this.rest.schema(e)}getOpenApiSpec(){return this.rest.getOpenApiSpec()}rpc(e,t={},n={head:!1,get:!1,count:void 0}){return this.rest.rpc(e,t,n)}channel(e,t={config:{}}){return this.realtime.channel(e,t)}getChannels(){return this.realtime.getChannels()}removeChannel(e){return this.realtime.removeChannel(e)}removeAllChannels(){return this.realtime.removeAllChannels()}async _getSessionToken(){if(this.accessToken)return await this.accessToken();let{data:e}=await this.auth.getSession();return e.session?.access_token??null}async _getAccessToken(){return await this._getSessionToken()??this.supabaseKey}_initSupabaseAuthClient({autoRefreshToken:e,persistSession:t,detectSessionInUrl:n,storage:r,userStorage:i,storageKey:a,flowType:o,lock:s,debug:c,throwOnError:l,experimental:u,lockAcquireTimeout:d,skipAutoInitialize:f},p,m){let h={Authorization:`Bearer ${this.supabaseKey}`,apikey:`${this.supabaseKey}`};return new Qi({url:this.authUrl.href,headers:{...h,...p},storageKey:a,autoRefreshToken:e,persistSession:t,detectSessionInUrl:n,storage:r,userStorage:i,flowType:o,lock:s,debug:c,throwOnError:l,experimental:u,fetch:m,lockAcquireTimeout:d,skipAutoInitialize:f,hasCustomAuthorizationHeader:Object.keys(this.headers).some(e=>e.toLowerCase()===`authorization`)})}_initRealtimeClient(e){return new gt(this.realtimeUrl.href,{...e,params:{apikey:this.supabaseKey,...e?.params}})}_listenForAuthEvents(){return this.auth.onAuthStateChange((e,t)=>{this._handleTokenChanged(e,`CLIENT`,t?.access_token)})}_handleTokenChanged(e,t,n){(e===`TOKEN_REFRESHED`||e===`SIGNED_IN`||e===`INITIAL_SESSION`)&&this.changedAccessToken!==n?(this.changedAccessToken=n,this.realtime.setAuth(n)):e===`SIGNED_OUT`&&(this.realtime.setAuth(),t==`STORAGE`&&this.auth.signOut(),this.changedAccessToken=void 0)}};let ea=(e,t,n)=>new $i(e,t,n);function ta(){if(typeof window<`u`||globalThis.Deno!==void 0)return!1;let e=globalThis.process;if(!e)return!1;let t=e.version;if(t==null)return!1;let n=t.match(/^v(\d+)\./);return n?parseInt(n[1],10)<=20:!1}return ta()&&console.warn(`⚠️  Node.js 20 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 22 or later. For more information, visit: https://github.com/orgs/supabase/discussions/45715`),e.AuthAdminApi=Xi,e.AuthApiError=Qn,e.AuthClient=Zi,e.AuthError=Zn,e.AuthImplicitGrantRedirectError=nr,e.AuthInvalidCredentialsError=tr,e.AuthInvalidJwtError=pr,e.AuthInvalidTokenResponseError=L,e.AuthPKCECodeVerifierMissingError=ar,e.AuthPKCEGrantCodeExchangeError=ir,e.AuthRefreshDiscardedError=lr,e.AuthRetryableFetchError=sr,e.AuthSessionMissingError=I,e.AuthUnknownError=P,e.AuthWeakPasswordError=dr,e.CustomAuthError=F,Object.defineProperty(e,`FunctionRegion`,{enumerable:!0,get:function(){return c}}),e.FunctionsError=i,e.FunctionsFetchError=a,e.FunctionsHttpError=s,e.FunctionsRelayError=o,e.GoTrueAdminApi=mi,e.GoTrueClient=Yi,e.NavigatorLockAcquireTimeoutError=_i,e.PostgrestError=u,e.REALTIME_CHANNEL_STATES=lt,Object.defineProperty(e,`REALTIME_LISTEN_TYPES`,{enumerable:!0,get:function(){return E}}),Object.defineProperty(e,`REALTIME_POSTGRES_CHANGES_LISTEN_EVENT`,{enumerable:!0,get:function(){return ct}}),Object.defineProperty(e,`REALTIME_PRESENCE_LISTEN_EVENTS`,{enumerable:!0,get:function(){return Ye}}),Object.defineProperty(e,`REALTIME_SUBSCRIBE_STATES`,{enumerable:!0,get:function(){return D}}),e.RealtimeChannel=ut,e.RealtimeClient=gt,e.RealtimePostgresFilterBuilder=ot,e.RealtimePresence=Xe,e.SIGN_OUT_SCOPES=pi,e.StorageApiError=Nt,e.SupabaseClient=$i,e.WebSocketFactory=fe,e.createClient=ea,e.isAuthApiError=$n,e.isAuthError=N,e.isAuthImplicitGrantRedirectError=rr,e.isAuthPKCECodeVerifierMissingError=or,e.isAuthRefreshDiscardedError=ur,e.isAuthRetryableFetchError=cr,e.isAuthSessionMissingError=er,e.isAuthWeakPasswordError=fr,e.lockInternals=Q,e.navigatorLock=yi,e.postgresChangesFilter=st,e.processLock=xi,e})({});</script>
-<script src="kiem_dich_wizard.js"></script>
+<script>// Kiem Dich Wizard — PHASE 3: form INLINE 3 bước (chọn cont KD → nhập mã KDTV → xác nhận & lưu)
+// Khác bản cũ: KHÔNG mở drawer nữa. Wizard render thẳng vào màn Kiểm dịch (vKD) qua S.kdWiz.
+// Logic dữ liệu (chọn cont, cập nhật cont_kiem_dich, mã KDTV, tích da_kiem_dich, lưu Supabase) GIỮ NGUYÊN 100%.
+const KD_WIZARD = {
+  step: 1,
+  lo: null,
+  contId: null,
+  maKdtv: '',
+
+  // Mở wizard inline cho một lô: chuyển sang tab Kiểm dịch và render form ngay trong trang
+  open: function(loId) {
+    const l = S.lots[loId];
+    if (!l) { toast(T1('Không tìm thấy lô ' + loId, '找不到批次 ' + loId), true); return; }
+    this.step = 1;
+    this.lo = loId;
+    const existing = S.conts.find(c => c.lo === loId && c.cont_kiem_dich && c.trang_thai !== '9');
+    this.contId = existing ? existing.id : null;
+    this.maKdtv = l.ma_don_kdtv || '';
+    S.kdWiz = loId;
+    // Nếu đang mở một drawer (vd chi tiết lô) thì đóng lại — wizard giờ hiển thị inline
+    if (S.drawer) { S.drawer = null; const d = document.getElementById('drawer'); if (d) d.innerHTML = ''; }
+    if (S.tab !== 'kd') { S.tab = 'kd'; renderShell(); } else { renderMain(); }
+    this._afterPaint(true);
+  },
+
+  // Đóng wizard inline
+  close: function() {
+    S.kdWiz = null;
+    if (S.drawer) { S.drawer = null; const d = document.getElementById('drawer'); if (d) d.innerHTML = ''; }
+    renderMain();
+  },
+
+  selectCont: function(id) {
+    this.contId = id;
+    this.paint();
+  },
+
+  _readMa: function() {
+    const el = document.getElementById('kd-wizard-ma');
+    if (el) this.maKdtv = el.value.trim();
+  },
+
+  nextStep: function() {
+    if (this.step === 1) {
+      if (!this.contId) { toast(T1('Vui lòng chọn cont kiểm dịch.', '请先选择检疫柜。'), true); return; }
+      this.step = 2;
+    } else if (this.step === 2) {
+      this._readMa();
+      if (!this.maKdtv) { toast(T1('Vui lòng nhập mã KDTV.', '请输入检疫单号。'), true); return; }
+      this.step = 3;
+    }
+    this.paint();
+  },
+
+  prevStep: function() {
+    if (this.step === 2) { this._readMa(); this.step = 1; this.paint(); }
+    else if (this.step === 3) { this.step = 2; this.paint(); }
+  },
+
+  save: async function() {
+    this._readMa();
+    const l = S.lots[this.lo];
+    const cont = S.conts.find(c => c.id === this.contId);
+    if (!l || !cont || !this.maKdtv) return;
+    const tickEl = document.getElementById('kd-wizard-tick');
+    const tickKd = tickEl && tickEl.checked;
+    const btn = document.getElementById('kd-wizard-save-btn');
+    if (btn) btn.disabled = true;
+    try {
+      // Bỏ đánh dấu KD các cont cũ trong lô (nếu khác cont đang chọn)
+      const oldKd = S.conts.filter(c => c.lo === this.lo && c.cont_kiem_dich && c.id !== this.contId && c.trang_thai !== '9');
+      for (const c of oldKd) {
+        await q(sb.from('cont').update({ cont_kiem_dich: false }).eq('id', c.id));
+      }
+      // Đánh dấu cont được chọn là cont KD
+      await q(sb.from('cont').update({ cont_kiem_dich: true }).eq('id', this.contId));
+      // Cập nhật mã KDTV (và tích KD nếu đủ điều kiện)
+      const loPatch = { ma_don_kdtv: this.maKdtv };
+      if (tickKd) loPatch.da_kiem_dich = true;
+      await q(sb.from('lo').update(loPatch).eq('lo', this.lo));
+
+      toast(T1('Đã lưu kiểm dịch lô ' + this.lo, '已保存检疫信息 ' + this.lo));
+      S.kdWiz = null;                    // đóng wizard, ở lại màn Kiểm dịch
+      await loadData();
+      renderMain();
+      renderNavCounts();
+    } catch (e) {
+      if (btn) btn.disabled = false;
+      toast(errMsg(e), true);
+    }
+  },
+
+  // Re-render toàn màn (vKD sẽ nhúng bodyHTML) rồi focus/scroll hợp lý
+  paint: function() {
+    renderMain();
+    this._afterPaint(false);
+  },
+
+  _afterPaint: function(scroll) {
+    const self = this;
+    requestAnimationFrame(function() {
+      if (self.step === 2) {
+        const ma = document.getElementById('kd-wizard-ma');
+        if (ma) { ma.focus(); ma.select(); }
+      }
+      if (scroll) {
+        const w = document.getElementById('kd-wiz-panel');
+        if (w && w.scrollIntoView) w.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  },
+
+  // Trả về HTML của panel wizard inline (được vKD() nhúng vào đầu trang khi S.kdWiz được đặt)
+  bodyHTML: function() {
+    const l = S.lots[this.lo];
+    if (!l) return '';
+    const conts = S.conts.filter(c => c.lo === this.lo && c.trang_thai !== '9')
+      .sort((a, b) => +a.trang_thai - +b.trang_thai);
+    const selCont = conts.find(c => c.id === this.contId);
+    const readyKd = selCont && selCont.trang_thai === '4' && BAI_KD.indexOf(selCont.bai_tam) > -1;
+    const canTickNow = readyKd && this.maKdtv;
+
+    // --- Thanh bước ---
+    const stepLabels = [T1('Chọn cont', '选柜'), T1('Mã KDTV', '检疫单号'), T1('Xác nhận', '确认')];
+    const stepBar = '<div style="display:flex;gap:6px;margin-bottom:18px">' +
+      stepLabels.map((s, i) => '<div style="flex:1;text-align:center;padding:9px 4px;border-radius:10px;font-size:12px;font-weight:600;' +
+        (i + 1 === this.step ? 'background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;box-shadow:0 2px 10px rgba(37,99,235,.35)' :
+         i + 1 < this.step ? 'background:var(--teal-bg);color:var(--teal-ink)' :
+         'background:var(--soft);color:var(--faint)') + '">' +
+        (i + 1 < this.step ? '✓ ' : (i + 1 === this.step ? '' : (i + 1) + '. ')) + esc(s) + '</div>').join('') + '</div>';
+
+    // --- Nội dung theo bước ---
+    let body = '';
+    if (this.step === 1) {
+      body = '<p style="margin:0 0 12px;font-size:13px;color:var(--muted)">' +
+        esc(T1('Chọn cont sẽ đi kiểm dịch. Ưu tiên cont đang ở bãi HLS / PD / HT (đã sẵn sàng).', '请选择检疫柜，优先选已在HLS/PD/HT堆场的柜子。')) + '</p>' +
+        (conts.length ? conts.map(c => {
+          const isSel = c.id === this.contId;
+          const atKdBai = c.trang_thai === '4' && BAI_KD.indexOf(c.bai_tam) > -1;
+          const atOtherBai = c.trang_thai === '4' && !atKdBai;
+          const bg = isSel ? 'var(--pri)' : atKdBai ? 'var(--teal-bg)' : 'var(--soft)';
+          const fg = isSel ? '#fff' : 'var(--ink)';
+          const border = isSel ? '2px solid var(--pri)' : atKdBai ? '2px solid #7FC8BF' : '1px solid var(--line)';
+          const badge = atKdBai ? pill(T1('Sẵn sàng KD', '可检疫'), 'var(--teal-bg)', 'var(--teal-ink)') :
+                        atOtherBai ? pill('Bãi ' + (c.bai_tam || '?'), 'var(--amb-bg)', 'var(--amb-ink)') :
+                        stPill(c.trang_thai);
+          return '<button type="button" data-act="kd-wizard-sel" data-id="' + esc(c.id) + '" ' +
+            'style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:' + border + ';background:' + bg + ';color:' + fg + ';border-radius:12px;padding:11px 14px;margin-bottom:8px;cursor:pointer">' +
+            '<div style="flex:1;min-width:0">' +
+              '<div class="mono" style="font-size:15px;font-weight:700">' + esc(c.so_cont || c.ma_don || T1('Chưa có số', '未填柜号')) + '</div>' +
+              '<div style="font-size:12px;margin-top:2px;opacity:' + (isSel ? '.85' : '1') + '">' +
+                esc(c.kho ? c.kho : '') + (c.bai_tam ? (c.kho ? ' → ' : '') + 'Bãi ' + c.bai_tam : '') +
+                (c.nha_xe ? ' · ' + c.nha_xe : '') +
+              '</div>' +
+            '</div>' +
+            '<div>' + badge + '</div>' +
+            (isSel ? '<div style="font-size:18px">✓</div>' : '') +
+            '</button>';
+        }).join('') : '<p class="muted">' + esc(T1('Lô chưa có cont.', '此批次暂无柜子。')) + '</p>');
+
+    } else if (this.step === 2) {
+      body =
+        '<div style="background:var(--soft);border-radius:12px;padding:10px 14px;margin-bottom:16px">' +
+          '<div class="muted" style="font-size:11px;margin-bottom:3px">' + esc(T1('Cont kiểm dịch', '检疫柜')) + '</div>' +
+          '<div class="mono" style="font-size:17px;font-weight:700">' + esc(selCont ? (selCont.so_cont || selCont.ma_don || '—') : '—') + '</div>' +
+          '<div class="muted" style="font-size:12px">' + esc(selCont ? stLabel(selCont.trang_thai) + (selCont.bai_tam ? ' · Bãi ' + selCont.bai_tam : '') : '') + '</div>' +
+        '</div>' +
+        '<label class="field" style="display:block">' +
+          '<span style="font-weight:600">' + esc(T('kdtv')) + '</span> <span style="color:var(--red-ink)">*</span><br>' +
+          '<input id="kd-wizard-ma" type="text" value="' + esc(this.maKdtv) + '" ' +
+            'placeholder="VD: 11300/HAN-KD/24/05..." ' +
+            'autocapitalize="characters" ' +
+            'style="font-family:var(--mono);font-size:15px;letter-spacing:.03em;margin-top:6px" required>' +
+        '</label>' +
+        '<p class="muted" style="font-size:12px;margin-top:8px">' +
+          esc(T1('Mã trên tờ kiểm dịch tiêu vật của lô. Sẽ được lưu vào lô.', '检疫单号，来自检疫证书。')) +
+        '</p>';
+
+    } else {
+      const whyNoTick = !readyKd ?
+        (selCont && selCont.trang_thai !== '4' ? T1('cont chưa về bãi', '柜未到堆场') :
+         selCont && BAI_KD.indexOf(selCont.bai_tam) < 0 ? T1('bãi ' + (selCont.bai_tam || '?') + ' không được kiểm dịch (chỉ HLS / PD / HT)', '堆场不符') : '') : '';
+      body =
+        '<div class="kv" style="background:var(--soft);border-radius:12px;padding:12px 16px;margin-bottom:16px">' +
+          '<span>' + esc(T('loCol')) + '</span><span style="font-weight:700">' + esc(this.lo) + (l.booking ? ' · ' + l.booking : '') + '</span>' +
+          '<span>' + esc(T('kdCont')) + '</span><span class="mono" style="font-weight:700">' + esc(selCont ? (selCont.so_cont || selCont.ma_don || '—') : '—') + '</span>' +
+          '<span>' + esc(T('kdtv')) + '</span><span class="mono">' + esc(this.maKdtv) + '</span>' +
+          '<span>' + esc(T1('Trạng thái cont', '柜状态')) + '</span><span>' + (selCont ? esc(stLabel(selCont.trang_thai) + (selCont.bai_tam ? ' · Bãi ' + selCont.bai_tam : '')) : '—') + '</span>' +
+        '</div>' +
+        (canTickNow ?
+          '<label class="chk" style="margin-bottom:14px;padding:10px 12px;background:var(--teal-bg);border-radius:12px">' +
+            '<input id="kd-wizard-tick" type="checkbox" checked>' +
+            '<span>' + esc(T1('Tích "Lô đã kiểm dịch" ngay — cont đang ở bãi ' + (selCont.bai_tam || '') + ', đủ điều kiện.', '立即勾选已检疫—柜已在合规堆场。')) + '</span>' +
+          '</label>' :
+          (whyNoTick ? '<div style="font-size:12px;color:var(--muted);padding:8px 12px;background:var(--amb-bg);border-radius:10px;margin-bottom:14px">ℹ ' +
+            esc(T1('Chưa thể tích KD ngay vì ' + whyNoTick + '. Bấm Lưu rồi tích thủ công sau khi cont về đúng bãi.', '暂不能勾选KD：' + whyNoTick + '。保存后待柜到位再手动勾选。')) +
+            '</div>' : '')) +
+        '<button id="kd-wizard-save-btn" type="button" class="btn btn-pri" data-act="kd-wizard-save" style="width:100%;min-height:46px;font-size:15px">' +
+          esc(T1('💾 Lưu kiểm dịch', '保存检疫信息')) +
+        '</button>';
+    }
+
+    // --- Điều hướng bước ---
+    const footer = '<div style="display:flex;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)">' +
+      (this.step > 1 ?
+        '<button type="button" class="btn" data-act="kd-prev-step" style="flex:1">← ' + esc(T1('Quay lại', '返回')) + '</button>' :
+        '<button type="button" class="btn" data-act="close-wizard" style="flex:1">' + esc(T1('Đóng', '关闭')) + '</button>') +
+      (this.step < 3 ?
+        '<button type="button" class="btn btn-pri" data-act="kd-next-step" style="flex:2">' + esc(T1('Tiếp theo', '下一步')) + ' →</button>' : '') +
+      '</div>';
+
+    // --- Panel card inline (thay cho drawer) ---
+    return '<section id="kd-wiz-panel" class="card" style="border:2px solid var(--pri);box-shadow:0 8px 30px rgba(37,99,235,.18)">' +
+        '<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">' +
+          '<div style="flex:1;min-width:0">' +
+            '<b style="font-size:18px;color:var(--pri-ink)">' + esc(T1('Kiểm dịch', '检疫向导')) + ' · ' + esc(T('loCol') + ' ' + this.lo) + '</b>' +
+            '<span class="muted" style="font-size:13px;display:block;margin-top:2px">' +
+              esc((l.booking ? l.booking : '') + (l.closing ? (l.booking ? ' · ' : '') + 'CLS ' + fTs(l.closing) : '')) +
+            '</span>' +
+          '</div>' +
+          '<button type="button" class="x-btn" data-act="close-wizard" aria-label="' + esc(T('close')) + '">' + ico('x', 16) + '</button>' +
+        '</div>' +
+        stepBar + body + footer +
+      '</section>';
+  }
+};
+</script>
 <script>
 'use strict';
 /* =========================================================
@@ -263,7 +660,7 @@ const TZ = 'Asia/Ho_Chi_Minh';
 /* ---------------- ngôn ngữ ---------------- */
 const D = {
   tong:['Tổng quan','总览'], goiy:['Gợi ý chờ duyệt','待确认建议'], homnay:['Kế hoạch hôm nay','今日计划'],
-  taikho:['Tại kho','在厂'], bai:['Bãi tạm','堆场'], kd:['Kiểm dịch','检疫'], lo:['Lô / Booking','批次 / 订舱'],
+  taikho:['Tại kho','在厂'], bai:['Bãi tạm','堆场'], board:['Container','货柜'], kd:['Kiểm dịch','检疫'], lo:['Lô / Booking','批次 / 订舱'],
   tim:['Tìm cont','查柜'], danhmuc:['Danh mục','基础资料'],
   gDieuDo:['Điều độ','调度'], gTheoDoi:['Theo dõi cont','柜子跟踪'], gTraCuu:['Tra cứu','查询'],
   refresh:['Chạy lại gợi ý','重新生成建议'], searchPh:['Tìm cont, seal, lô, mã đơn…','搜索柜号、封条、批次、订单号…'],
@@ -311,6 +708,7 @@ const D = {
   runOk:['Đã tạo gợi ý mới','已生成新建议'], runBusy:['Đang có phiên chạy gợi ý khác — thử lại sau giây lát','另一个建议任务正在运行，请稍后重试'], signOut:['Đăng xuất','退出'], nkTab:['Nhật ký thay đổi','修改日志'], pwChange:['Đổi mật khẩu','修改密码'], live:['Cập nhật trực tiếp','实时更新'],
   shipped:['Đã lên tàu','已登船'], lotsOpen:['lô đang chạy','批进行中'], required:['Thiếu thông tin bắt buộc','缺少必填信息'],
   suggest:['Gợi ý','建议'], today:['Hôm nay','今日'], menu:['Menu','菜单'], search:['Tìm','查'],
+  workflow:['Điều phối','调度台'], goi_y:['Gợi ý','建议'], yard:['Tại kho','在厂'],
   hacang:['Hạ cảng','回港'], clsMail:['CLS mail','邮件截关'], clsEport:['CLS ePort','ePort截关'], clsTay:['CLS nhập tay','手填截关'], clsUse:['CLS máy dùng','计划用截关'],
   eportBtn:['Cập nhật CLS ePort','更新ePort截关'], kdtvBtn:['Cập nhật mã KDTV','更新检疫单号'], kdtvNoUrl:['Chưa cấu hình URL đồng bộ KDTV (cấu hình: URL đồng bộ KDTV)','未配置检疫单号同步URL'], baiTab:['Bãi tạm','堆场'], giaTab:['Giá cước nhà xe','车队运价'], donTab:['Dọn dữ liệu','清理数据'],
   dongNgay:['Đóng trong ngày','当天装柜'], nangHa:['Nâng hạ','吊装费'], haCangFee:['Vận chuyển hạ cảng','回港运费'], phatSinh:['Phát sinh','其他费用'], tongCP:['Tổng chi phí','费用合计'],
@@ -325,22 +723,22 @@ function T(k) { return tr(D[k] || [k, k]); }
 function T1(vi, zh) { return tr([vi, zh], LANG === 'both' ? 'vi' : LANG); }
 
 const ST = {
-  '1': { vi:'Chờ cắt rỗng', zh:'待提空', bg:'#EFECFA', fg:'#4B3C8C', dot:'#B8AEE6' },
-  '2': { vi:'Đang đóng hàng', zh:'装货中', bg:'#E6E2F7', fg:'#3E3190', dot:'#6C5DC0' },
-  '3': { vi:'Đầy chờ kéo', zh:'已装满待拉回', bg:'#FBEBD5', fg:'#7A4700', dot:'#E0A43A' },
-  '4': { vi:'Ở bãi tạm', zh:'堆场插电', bg:'#E0F1EF', fg:'#10605A', dot:'#3E9C94' },
-  '5': { vi:'Đã hạ cảng', zh:'已回港待登船', bg:'#E4E0F2', fg:'#2E2468', dot:'#3B2F7A' },
-  '6': { vi:'Đã lên tàu', zh:'已登船走船', bg:'#EEEDF3', fg:'#55516A', dot:'#A7A3B8' },
-  '9': { vi:'Hủy / đổi cont', zh:'取消换柜', bg:'#FBE4E1', fg:'#A3261A', dot:'#C4392B' }
+  '1': { vi:'Chờ cắt rỗng', zh:'待提空', bg:'#DBEAFE', fg:'#1D4ED8', dot:'#60A5FA' },
+  '2': { vi:'Đang đóng hàng', zh:'装货中', bg:'#E0E7FF', fg:'#4338CA', dot:'#6366F1' },
+  '3': { vi:'Đầy chờ kéo', zh:'已装满待拉回', bg:'#FEF3C7', fg:'#92400E', dot:'#F59E0B' },
+  '4': { vi:'Ở bãi tạm', zh:'堆场插电', bg:'#D1FAE5', fg:'#065F46', dot:'#10B981' },
+  '5': { vi:'Đã hạ cảng', zh:'已回港待登船', bg:'#CFFAFE', fg:'#155E75', dot:'#06B6D4' },
+  '6': { vi:'Đã lên tàu', zh:'已登船走船', bg:'#E2E8F0', fg:'#475569', dot:'#94A3B8' },
+  '9': { vi:'Hủy / đổi cont', zh:'取消换柜', bg:'#FEE2E2', fg:'#B91C1C', dot:'#EF4444' }
 };
 const TYPES = {
-  dong:{ vi:'Đóng trong ngày', zh:'当天装柜', bg:'#FDF1DC', fg:'#7A4700' },
-  doi:{ vi:'Đổi rỗng kéo đầy', zh:'换空拉满', bg:'#E0F1EF', fg:'#10605A' },
-  cat:{ vi:'Cắt mooc', zh:'甩挂', bg:'#F3EFFB', fg:'#5A4A9E' },
-  rut:{ vi:'Rút mooc', zh:'拉满柜', bg:'#E6E2F7', fg:'#3E3190' }
+  dong:{ vi:'Đóng trong ngày', zh:'当天装柜', bg:'#FEF3C7', fg:'#92400E' },
+  doi:{ vi:'Đổi rỗng kéo đầy', zh:'换空拉满', bg:'#D1FAE5', fg:'#065F46' },
+  cat:{ vi:'Cắt mooc', zh:'甩挂', bg:'#DBEAFE', fg:'#1D4ED8' },
+  rut:{ vi:'Rút mooc', zh:'拉满柜', bg:'#E0E7FF', fg:'#4338CA' }
 };
 function typeKey(t) { t = String(t || ''); if (t.indexOf('Đóng trong ngày') === 0) return 'dong'; if (t.indexOf('Đổi rỗng') === 0 || t.indexOf('+') > -1) return 'doi'; if (t.indexOf('Rút mooc') === 0) return 'rut'; return 'cat'; }
-const MUC = { 'Quá CLS':['#6B0A12', '#fff'], 'KD gấp':['#B42318', '#fff'], 'Sát CLS':['#FBE4E1', '#A3261A'], 'CLS gần':['#FBEBD5', '#7A4700'], 'CLS xa':['#EEEBF8', '#4B3C8C'] };
+const MUC = { 'Quá CLS':['#7F1D1D', '#fff'], 'KD gấp':['#DC2626', '#fff'], 'Sát CLS':['#FEE2E2', '#B91C1C'], 'CLS gần':['#FEF3C7', '#92400E'], 'CLS xa':['#DBEAFE', '#1D4ED8'] };
 function mucPill(m) { const c = MUC[m]; return c ? pill(m, c[0], c[1]) : ''; }
 function splitVZ(s) { s = String(s || ''); const m = s.match(/^(.*?)\s*([㐀-鿿].*)$/); return m ? [m[1].trim(), m[2].trim()] : [s, '']; }
 function stLabel(k) { const s = ST[k] || { vi:k, zh:'' }; return tr([s.vi, s.zh]); }
@@ -362,19 +760,20 @@ function stPill(k) { const s = ST[k] || ST['6']; return pill(stLabel(k), s.bg, s
 function typePill(tk) { const t = TYPES[tk]; return pill(tr([t.vi, t.zh]), t.bg, t.fg); }
 function clChip(ts) {
   const h = hLeft(ts);
-  if (h === null) return pill(T1('Chưa có closing', '无截关'), '#EEEBF8', '#4B3C8C');
-  if (h < 0) { const o = -h; return pill(o >= 48 ? T1('Quá ' + Math.round(o / 24) + ' ngày', '超' + Math.round(o / 24) + '天') : T1('Quá ' + Math.round(o) + ' giờ', '超' + Math.round(o) + '小时'), '#B42318', '#fff'); }
+  if (h === null) return pill(T1('Chưa có closing', '无截关'), '#DBEAFE', '#1D4ED8');
+  if (h < 0) { const o = -h; return pill(o >= 48 ? T1('Quá ' + Math.round(o / 24) + ' ngày', '超' + Math.round(o / 24) + '天') : T1('Quá ' + Math.round(o) + ' giờ', '超' + Math.round(o) + '小时'), '#DC2626', '#fff'); }
   const txt = h >= 48 ? T1('Còn ' + Math.round(h / 24) + ' ngày', '剩' + Math.round(h / 24) + '天') : T1('Còn ' + Math.round(h) + ' giờ', '剩' + Math.round(h) + '小时');
-  if (h < 24) return pill(txt, '#FBE4E1', '#A3261A');
-  if (h < 48) return pill(txt, '#FBEBD5', '#7A4700');
-  return pill(txt, '#EEEBF8', '#4B3C8C');
+  if (h < 24) return pill(txt, '#FEE2E2', '#B91C1C');
+  if (h < 48) return pill(txt, '#FEF3C7', '#92400E');
+  return pill(txt, '#DBEAFE', '#1D4ED8');
 }
 function tick(b) { return b ? '<span style="color:var(--green-ink);font-weight:700">✓</span>' : '<span class="faint">—</span>'; }
 const ICON = {
   tong:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+  workflow:'M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5',
   goiy:'M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z',
   homnay:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4',
-  taikho:'M3 10l9-6 9 6v10H3zM7 20v-6h10v6', bai:'M13 3L5 14h6l-1 7 8-11h-6z',
+  taikho:'M3 10l9-6 9 6v10H3zM7 20v-6h10v6', bai:'M13 3L5 14h6l-1 7 8-11h-6z', board:'M3 6h18v12H3zM3 12h18M9 6v12M15 6v12',
   kd:'M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6zM9 12l2 2 4-4',
   lo:'M3 17l2 3h14l2-3M5 17v-6h14v6M8 11V7h8v4M12 4v3', tim:'M11 4a7 7 0 1 0 0 14a7 7 0 0 0 0-14zM20 20l-4-4',
   danhmuc:'M4 5h16M4 12h16M4 19h10', truck:'M2 16h13V7H2zM15 10h4l3 3v3h-7zM6 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4zM18 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4z',
@@ -396,7 +795,8 @@ const S = {
   recent: [], shipped: 0, loaded: false, live: false,
   gyType: 'all', gyPri: 'all', gyHide: true, sel: null, pick: {}, copied: null, confirmApply: null,
   tkSeg: '2', loOpen: true, q: '', results: null, searching: false, dmTab: 'nhaxe', navOpen: false,
-  chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, eportRunning: false
+  chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, eportRunning: false,
+  kdWiz: null, boardSeg: '1'
 };
 function canWrite() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
 function canCat() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
@@ -519,11 +919,13 @@ function gyView(g) {
 const NEXT = { '1':['2','toDen'], '2':['3','toDay'], '3':['4','toBai'], '4':['5','toCang'], '5':['6','toTau'] };
 
 /* ---------------- khung trang ---------------- */
-const NAV_GROUPS = [['gDieuDo', ['tong', 'goiy', 'homnay']], ['gTheoDoi', ['taikho', 'bai', 'kd', 'hacang']], ['gTraCuu', ['lo', 'tim', 'danhmuc']]];
+const NAV_GROUPS = [['gDieuDo', ['tong', 'workflow', 'lo']], ['gTheoDoi', ['board', 'kd', 'hacang']], ['gTraCuu', ['tim', 'danhmuc']]];
 function navCount(k) {
   const n = counts();
+  if (k === 'workflow') { const pending = S.goiy.filter(g => !g.duyet).length; const ready = S.goiy.filter(g => g.duyet && !g.da_ap_dung).length; return pending + ready; }
   if (k === 'goiy') return S.goiy.filter(g => !g.duyet).length;
   if (k === 'homnay') return S.goiy.filter(g => g.duyet && !g.da_ap_dung).length;
+  if (k === 'board') return n['1'] + n['2'] + n['3'] + n['4'];
   if (k === 'taikho') return n['1'] + n['2'] + n['3'];
   if (k === 'bai') return n['4'];
   if (k === 'kd') return kdList().length;
@@ -552,7 +954,7 @@ function renderShell() {
       (canPlan() ? '<button class="btn btn-pri" data-act="run-goiy">' + ico('refresh', 16) + '<span>' + esc(T('refresh')) + '</span></button>' : '') +
     '</header><div class="content" id="main"></div></div>' +
     '<nav class="bottom-nav" aria-label="Menu">' +
-      [['goiy', 'suggest'], ['homnay', 'today'], ['taikho', 'taikho'], ['tim', 'search']].map(x => '<button data-act="tab" data-tab="' + x[0] + '" aria-current="' + (S.tab === x[0] ? 'page' : 'false') + '">' + ico(x[0], 20) + '<span>' + esc(T(x[1])) + '</span></button>').join('') +
+      [['goiy', 'suggest'], ['homnay', 'today'], ['board', 'board'], ['tim', 'search']].map(x => '<button data-act="tab" data-tab="' + x[0] + '" aria-current="' + (S.tab === x[0] ? 'page' : 'false') + '">' + ico(x[0], 20) + '<span>' + esc(T(x[1])) + '</span></button>').join('') +
       '<button data-act="nav-open">' + ico('menu', 20) + '<span>' + esc(T('menu')) + '</span></button>' +
     '</nav></div>';
   renderNavCounts();
@@ -565,7 +967,7 @@ function setTitle(t, sub) { const a = document.getElementById('title'), b = docu
 function renderMain() {
   const el = document.getElementById('main'); if (!el) return;
   if (!S.loaded) { el.innerHTML = '<div class="loading">Đang tải dữ liệu… 数据加载中…</div>'; return; }
-  const V = { tong:vTong, goiy:vGoiY, homnay:vHomNay, taikho:vTaiKho, bai:vBai, kd:vKD, hacang:vHaCang, lo:vLo, tim:vTim, danhmuc:vDanhMuc };
+  const V = { tong:vTong, workflow:vWorkflowHub, goiy:vGoiY, homnay:vHomNay, board:vBoard, taikho:vTaiKho, bai:vBai, kd:vKD, hacang:vHaCang, lo:vLo, tim:vTim, danhmuc:vDanhMuc };
   setTitle(T(S.tab), (S.me ? S.me.email : '') + (canWrite() ? '' : ' · ' + T('readOnly')));
   el.innerHTML = (V[S.tab] || vTong)();
 }
@@ -609,9 +1011,9 @@ function vTong() {
   // donut
   const C = 2 * Math.PI * 52; let cum = 0;
   const segs = ['1', '2', '3', '4', '5'].filter(k => n[k] > 0).map(k => { const len = C * n[k] / Math.max(1, totalAct); const s = '<circle cx="70" cy="70" r="52" fill="none" stroke="' + ST[k].dot + '" stroke-width="18" stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-cum).toFixed(2) + '"/>'; cum += len; return s; }).join('');
-  const kpiTab = { '1':'taikho', '2':'taikho', '3':'taikho', '4':'bai', '5':'lo' };
+  const kpiTab = { '1':'board', '2':'board', '3':'board', '4':'board', '5':'lo' };
   const donut = '<section class="card stack" style="gap:14px"><h2>' + esc(T1('Cont đang chạy', '在途柜')) + '</h2><div style="display:flex;justify-content:center"><div style="position:relative;width:168px;height:168px"><svg width="168" height="168" viewBox="0 0 140 140" aria-hidden="true"><g transform="rotate(-90 70 70)"><circle cx="70" cy="70" r="52" fill="none" stroke="#F1EEFB" stroke-width="18"/>' + segs + '</g></svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:30px;font-weight:700;color:var(--pri-ink)" class="num">' + totalAct + '</span><span class="muted" style="font-size:12px">cont 柜</span></div></div></div><div>' +
-    ['1', '2', '3', '4', '5'].map(k => '<button class="legend-i" data-act="tab" data-tab="' + kpiTab[k] + '" data-seg="' + (k < '4' ? k : '') + '"><span style="width:10px;height:10px;border-radius:3px;background:' + ST[k].dot + '"></span><span style="flex:1">' + esc(stLabel(k)) + '</span><b class="num">' + n[k] + '</b><span class="muted num" style="width:40px;text-align:right">' + Math.round(n[k] / Math.max(1, totalAct) * 100) + '%</span></button>').join('') +
+    ['1', '2', '3', '4', '5'].map(k => '<button class="legend-i" data-act="tab" data-tab="' + kpiTab[k] + '" data-seg="' + (k <= '4' ? k : '') + '"><span style="width:10px;height:10px;border-radius:3px;background:' + ST[k].dot + '"></span><span style="flex:1">' + esc(stLabel(k)) + '</span><b class="num">' + n[k] + '</b><span class="muted num" style="width:40px;text-align:right">' + Math.round(n[k] / Math.max(1, totalAct) * 100) + '%</span></button>').join('') +
     '</div><div class="muted" style="font-size:12px;padding:0 8px">' + esc(T('shipped')) + ': ' + S.shipped.toLocaleString('vi-VN') + ' cont</div></section>';
   // closing 72
   const cl72 = ol.filter(l => { const h = hLeft(l.closing); return h !== null && h > -24 && h < 72; }).sort((a, b) => new Date(a.closing) - new Date(b.closing));
@@ -620,7 +1022,7 @@ function vTong() {
     (cl72.length ? cl72.map(l => { const mine = S.conts.filter(c => c.lo === l.lo); const k = mine.filter(c => c.trang_thai <= '3').length, b = mine.filter(c => c.trang_thai === '4').length, p = mine.filter(c => c.trang_thai === '5').length;
       return '<div class="tr" style="' + cols + '"><button class="lk" style="font-weight:700" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button><span class="mono ell" style="font-size:12px">' + esc(l.booking || '—') + '</span><span class="ell">' + esc((l.hang_tau || '') + (l.ten_tau ? ' · ' + l.ten_tau : '')) + '</span><span>' + esc(l.cang_den || '—') + '</span><span class="num">' + fTs(l.closing) + '</span><span>' + clChip(l.closing) + '</span><span class="muted" style="font-size:12px">' + esc(LANG === 'zh' ? ('厂 ' + k + ' · 场 ' + b + ' · 港 ' + p) : (k + ' kho · ' + b + ' bãi · ' + p + ' cảng')) + '</span><span>' + tick(l.da_kiem_dich) + '</span></div>'; }).join('') : '<div class="muted" style="padding:14px 20px">' + esc(T('noClosing72')) + '</div>') +
     '</div></section>';
-  const todo = [['pendingSug', pending.length, 'goiy', ''], ['waitEmpty', n['1'], 'taikho', '1'], ['fullWait', n['3'], 'taikho', '3'], ['kdPending', kdList().length, 'kd', ''], ['closing48', cl72.filter(l => hLeft(l.closing) < 48).length, 'lo', '']];
+  const todo = [['pendingSug', pending.length, 'goiy', ''], ['waitEmpty', n['1'], 'board', '1'], ['fullWait', n['3'], 'board', '3'], ['kdPending', kdList().length, 'kd', ''], ['closing48', cl72.filter(l => hLeft(l.closing) < 48).length, 'lo', '']];
   const yards = ['HLS', 'HT', 'PD', 'DCL'].map(b => { const bi = S.bai.find(x => x.ma === b) || {}; return '<div style="border-radius:10px;background:var(--soft);border:1px solid #ECE8F8;padding:10px 12px"><div style="display:flex;align-items:baseline;justify-content:space-between"><b style="color:var(--pri-ink)">' + b + '</b><span class="num" style="font-size:22px;font-weight:700">' + S.conts.filter(c => c.trang_thai === '4' && c.bai_tam === b).length + '</span></div><div class="muted" style="font-size:11px">' + (bi.dien_moi_gio ? money(bi.dien_moi_gio) + T('perHour') : '—') + '</div></div>'; }).join('');
   const right = '<div class="stack" style="gap:16px"><section class="card"><h2 style="margin-bottom:6px">' + esc(T('todo')) + '</h2>' + todo.map(x => '<button class="todo-i" data-act="tab" data-tab="' + x[2] + '" data-seg="' + x[3] + '"><span>' + esc(T(x[0])) + '</span><b class="num">' + x[1] + '</b></button>').join('') + '</section><section class="card stack" style="gap:12px"><h2>' + esc(T('yardNow')) + '</h2><div class="g2" style="gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))">' + yards + '</div></section></div>';
   // bars
@@ -675,6 +1077,97 @@ function vGoiY() {
     '<div class="gy-layout"><div class="stack">' + (list.length ? groups : '<div class="empty">' + esc(T1('Không có gợi ý nào khớp bộ lọc.', '无匹配建议。')) + '</div>') + '</div><aside class="card panel">' + panel + '</aside></div></div>';
 }
 
+
+/* ================ WORKFLOW HUB: Gợi ý + Kế hoạch hôm nay ================ */
+function vWorkflowHub() {
+  const tab = S.wfTab || 'suggestions'; // 'suggestions', 'today', 'yard'
+  const all = S.goiy.map(gyView);
+  const tc = { dong:0, doi:0, cat:0, rut:0 };
+  all.forEach(g => tc[g.tk]++);
+
+  const chip = (act, val, cur, txt) => '<button class="chip" data-act="' + act + '" data-v="' + val + '" aria-pressed="' + (cur === val) + '">' + esc(txt) + '</button>';
+
+  // ====== TAB 1: SUGGESTIONS ======
+  const renderSuggestions = () => {
+    const list = all.filter(g => (S.gyType === 'all' || g.tk === S.gyType) && (S.gyPri === 'all' || String(g.uu_tien) === S.gyPri) && !(S.gyHide && g.duyet));
+    const approved = all.filter(g => g.duyet).length;
+    let sel = all.find(g => g.id === S.sel) || list[0];
+
+    const card = g => '<article class="gy-card' + (sel && sel.id === g.id ? ' sel' : '') + '"><button class="gy-main" data-act="gy-sel" data-id="' + esc(g.id) + '"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' + priBadge(g.uu_tien) + typePill(g.tk) + mucPill(g.muc_uu_tien) + clChip(g.closing) + '<span class="muted" style="font-size:12px">' + esc(T('closing')) + ' ' + fTs(g.closing, true) + '</span>' + (g.duyet ? pill(T('approved'), 'var(--teal-bg)', 'var(--teal-ink)') : '') + '</div>' +
+      (g.cont_day ? '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span class="mono" style="font-size:14px">' + esc(g.cont_day) + '</span><span class="muted" style="font-size:12px">' + esc(T('loCol')) + ' ' + esc((g.id_cont_day || '').split('-').pop()) + '</span><span style="font-weight:500">' + esc(g.kho_day || '') + '</span><span class="muted">→ ' + esc(tr(splitVZ(g.noi_ha))) + '</span>' + (g.kdChua ? pill(T1('KD chưa kiểm', '检疫未完成'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</div>' +
+        '<div style="font-size:12px;color:var(--muted)">' + esc(T1('Mooc', '车架') + ': ') + (g.mooc ? '<b style="color:var(--ink)">' + esc(g.mooc) + '</b>' + (g.cd && g.cd.ngay_den_kho ? ' · ' + esc(T1('kéo lên', '上柜')) + ' ' + fDate(g.cd.ngay_den_kho) : '') : '<b style="color:var(--red-ink)">' + esc(T1('chưa rõ nhà xe nào', '未知')) + '</b>') + (g.cd && g.cd.so_seal ? ' · Seal <span class="mono">' + esc(g.cd.so_seal) + '</span>' : '') + '</div>' : '') +
+      (g.kho_cat_rong ? '<div style="font-size:12px;color:var(--lav-ink)">' + esc(T('rong') + ': ' + (g.ma_don_rong || '') + ' @ ' + g.kho_cat_rong + ' · ' + (g.booking_lay_rong || T('noBooking'))) + '</div>' : '') +
+      '</button><div class="gy-side"><span class="muted" style="font-size:12px;text-align:center">' + esc(T('carrier')) + ': <b style="color:var(--ink)">' + esc(g.nx || '—') + '</b>' + (g.chi_phi_uoc_tinh != null ? '<br>' + esc(money(g.chi_phi_uoc_tinh)) : '') + '</span>' + (canPlan() ? '<button class="btn btn-sm ' + (g.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(g.id) + '" data-v="' + (g.duyet ? '0' : '1') + '">' + esc(g.duyet ? T('approved') : T('approve')) + '</button>' : '') + '</div></article>';
+
+    const groups = [1, 2, 3].map(p => {
+      const items = list.filter(g => g.uu_tien === p);
+      if (!items.length) return '';
+      const nm = { 1:['gấp: KD / sát CLS / cần rỗng trong 24 giờ', '紧急'], 2:['CLS gần / cần rỗng trong 48 giờ', '两天内'], 3:['còn lại', '其他'] }[p];
+      return '<div class="stack" style="gap:10px"><div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0;font-size:14px;color:var(--pri-ink)">' + esc(T('pri') + ' ' + p + ' · ' + tr(nm)) + '</h2><span class="cnt-b">' + items.length + '</span></div>' + items.map(card).join('') + '</div>';
+    }).join('');
+
+    let panel = '<div class="muted">' + esc(T('pickOne')) + '</div>';
+    if (sel) {
+      const ph = nxPhone(sel.nx);
+      panel = '<div style="display:flex;gap:8px;flex-wrap:wrap">' + typePill(sel.tk) + clChip(sel.closing) + '</div>' +
+        (sel.cont_day ? '<div class="mono" style="font-size:20px">' + esc(sel.cont_day) + '</div>' : '') +
+        (sel.cd ? '<div class="kv" style="background:var(--soft);border-radius:10px;padding:10px 12px"><span>' + esc(T1('Cont đầy', '满柜')) + '</span><span class="mono">' + esc(sel.cd.so_cont || '—') + '</span><span>Seal</span><span class="mono">' + esc(sel.cd.so_seal || '—') + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(sel.cd.lo || '—') + '</span><span>' + esc(T1('Đang ở kho', '所在仓库')) + '</span><span>' + esc(sel.cd.kho || '—') + '</span><span>' + esc(T1('Mooc của', '车架属于')) + '</span><span><b>' + esc(sel.mooc || T1('chưa rõ', '未知')) + '</b>' + (sel.cd.ngay_den_kho ? ' · ' + esc(T1('kéo lên', '上柜')) + ' ' + fDate(sel.cd.ngay_den_kho, true) : '') + '</span><span>' + esc(T('kd')) + '</span><span>' + (sel.cd.cont_kiem_dich ? (sel.kdChua ? pill(T1('KD chưa kiểm', '检疫未完成'), 'var(--amb-bg)', 'var(--amb-ink)') : esc(T1('KD — lô đã kiểm xong', '已检疫'))) : esc(T1('Không', '否'))) + '</span></div>' : '') +
+        '<div class="kv"><span>' + esc(T('kho')) + '</span><span>' + esc(sel.kho_day || sel.kho_cat_rong || '—') + '</span><span>Nơi hạ 还柜点</span><span>' + esc(sel.noi_ha ? tr(splitVZ(sel.noi_ha)) : '—') + '</span><span>' + esc(T('closing')) + '</span><span>' + fTs(sel.closing, true) + '</span><span>' + esc(T('carrierSug')) + '</span><span>' + esc(sel.nha_xe_goi_y || '—') + '</span><span>' + esc(T1('Chi phí ước tính', '预估费用')) + '</span><span>' + (sel.chi_phi_uoc_tinh != null ? '<b>' + esc(money(sel.chi_phi_uoc_tinh)) + '</b>' : '—') + (sel.chi_phi_ghi_chu ? '<span class="muted" style="font-size:11px;display:block">' + esc(sel.chi_phi_ghi_chu) + '</span>' : '') + '</span></div>' +
+        (sel.kho_cat_rong ? '<div class="msg">' + esc(T('rong') + ': ' + (sel.ma_don_rong || '') + ' @ ' + sel.kho_cat_rong + ' · ' + (sel.booking_lay_rong || T('noBooking'))) + '</div>' : '') +
+        '<div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">' + esc(T('reason')) + '</div><ul style="margin:0;padding-left:18px;font-size:12px;line-height:1.55">' + String(sel.ly_do || '').split(';').filter(x => x.trim()).map(x => '<li>' + esc(x.trim()) + '</li>').join('') + '</ul></div>' +
+        (sel.locked ? '<div class="msg"><b>' + esc(T('pickCarrier')) + ': ' + esc(sel.mooc) + '</b> 🔒<br>' + esc(T1('Cont đang nằm trên mooc của ' + sel.mooc + ' — chỉ ' + sel.mooc + ' kéo về được. Muốn đổi, sửa nhà xe của cont trước.', '柜子在 ' + sel.mooc + ' 的车架上，只能由 ' + sel.mooc + ' 拉回。')) + '</div>' : (sel.cd ? '<div class="msg err">' + esc(T1('Chưa rõ cont nằm trên mooc nhà xe nào — hỏi kho rồi nhập nhà xe cho cont trước khi duyệt.', '未知车架属于哪个车队，请先确认。')) + '</div>' : '') +
+        '<label class="field">' + esc(T('pickCarrier')) + '<select data-on="gy-pick" data-id="' + esc(sel.id) + '"' + (canPlan() ? '' : ' disabled') + '>' + '<option value="">—</option>' + S.nhaxe.map(n => '<option value="' + esc(n.ma) + '"' + (n.ma === sel.nx ? ' selected' : '') + '>' + esc(n.ma + (n.ten_day_du && n.ten_day_du !== n.ma ? ' · ' + n.ten_day_du : '')) + '</option>').join('') + '</select></label>') +
+        '<div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:4px">' + esc(T('orderText')) + '</div><pre class="order">' + esc(sel.text) + '</pre></div>' +
+        '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">' +
+          (canPlan() ? '<button class="btn btn-sm ' + (sel.duyet ? 'btn-ok' : 'btn-pri') + '" data-act="gy-approve" data-id="' + esc(sel.id) + '" data-v="' + (sel.duyet ? '0' : '1') + '">' + esc(sel.duyet ? T('approved') : T('approve')) + '</button>' : '<span></span>') +
+          '<button class="btn btn-sm" data-act="copy-gy" data-id="' + esc(sel.id) + '">' + esc(S.copied === sel.id ? T('copied') : T('copy')) + '</button>' +
+          (ph ? '<a class="btn btn-sm btn-zalo" href="' + esc(zaloUrl(ph)) + '" target="_blank" rel="noopener" data-act="copy-gy" data-id="' + esc(sel.id) + '" data-keep="1">' + esc(T('zalo')) + '</a>' : '<button class="btn btn-sm" disabled title="' + esc(T('noZalo')) + '">' + esc(T('noZalo')) + '</button>') +
+        '</div>';
+    }
+
+    return '<div class="stack" style="gap:16px"><div class="chips">' + chip('gy-type', 'all', S.gyType, T('all') + ' ' + all.length) + ['dong', 'doi', 'cat', 'rut'].map(k => chip('gy-type', k, S.gyType, tr([TYPES[k].vi, TYPES[k].zh]) + ' ' + tc[k])).join('') +
+      '<span style="width:1px;height:24px;background:#D8D2EE;margin:0 4px"></span>' + chip('gy-pri', 'all', S.gyPri, T('all')) + ['1', '2', '3'].map(p => chip('gy-pri', p, S.gyPri, T('pri') + ' ' + p)).join('') +
+      '<span style="flex:1"></span><label class="chk"><input type="checkbox" data-on="gy-hide"' + (S.gyHide ? ' checked' : '') + '>' + esc(T('hideApproved')) + '</label><span class="muted" style="font-size:13px">' + esc(LANG === 'zh' ? all.length + ' 条建议 · 已确认 ' + approved : all.length + ' gợi ý · ' + approved + ' đã duyệt') + '</span></div>' +
+      '<div class="gy-layout"><div class="stack">' + (list.length ? groups : '<div class="empty">' + esc(T1('Không có gợi ý nào khớp bộ lọc.', '无匹配建议。')) + '</div>') + '</div><aside class="card panel">' + panel + '</aside></div></div>';
+  };
+
+  // ====== TAB 2: TODAY'S PLAN ======
+  const renderToday = () => {
+    const ap = all.filter(g => g.duyet).map(x => x);
+    if (!ap.length) return '<div class="empty stack" style="align-items:center;gap:14px"><span>' + esc(T('emptyToday')) + '</span><button class="btn btn-pri" data-act="wf-tab" data-tab="suggestions">' + esc(T('goSuggest')) + '</button></div>';
+
+    const groups = {}; ap.forEach(g => { (groups[g.nx || '—'] = groups[g.nx || '—'] || []).push(g); });
+    const cols = '--cols:160px 130px minmax(0,1fr) 120px 150px;--minw:760px';
+
+    return '<div class="stack">' + Object.keys(groups).sort().map(k => {
+      const items = groups[k], ph = nxPhone(k), open = items.filter(g => !g.da_ap_dung);
+      return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:13px">' + items.length + ' ' + esc(T('orders')) + '</span><span style="flex:1"></span><button class="btn btn-sm" data-act="copy-grp" data-nx="' + esc(k) + '">' + esc(S.copied === 'grp-' + k ? T('copied') : T('copyGroup')) + '</button>' + (ph ? '<a class="btn btn-sm btn-zalo" href="' + esc(zaloUrl(ph)) + '" target="_blank" rel="noopener" data-act="copy-grp" data-nx="' + esc(k) + '" data-keep="1">' + esc(T('zalo')) + '</a>' : '<span class="faint" style="font-size:12px">' + esc(T('noZalo')) + '</span>') + '</div><div class="tbl-x">' +
+        items.map(g => '<div class="tr" style="' + cols + (g.da_ap_dung ? ';opacity:.6' : '') + '"><span>' + typePill(g.tk) + '</span><span class="mono">' + esc(g.cont_day || g.ma_don_rong || '') + '</span><span class="ell">' + esc((g.kho_day || g.kho_cat_rong || '') + (g.noi_ha ? ' → ' + tr(splitVZ(g.noi_ha)) : '')) + '</span><span>' + clChip(g.closing) + '</span><span style="display:flex;gap:6px;justify-content:flex-end">' +
+          (g.da_ap_dung ? pill(T('applied'), 'var(--teal-bg)', 'var(--teal-ink)') : (canPlan() ? '<button class="btn btn-sm btn-line" data-act="gy-apply" data-id="' + esc(g.id) + '">' + esc(S.confirmApply === g.id ? T('confirm') : T('markApplied')) + '</button><button class="btn btn-sm" data-act="gy-approve" data-id="' + esc(g.id) + '" data-v="0" title="' + esc(T('unapprove')) + '">' + ico('x', 14) + '</button>' : '')) +
+        '</span></div>').join('') + '</div></section>';
+    }).join('') + '<p class="muted" style="font-size:12px;margin:0">' + esc(T1('"Đánh dấu đã chạy" sẽ tự cập nhật trạng thái cont: cont đầy → vào bãi hoặc hạ cảng theo nơi hạ; đơn rỗng → cont đã tới kho.', '"标记已执行"会自动更新柜子状态：满柜→进堆场或回港；空柜订单→已到厂。')) + '</p></div>';
+  };
+
+  // ====== TAB 3: YARD STATUS ======
+  const renderYard = () => vTaiKho();
+
+  // ====== RENDER TABS ======
+  const tabButtons = '<div class="chips" style="gap:8px">' +
+    '<button class="chip" data-act="wf-tab" data-tab="suggestions" aria-pressed="' + (tab === 'suggestions' ? 'true' : 'false') + '">' + esc(T('goi_y') + ' (' + all.filter(g => !g.duyet).length + ')') + '</button>' +
+    '<button class="chip" data-act="wf-tab" data-tab="today" aria-pressed="' + (tab === 'today' ? 'true' : 'false') + '">' + esc(T('today') + ' (' + all.filter(g => g.duyet && !g.da_ap_dung).length + ')') + '</button>' +
+    '<button class="chip" data-act="wf-tab" data-tab="yard" aria-pressed="' + (tab === 'yard' ? 'true' : 'false') + '">' + esc(T('yard') + ' (' + S.conts.filter(c => c.trang_thai <= '3').length + ')') + '</button>' +
+  '</div>';
+
+  const content = {
+    'suggestions': renderSuggestions(),
+    'today': renderToday(),
+    'yard': renderYard()
+  }[tab] || renderSuggestions();
+
+  return '<div class="stack" style="gap:14px">' + tabButtons + content + '</div>';
+}
+
+
 /* ---------------- KẾ HOẠCH HÔM NAY ---------------- */
 function vHomNay() {
   const ap = S.goiy.filter(g => g.duyet).map(gyView);
@@ -700,20 +1193,29 @@ function loOrder(a, b) {
   const r = String(a.lo || '~').localeCompare(String(b.lo || '~'), 'vi', { numeric:true });
   return r || String(a.so_cont || a.ma_don || a.id).localeCompare(String(b.so_cont || b.ma_don || b.id));
 }
-function vTaiKho() {
-  const n = counts(), seg = S.tkSeg, list = S.conts.filter(c => c.trang_thai === seg);
+function vBoard() {
+  const n = counts(), seg = S.boardSeg || '1';
+  const chips = '<div class="chips">' + ['1', '2', '3', '4'].map(k => '<button class="chip" data-act="board-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Lọc container theo trạng thái', '按柜状态筛选')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>';
+  const body = seg === '4' ? baiBody() : taiKhoBody(seg);
+  return '<div class="stack" style="gap:16px">' + chips + body + '</div>';
+}
+function taiKhoBody(seg) {
+  const list = S.conts.filter(c => c.trang_thai === seg);
   const g = {}; list.forEach(c => { (g[c.kho || '—'] = g[c.kho || '—'] || []).push(c); });
   const cols = '--cols:150px 60px 96px 88px 110px 110px 44px minmax(190px,1fr) 124px;--minw:1040px';
   const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('madon')) + '</span><span>' + esc(seg === '1' ? T('can') : T('den')) + '</span><span>' + esc(T('day')) + '</span><span>' + esc(T('carrier')) + '</span><span>' + esc(T('kdShort')) + '</span><span>' + esc(T('clsUse') + ' · ' + T('clsMail') + ' / ' + T('clsEport')) + '</span><span></span></div>';
-  return '<div class="stack" style="gap:16px"><div class="chips">' + ['1', '2', '3'].map(k => '<button class="chip" data-act="tk-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Mỗi kho xếp theo thứ tự lô', '各仓库按批次排序')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>' +
-    (list.length ? Object.keys(g).sort((a, b) => g[b].length - g[a].length).map(k => { const ki = S.kho.find(x => x.ten === k) || {};
+  return (list.length ? Object.keys(g).sort((a, b) => g[b].length - g[a].length).map(k => { const ki = S.kho.find(x => x.ten === k) || {};
       return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:12px">' + esc([ki.khu_vuc, ki.ten_tq].filter(Boolean).join(' · ')) + '</span><span style="flex:1"></span><span class="cnt-b">' + g[k].length + '</span></div><div class="tbl-x">' + head +
         g[k].slice().sort(loOrder).map(c => { const l = lotOf(c); return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + (l && l.dong_trong_ngay ? ' <span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + '</span><span>' + esc(c.ma_don || '—') + '</span><span data-l="' + esc(seg === '1' ? T('can') : T('den')) + '">' + (seg === '1' ? fTs(c.ngay_can_len_kho) : fDate(c.ngay_den_kho)) + '</span><span data-l="' + esc(T('day')) + '" style="' + (c.du_kien_day ? '' : 'color:#8A5A00;font-style:italic') + '">' + (c.du_kien_day ? fTs(c.du_kien_day) : esc(T('notEntered'))) + '</span><span data-l="' + esc(T('carrier')) + '">' + esc(c.nha_xe || '—') + '</span><span>' + (c.cont_kiem_dich ? pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('')
-      : '<div class="empty">' + esc(T1('Không có cont nào ở bước này.', '没有柜子处于此状态。')) + '</div>') + '</div>';
+      : '<div class="empty">' + esc(T1('Không có cont nào ở bước này.', '没有柜子处于此状态。')) + '</div>');
+}
+function vTaiKho() {
+  const n = counts(), seg = S.tkSeg;
+  return '<div class="stack" style="gap:16px"><div class="chips">' + ['1', '2', '3'].map(k => '<button class="chip" data-act="tk-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Mỗi kho xếp theo thứ tự lô', '各仓库按批次排序')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>' + taiKhoBody(seg) + '</div>';
 }
 
 /* ---------------- BÃI TẠM ---------------- */
-function vBai() {
+function baiBody() {
   const list = S.conts.filter(c => c.trang_thai === '4');
   const sorters = { vao:(a, b) => new Date(a.gio_vao_bai || 0) - new Date(b.gio_vao_bai || 0), cls:(a, b) => { const la = lotOf(a), lb = lotOf(b); return (la && la.closing ? new Date(la.closing) : 9e15) - (lb && lb.closing ? new Date(lb.closing) : 9e15); }, lo:loOrder, tien:(a, b) => baiCost(b).tong - baiCost(a).tong };
   const bais = S.bai.map(b => b.ma).concat(list.some(c => !c.bai_tam) ? ['—'] : []);
@@ -722,14 +1224,15 @@ function vBai() {
   const sortSel = '<label class="chk" style="gap:6px">' + esc(T1('Sắp xếp trong bãi', '堆场内排序')) + '<select data-on="bai-sort" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff">' + [['vao', T1('Giờ vào bãi', '进场时间')], ['cls', T1('CLS gần nhất', '截关')], ['lo', T1('Thứ tự lô', '批次')], ['tien', T1('Chi phí cao nhất', '费用最高')]].map(o => '<option value="' + o[0] + '"' + (S.baiSort === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select></label>';
   const cards = '<div class="g4">' + S.bai.map(bi => { const cs = list.filter(c => c.bai_tam === bi.ma), tong = cs.reduce((a, c) => a + baiCost(c).tong, 0);
     return '<section class="card" style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;align-items:baseline;justify-content:space-between"><b style="font-size:16px;color:var(--pri-ink)">' + esc(bi.ma) + '</b><span class="num" style="font-size:28px;font-weight:700">' + cs.length + '</span></div><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span class="muted" style="font-size:12px">' + esc(T1('Điện', '电费')) + ' ' + (bi.dien_moi_gio ? money(bi.dien_moi_gio) + T('perHour') : '—') + ' · ' + esc(T('nangHa')) + ' ' + money(bi.nang_ha) + ' · ' + esc(T1('Hạ cảng', '回港')) + ' ' + money(bi.trucking) + '</span><span style="font-size:13px">' + esc(T('tongCP')) + ': <b>' + money(tong) + '</b></span></section>'; }).join('') + '</div>';
-  return '<div class="stack" style="gap:16px">' + cards + '<div class="chips">' + sortSel + '<span class="muted" style="font-size:12px">' + esc(T1('Điện tính theo giờ thực tế (làm tròn lên), nâng hạ 1 lần khi hạ vào bãi, hạ cảng theo giá từng bãi.', '电费按实际小时（向上取整），吊装一次，回港按堆场价。')) + '</span></div>' +
+  return cards + '<div class="chips">' + sortSel + '<span class="muted" style="font-size:12px">' + esc(T1('Điện tính theo giờ thực tế (làm tròn lên), nâng hạ 1 lần khi hạ vào bãi, hạ cảng theo giá từng bãi.', '电费按实际小时（向上取整），吊装一次，回港按堆场价。')) + '</span></div>' +
     bais.map(ma => { const cs = list.filter(c => (c.bai_tam || '—') === ma).sort(sorters[S.baiSort] || sorters.vao); if (!cs.length) return '';
       const tong = cs.reduce((a, c) => a + baiCost(c).tong, 0), bi = S.bai.find(x => x.ma === ma) || {};
       return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(ma) + '</h2><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span style="flex:1"></span><span class="muted" style="font-size:13px">' + esc(T('tongCP')) + ' <b style="color:var(--ink)">' + money(tong) + '</b></span><span class="cnt-b">' + cs.length + '</span></div><div class="tbl-x">' + head +
         cs.map(c => { const l = lotOf(c), k = baiCost(c);
           return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + '</span><span data-l="' + esc(T('yardIn')) + '">' + fTs(c.gio_vao_bai) + '</span><span class="num" data-l="' + esc(T('hours')) + '">' + (k.gio === null ? '—' : k.gio) + '</span><span class="num" data-l="' + esc(T1('Tiền điện', '电费')) + '">' + money(k.dien) + '</span><span class="num" data-l="' + esc(T('nangHa')) + '">' + money(k.nang) + '</span><span class="num" data-l="' + esc(T('haCangFee')) + '">' + money(k.hacang) + '</span><span class="num" data-l="' + esc(T('phatSinh')) + '">' + (k.ps ? money(k.ps) : '—') + '</span><span class="num" style="font-weight:700" data-l="' + esc(T('tongCP')) + '">' + money(k.tong) + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span><span style="text-align:center">' + tick(l && (l.cho_keo_ha_cang || l.da_kiem_dich)) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('') +
-    (list.length ? '' : '<div class="empty">' + esc(T1('Không có cont nào ở bãi tạm.', '堆场没有柜子。')) + '</div>') + '</div>';
+    (list.length ? '' : '<div class="empty">' + esc(T1('Không có cont nào ở bãi tạm.', '堆场没有柜子。')) + '</div>');
 }
+function vBai() { return '<div class="stack" style="gap:16px">' + baiBody() + '</div>'; }
 
 /* ---------------- KIỂM DỊCH ---------------- */
 function kdGroups() {
@@ -747,19 +1250,20 @@ function kdPlanText(items) {
     x.cs.map(c => '   ' + (c.so_cont || '—') + (c.so_seal ? ' · Seal ' + c.so_seal : '') + ' · ' + (c.trang_thai === '4' ? 'Bãi ' + (c.bai_tam || '') : 'Kho ' + (c.kho || '') + ' (đang kéo về)')).join('\n')).join('\n');
 }
 function vKD() {
+  const wiz = (S.kdWiz && S.lots[S.kdWiz] && typeof KD_WIZARD !== 'undefined') ? KD_WIZARD.bodyHTML() : '';
   const all = kdGroups();
   const chuaChon = openLots().filter(l => !l.da_huy && !l.da_kiem_dich && !kdCont(l.lo)).sort((a, b) => (hLeft(a.closing) ?? 9e9) - (hLeft(b.closing) ?? 9e9));
   const sai = openLots().filter(l => nPortNoKd(l) > 0);
   const warn = (sai.length ? '<section class="tbl" data-kd-sai style="border-color:var(--red-ink)"><div class="tbl-h"><h2 style="color:var(--red-ink)">⚠ ' + esc(T1('Sai quy trình: có cont ở cảng khi lô chưa kiểm dịch', '流程错误：未检疫已回港')) + '</h2><span class="cnt-b">' + sai.length + '</span></div><div style="padding:8px 16px 12px;display:flex;gap:8px;flex-wrap:wrap">' + sai.map(l => '<button class="btn btn-sm" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + ' · ' + nPortNoKd(l) + ' cont</button>').join('') + '</div></section>' : '') +
     (chuaChon.length ? '<section class="tbl" data-kd-chua-chon><div class="tbl-h"><h2>' + esc(T1('Lô chưa chọn cont kiểm dịch (chưa được hạ cảng)', '未选检疫柜的批次（不可回港）')) + '</h2><span class="cnt-b">' + chuaChon.length + '</span></div><div style="padding:8px 16px 12px;display:flex;gap:8px;flex-wrap:wrap">' + chuaChon.map(l => '<button class="btn btn-sm" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + (l.closing ? ' · CLS ' + fTs(l.closing) : '') + '</button>').join('') + '</div></section>' : '');
-  if (!all.length) return warn ? '<div class="stack" style="gap:18px">' + warn + '<div class="empty">' + esc(T('noKd')) + '</div></div>' : '<div class="empty">' + esc(T('noKd')) + '</div>';
+  if (!all.length) return (wiz || warn) ? '<div class="stack" style="gap:18px">' + wiz + warn + '<div class="empty">' + esc(T('noKd')) + '</div></div>' : '<div class="empty">' + esc(T('noKd')) + '</div>';
   const plan = all.filter(x => x.nhom <= 2);
   const nhomTen = { 1:T1('Sẵn sàng kiểm: cont KD đã ở bãi (chỉ HLS / PD / HT được kiểm)', '可检疫：检疫柜已在堆场（仅HLS/PD/HT）'), 2:T1('Đang kéo về bãi (lệnh đã duyệt)', '正在拉回堆场'), 3:T1('Còn ở kho', '仍在仓库') };
-  const card = x => '<section class="tbl"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + x.k) + '</h2>' + clChip(x.l.closing) + (x.gap && x.nhom === 3 ? pill(T1('KD gấp – cần rút mooc', '检疫紧急'), '#B42318', '#fff') : '') + '<span class="muted" style="font-size:12px">' + esc(x.l.ma_don_kdtv ? T('kdtv') + ' ' + x.l.ma_don_kdtv : T('noKdtv')) + '</span><span style="flex:1"></span>' + (canKd() && x.k !== '—' && x.nhom === 1 ? '<button class="btn btn-sm" style="border-color:var(--teal);color:var(--teal-ink)" data-act="kd-done" data-lo="' + esc(x.k) + '"' + (x.why ? ' disabled title="' + esc(x.why) + '"' : '') + '>' + esc(T('kdDone')) + ' ✓</button>' : '') + '</div>' +
+  const card = x => '<section class="tbl"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + x.k) + '</h2>' + clChip(x.l.closing) + (x.gap && x.nhom === 3 ? pill(T1('KD gấp – cần rút mooc', '检疫紧急'), '#B42318', '#fff') : '') + '<span class="muted" style="font-size:12px">' + esc(x.l.ma_don_kdtv ? T('kdtv') + ' ' + x.l.ma_don_kdtv : T('noKdtv')) + '</span><span style="flex:1"></span>' + (canKd() && x.k !== '—' ? '<button class="btn btn-sm btn-pri" data-act="open-kd-wizard" data-lo="' + esc(x.k) + '">' + esc(T1('Kiểm dịch', '检疫')) + ' ▸</button>' : '') + (canKd() && x.k !== '—' && x.nhom === 1 ? '<button class="btn btn-sm" style="border-color:var(--teal);color:var(--teal-ink)" data-act="kd-done" data-lo="' + esc(x.k) + '"' + (x.why ? ' disabled title="' + esc(x.why) + '"' : '') + '>' + esc(T('kdDone')) + ' ✓</button>' : '') + '</div>' +
     '<div class="kv" style="padding:6px 16px 10px;font-size:12px"><span>' + esc(T('clsUse')) + '</span><span><b>' + fTs(x.l.closing, true) + '</b></span><span>' + esc(T('clsMail')) + '</span><span>' + fTs(x.l.closing_mail, true) + '</span><span>' + esc(T('clsEport')) + '</span><span>' + fTs(x.l.closing_eport, true) + (x.l.closing_eport && x.l.eport_cang ? ' <span class="muted">' + esc(eportCang(x.l)) + '</span>' : '') + (x.l.eport_ghi_chu ? ' <span style="color:var(--red-ink)">' + esc(x.l.eport_ghi_chu) + '</span>' : '') + '</span><span>' + esc(T('vessel')) + '</span><span>' + esc(x.l.ten_tau || '—') + '</span></div>' +
     (x.nhom === 1 && x.why ? '<p style="margin:0;padding:0 16px 8px;font-size:12px;color:var(--red-ink)" data-kd-why>' + esc(x.why) + '</p>' : '') +
     x.cs.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 150px">' + contBtn(c) + '<span class="ell">' + esc(c.trang_thai === '4' ? T('bai') + ' ' + (c.bai_tam || '') : (c.kho || '—')) + '</span><span>' + stPill(c.trang_thai) + '</span></div>').join('') + '</section>';
-  return '<div class="stack" style="gap:18px">' + warn + '<div class="chips"><b style="font-size:15px;color:var(--pri-ink)">' + esc(T1('Kế hoạch kiểm dịch', '检疫计划')) + '</b><span class="muted" style="font-size:13px">' + plan.length + ' ' + esc(T1('lô ở bãi / đang kéo về, xếp theo CLS gần nhất', '批（在堆场/拉回中），按截关排序')) + '</span><span style="flex:1"></span>' +
+  return '<div class="stack" style="gap:18px">' + wiz + warn + '<div class="chips"><b style="font-size:15px;color:var(--pri-ink)">' + esc(T1('Kế hoạch kiểm dịch', '检疫计划')) + '</b><span class="muted" style="font-size:13px">' + plan.length + ' ' + esc(T1('lô ở bãi / đang kéo về, xếp theo CLS gần nhất', '批（在堆场/拉回中），按截关排序')) + '</span><span style="flex:1"></span>' +
       (plan.length ? '<button class="btn btn-sm" data-act="copy-kd">' + esc(S.copied === 'kd' ? T('copied') : T1('Chép kế hoạch KD', '复制检疫计划')) + '</button>' : '') + (canWrite() ? eportBtn() : '') + '</div>' +
     [1, 2, 3].map(nh => { const xs = all.filter(x => x.nhom === nh); if (!xs.length) return '';
       return '<div class="stack" style="gap:10px"><div style="display:flex;align-items:center;gap:10px"><h2 style="margin:0;font-size:14px;color:var(--pri-ink)">' + esc(nhomTen[nh]) + '</h2><span class="cnt-b">' + xs.length + '</span></div><div class="g2" style="align-items:start">' + xs.map(card).join('') + '</div></div>'; }).join('') + '</div>';
@@ -1147,9 +1651,10 @@ async function saveCont(form) {
     if (!id) {
       const st = o.trang_thai || '1';
       if (['1', '2', '3'].indexOf(st) > -1) S.tkSeg = st;
+      if (['1', '2', '3', '4'].indexOf(st) > -1) S.boardSeg = st;
       toast(T1('Đã thêm — cont nằm ở mục “' + stLabel(st) + '”', '已新增，位于“' + stLabel(st) + '”'));
       if (o.lo && S.lots[o.lo]) { renderMain(); openLo(S.lots[o.lo]); }
-      else if (['1', '2', '3'].indexOf(st) > -1) { S.tab = 'taikho'; renderShell(); renderMain(); }
+      else if (['1', '2', '3', '4'].indexOf(st) > -1) { S.tab = 'board'; renderShell(); renderMain(); }
       else renderMain();
     } else { toast(T('saved')); renderMain(); }
     renderNavCounts();
@@ -1246,7 +1751,7 @@ async function runGoiY() {
 
 /* ---------------- sự kiện ---------------- */
 const ACT = {
-  'tab': d => { S.tab = d.tab; if (d.seg) S.tkSeg = d.seg; S.navOpen = false; closeDrawer(); renderShell(); window.scrollTo(0, 0); },
+  'tab': d => { S.tab = d.tab; if (d.seg) { S.tkSeg = d.seg; S.boardSeg = d.seg; } S.navOpen = false; closeDrawer(); renderShell(); window.scrollTo(0, 0); },
   'nav-open': () => { S.navOpen = true; document.getElementById('app').classList.add('nav-open'); },
   'nav-close': () => { S.navOpen = false; document.getElementById('app').classList.remove('nav-open'); },
   'lang': d => { LANG = d.lang; try { localStorage.setItem('dd_lang', LANG); } catch (e) {} renderShell(); if (S.drawer) { const dr = S.drawer; if (dr.kind === 'cont') { if (dr.id) openContById(dr.id); } else if (dr.kind === 'lo' && dr.id) openLo(S.lots[dr.id]); } },
@@ -1321,6 +1826,7 @@ const ACT = {
   'copy-gy': async (d, el) => { const g = S.goiy.find(x => x.id === d.id); if (!g) return; await copyText(gyView(g).text); S.copied = d.id; toast(T('copied')); if (!d.keep) renderMain(); },
   'copy-grp': async (d) => { const t = S.goiy.filter(g => g.duyet && !g.da_ap_dung).map(gyView).filter(g => (g.nx || '—') === d.nx).map(g => g.text).join('\n\n'); await copyText(t); S.copied = 'grp-' + d.nx; toast(T('copied')); if (!d.keep) renderMain(); },
   'tk-seg': d => { S.tkSeg = d.v; renderMain(); },
+  'board-seg': d => { S.boardSeg = d.v; renderMain(); },
   'move': d => moveCont(d.id, d.to),
   'kd-done': async d => { try { await q(sb.from('lo').update({ da_kiem_dich:true }).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + T('kdDone')); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'lo' && S.drawer.id === d.lo && S.lots[d.lo]) openLo(S.lots[d.lo]); } catch (e) { toast(errMsg(e), true); } },
   'kd-undo': async d => { try { await q(sb.from('lo').update({ da_kiem_dich:false }).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + T1('đã bỏ tích kiểm dịch', '已取消检疫勾选')); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'lo' && S.drawer.id === d.lo && S.lots[d.lo]) openLo(S.lots[d.lo]); } catch (e) { toast(errMsg(e), true); } },
