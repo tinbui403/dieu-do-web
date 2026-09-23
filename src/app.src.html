@@ -4,37 +4,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1E3A8A">
+<meta name="theme-color" content="#5B47E0">
 <title>Điều độ · Đại Cát Lâm</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231E3A8A'/%3E%3Cpath d='M4 15h9V8H4zM13 10.5h3l2.5 2.5v2H13z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='7' cy='17' r='1.6' fill='white'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='white'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235B47E0'/%3E%3Cpath d='M4 15h9V8H4zM13 10.5h3l2.5 2.5v2H13z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='7' cy='17' r='1.6' fill='white'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap">
 <style>
 :root{
-  /* ─── Nền & bề mặt ─── */
-  --bg:#EFF6FF;
-  --surface:rgba(255,255,255,.88);
-  --ink:#0F172A;--muted:#475569;--faint:#94A3B8;
-  --line:rgba(148,163,184,.28);--line2:rgba(148,163,184,.14);
-  --soft:rgba(255,255,255,.55);--soft2:rgba(255,255,255,.36);
-  /* ─── Xanh chính ─── */
-  --pri:#2563EB;--pri-ink:#1D4ED8;--pri-soft:#DBEAFE;
-  /* ─── Sidebar navy ─── */
-  --side:#1E3A8A;--side-ink:rgba(255,255,255,.9);
-  --side-h:rgba(255,255,255,.52);--side-sub:rgba(255,255,255,.42);
+  /* ─── Nền & bề mặt (kính sáng, tông tím – chàm) ─── */
+  --bg:#F4F2FB;
+  --surface:rgba(255,255,255,.8);
+  --ink:#1C1A33;--muted:#605E7C;--faint:#9C9AB8;
+  --line:rgba(112,96,190,.18);--line2:rgba(112,96,190,.1);
+  --soft:rgba(255,255,255,.62);--soft2:rgba(255,255,255,.4);
+  /* ─── Màu nhấn tím – chàm ─── */
+  --pri:#6D5AE6;--pri-ink:#4F3FCF;--pri-soft:#EAE6FF;
+  --pri-grad:linear-gradient(135deg,#8B7BFF 0%,#6D5AE6 55%,#5B47E0 100%);
+  /* ─── Sidebar sáng ─── */
+  --side:#5B47E0;--side-ink:#3D3A5C;
+  --side-h:#9C9AB8;--side-sub:#7A789A;
   /* ─── Trạng thái ─── */
   --red:#DC2626;--red-bg:rgba(220,38,38,.1);--red-ink:#B91C1C;
   --amb:#D97706;--amb-bg:rgba(217,119,6,.1);--amb-ink:#92400E;
   --teal:#059669;--teal-bg:rgba(5,150,105,.1);--teal-ink:#065F46;--green-ink:#14532D;
-  --lav:rgba(37,99,235,.1);--lav-ink:#1D4ED8;--zalo:#0068FF;
+  --lav:rgba(109,90,230,.1);--lav-ink:#4F3FCF;--zalo:#0068FF;
+  /* ─── Kính, bóng, bo góc ─── */
+  --glass-line:rgba(255,255,255,.9);
+  --tint:rgba(109,90,230,.06);--tint2:rgba(109,90,230,.1);
+  --sh-card:0 10px 30px rgba(76,58,170,.08),0 1px 2px rgba(76,58,170,.05);
+  --sh-card-h:0 18px 40px rgba(76,58,170,.14),0 2px 4px rgba(76,58,170,.06);
+  --r-card:18px;
+  --frame:clamp(10px,1.4vw,20px);
   --font:'Be Vietnam Pro','Noto Sans SC',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{
-  background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 30%,#BFDBFE 65%,#93C5FD 100%);
+  background:linear-gradient(160deg,#F8F6FD 0%,#F2EFFA 55%,#EEF0FB 100%);
   background-attachment:fixed;
   color:var(--ink);font-family:var(--font);font-size:14px;
   line-height:1.45;-webkit-text-size-adjust:100%
@@ -50,56 +58,113 @@ a{color:var(--pri-ink)}
 .num{font-variant-numeric:tabular-nums}
 .hide{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#root{position:relative;z-index:1}
+.main,.side,.drawer{scrollbar-width:thin;scrollbar-color:rgba(109,90,230,.28) transparent}
+.main::-webkit-scrollbar,.side::-webkit-scrollbar,.drawer::-webkit-scrollbar{width:8px;height:8px}
+.main::-webkit-scrollbar-thumb,.side::-webkit-scrollbar-thumb,.drawer::-webkit-scrollbar-thumb{background:rgba(109,90,230,.28);border-radius:8px}
+.main::-webkit-scrollbar-track,.side::-webkit-scrollbar-track,.drawer::-webkit-scrollbar-track{background:transparent}
 
-/* ─── Layout ─── */
-.app{display:flex;min-height:100vh}
+/* ─── Lớp nền 3D: khối màu, quả cầu, cont / tàu / cẩu trôi chậm sau khung kính ─── */
+.bg3d{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg3d i{position:absolute;display:block;border-radius:50%;will-change:transform}
+.bg3d .b1{width:60vmax;height:60vmax;right:-24vmax;top:-28vmax;
+  background:radial-gradient(circle at 42% 42%,rgba(190,110,255,.95) 0%,rgba(130,62,240,.9) 36%,rgba(124,58,237,0) 66%);
+  animation:drift1 34s ease-in-out infinite alternate}
+.bg3d .b2{width:66vmax;height:66vmax;left:-32vmax;bottom:-36vmax;
+  background:radial-gradient(circle at 58% 42%,rgba(226,84,240,.9) 0%,rgba(140,62,255,.88) 38%,rgba(140,62,255,0) 66%);
+  animation:drift2 42s ease-in-out infinite alternate}
+.bg3d .b3{width:24vmax;height:24vmax;left:5vmax;top:7vmax;
+  background:radial-gradient(circle,rgba(170,130,255,0) 50%,rgba(170,130,255,.55) 55%,rgba(170,130,255,0) 70%);
+  animation:drift3 28s ease-in-out infinite alternate}
+.bg3d .b4{width:30vmax;height:30vmax;right:14vmax;bottom:-14vmax;
+  background:radial-gradient(circle at 50% 50%,rgba(255,150,200,.6) 0%,rgba(255,150,200,0) 65%);
+  animation:drift3 36s ease-in-out infinite alternate-reverse}
+.bg3d .sph{width:15vmax;height:15vmax;right:-2vmax;top:36vh;
+  background:radial-gradient(circle at 33% 30%,#FFF3C4 0%,#FFD166 26%,#FFA23A 60%,#E4711D 100%);
+  box-shadow:0 34px 70px rgba(228,113,29,.38),inset -22px -28px 48px rgba(170,60,10,.28);
+  animation:bob 14s ease-in-out infinite alternate}
+.bg3d svg{position:absolute;display:block;will-change:transform}
+.bg3d .sh-cont{width:22vmax;right:7vmax;bottom:2vmax;opacity:.62;animation:bob 18s ease-in-out infinite alternate-reverse}
+.bg3d .sh-ship{width:48vmax;left:-6vmax;bottom:-1vmax;opacity:.5;animation:sail 46s ease-in-out infinite alternate}
+.bg3d .sh-crane{width:20vmax;left:22vmax;top:3vmax;opacity:.55;transform-origin:50% 100%;animation:sway 22s ease-in-out infinite alternate}
+@keyframes drift1{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-6vmax,5vmax,0) scale(1.08)}}
+@keyframes drift2{from{transform:translate3d(0,0,0) scale(1.05)}to{transform:translate3d(6vmax,-5vmax,0) scale(1)}}
+@keyframes drift3{from{transform:translate3d(0,0,0)}to{transform:translate3d(3vmax,4vmax,0)}}
+@keyframes bob{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-2.6vmax,0)}}
+@keyframes sail{from{transform:translate3d(0,0,0)}to{transform:translate3d(5vmax,-.6vmax,0)}}
+@keyframes sway{from{transform:rotate(-1.4deg)}to{transform:rotate(1.4deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes drawerIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes scrimIn{from{opacity:0}to{opacity:1}}
+html.lite .bg3d *{animation:none!important}  /* máy yếu (≤2 nhân / ≤2GB): nền đứng yên cho nhẹ */
+@media (prefers-reduced-motion:reduce){
+  .bg3d *,.content.swap,.drawer-wrap.in,.drawer-wrap.in .drawer{animation:none!important}
+  .card,.gy-card,.btn,.nav-i,.chip{transition:none!important}
+  .card:hover,.gy-card:hover,.btn:hover{transform:none!important}
+}
+
+/* ─── Khung kính nổi (3D) ─── */
+.app{
+  position:fixed;inset:var(--frame);z-index:1;
+  display:flex;border-radius:26px;overflow:hidden
+}
+.app.app-in{animation:fadeUp .35s ease-out}
+.app::before{
+  content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
+  background:linear-gradient(160deg,rgba(255,255,255,.8) 0%,rgba(255,255,255,.62) 60%,rgba(255,255,255,.7) 100%);
+  backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);
+  border:1px solid var(--glass-line);
+  box-shadow:0 34px 90px rgba(60,40,140,.24),0 2px 6px rgba(60,40,140,.08),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.5)
+}
 .side{
-  width:236px;flex-shrink:0;
-  background:linear-gradient(180deg,#1E3A8A 0%,#1E40AF 55%,#1D4ED8 100%);
-  color:#fff;display:flex;flex-direction:column;gap:20px;
-  padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto;
-  box-shadow:4px 0 24px rgba(30,58,138,.18)
+  position:relative;width:236px;flex-shrink:0;min-height:0;
+  background:rgba(255,255,255,.28);
+  border-right:1px solid rgba(255,255,255,.75);
+  box-shadow:inset -1px 0 0 rgba(112,96,190,.06);
+  color:var(--ink);display:flex;flex-direction:column;gap:18px;
+  padding:20px 14px;overflow-y:auto;overflow-x:hidden
 }
 .brand{display:flex;align-items:center;gap:10px;padding:0 6px}
 .brand-logo{
-  width:38px;height:38px;border-radius:10px;
-  background:rgba(255,255,255,.15);
-  backdrop-filter:blur(8px);
+  width:38px;height:38px;border-radius:12px;
+  background:var(--pri-grad);color:#fff;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  border:1px solid rgba(255,255,255,.25)
+  box-shadow:0 6px 14px rgba(91,71,224,.35),inset 0 1px 0 rgba(255,255,255,.4)
 }
-.brand-name{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.brand-name{font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
 .brand-sub{font-size:12px;color:var(--side-sub)}
 .nav-h{padding:0 10px 4px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--side-h)}
 .nav-g{display:flex;flex-direction:column;gap:3px}
 .nav-i{
-  display:flex;align-items:center;gap:10px;width:100%;min-height:40px;
-  padding:0 10px;border:0;border-radius:8px;
+  position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:40px;
+  padding:0 10px;border:0;border-radius:12px;
   background:transparent;color:var(--side-ink);font-size:14px;font-weight:500;text-align:left;
-  transition:background .15s
+  transition:background .18s,color .18s
 }
-.nav-i:hover{background:rgba(255,255,255,.12)}
+.nav-i:hover{background:var(--tint);color:var(--pri-ink)}
 .nav-i[aria-current="page"]{
-  background:rgba(255,255,255,.2);color:#fff;font-weight:600;
-  box-shadow:0 2px 8px rgba(0,0,0,.15)
+  background:var(--tint2);color:var(--pri-ink);font-weight:600;
+  box-shadow:inset 0 0 0 1px rgba(109,90,230,.12),0 4px 12px rgba(91,71,224,.1)
 }
+.nav-i[aria-current="page"]::before{content:"";position:absolute;left:-14px;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;background:var(--pri-grad)}
 .nav-i .cnt{
   margin-left:auto;min-width:24px;padding:1px 7px;
   border-radius:999px;font-size:12px;font-weight:600;text-align:center;
-  background:rgba(255,255,255,.18);color:#fff
+  background:rgba(109,90,230,.12);color:var(--pri-ink)
 }
-.nav-i[aria-current="page"] .cnt{background:rgba(255,255,255,.95);color:var(--pri-ink)}
-.langs{display:flex;gap:4px;padding:4px;border-radius:10px;background:rgba(255,255,255,.12)}
-.langs button{flex:1;min-height:34px;border:0;border-radius:8px;background:transparent;color:var(--side-ink);font-size:13px;font-weight:600}
-.langs button[aria-pressed="true"]{background:rgba(255,255,255,.9);color:var(--pri-ink)}
-.me{display:flex;align-items:center;gap:10px;padding:12px 6px 0;border-top:1px solid rgba(255,255,255,.18)}
+.nav-i[aria-current="page"] .cnt{background:var(--pri);color:#fff}
+.langs{display:flex;gap:4px;padding:4px;border-radius:12px;background:rgba(109,90,230,.08)}
+.langs button{flex:1;min-height:34px;border:0;border-radius:9px;background:transparent;color:var(--side-ink);font-size:13px;font-weight:600}
+.langs button[aria-pressed="true"]{background:#fff;color:var(--pri-ink);box-shadow:0 2px 6px rgba(76,58,170,.14)}
+.me{display:flex;align-items:center;gap:10px;padding:12px 6px 0;border-top:1px solid var(--line2)}
 .avatar{
   width:34px;height:34px;border-radius:999px;
-  background:linear-gradient(135deg,#3B82F6,#1D4ED8);
+  background:var(--pri-grad);
   color:#fff;display:flex;align-items:center;justify-content:center;
-  font-weight:700;flex-shrink:0;box-shadow:0 2px 8px rgba(29,78,216,.35)
+  font-weight:700;flex-shrink:0;box-shadow:0 4px 12px rgba(91,71,224,.35)
 }
 .me .out{border:0;background:transparent;color:var(--side-sub);font-size:12px;text-decoration:underline;padding:4px 6px;white-space:nowrap}
+.me .out:hover{color:var(--pri-ink)}
 .th-sort{border:0;background:transparent;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;white-space:nowrap}
 .th-sort.on{color:var(--pri-ink)}
 .th-sort:hover{text-decoration:underline}
@@ -107,54 +172,58 @@ a{color:var(--pri-ink)}
 .pw-row{position:relative}
 .pw-row input{padding-right:78px!important}
 .pw-eye{position:absolute;right:4px;top:4px;bottom:4px;border:0;border-radius:6px;background:var(--soft);color:var(--pri-ink);font-size:12px;font-weight:600;padding:0 10px}
-.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
 .top{
   position:sticky;top:0;z-index:20;
-  background:rgba(255,255,255,.82);
-  backdrop-filter:blur(20px) saturate(1.8);
-  -webkit-backdrop-filter:blur(20px) saturate(1.8);
-  border-bottom:1px solid rgba(255,255,255,.65);
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(18px) saturate(1.6);
+  -webkit-backdrop-filter:blur(18px) saturate(1.6);
+  border-bottom:1px solid rgba(255,255,255,.8);
   display:flex;align-items:center;gap:14px;padding:12px 28px;min-height:70px;
-  box-shadow:0 4px 20px rgba(30,58,138,.07)
+  box-shadow:0 4px 20px rgba(76,58,170,.05)
 }
-.top h1{margin:0;font-size:21px;font-weight:700;color:var(--pri-ink);letter-spacing:-.01em}
+.top h1{margin:0;font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
 .top .sub{font-size:12px;color:var(--muted)}
 .top .grow{flex:1;min-width:0}
-.menu-btn{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.6);align-items:center;justify-content:center}
+.menu-btn{display:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.6);align-items:center;justify-content:center}
 .search{position:relative;width:300px}
 .search svg{position:absolute;left:12px;top:12px}
 .search input{
-  width:100%;height:40px;padding:0 12px 0 36px;border-radius:10px;
-  border:1px solid rgba(148,163,184,.35);
-  background:rgba(255,255,255,.65);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px)
+  width:100%;height:40px;padding:0 12px 0 36px;border-radius:12px;
+  border:1px solid rgba(112,96,190,.16);
+  background:rgba(255,255,255,.7);
+  box-shadow:inset 0 1px 2px rgba(76,58,170,.04);
+  transition:border-color .15s,box-shadow .15s
 }
+.search input:focus{border-color:rgba(109,90,230,.5);box-shadow:0 0 0 3px rgba(109,90,230,.14);outline:0}
 .content{padding:22px 28px 60px}
+.content.swap{animation:fadeUp .26s ease-out}
 .live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
-.live i{width:8px;height:8px;border-radius:99px;background:#94A3B8;display:inline-block}
-.live.on i{background:#10B981;box-shadow:0 0 6px rgba(16,185,129,.5)}
+.live i{width:8px;height:8px;border-radius:99px;background:#9C9AB8;display:inline-block}
+.live.on i{background:#10B981;box-shadow:0 0 6px rgba(16,185,129,.55)}
 .bottom-nav{display:none}
 .scrim{display:none}
 
 /* ─── Controls ─── */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  min-height:40px;padding:0 16px;border-radius:10px;
-  border:1px solid rgba(148,163,184,.4);
-  background:rgba(255,255,255,.75);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  min-height:40px;padding:0 16px;border-radius:12px;
+  border:1px solid rgba(112,96,190,.18);
+  background:rgba(255,255,255,.74);
   color:var(--pri-ink);font-weight:600;font-size:14px;white-space:nowrap;
-  text-decoration:none;transition:all .15s
+  text-decoration:none;box-shadow:0 1px 2px rgba(76,58,170,.06);
+  transition:transform .15s,box-shadow .15s,background .15s,border-color .15s
 }
-.btn:hover{background:rgba(255,255,255,.92);border-color:rgba(148,163,184,.6)}
+.btn:hover{background:#fff;border-color:rgba(112,96,190,.32);transform:translateY(-1px);box-shadow:0 6px 14px rgba(76,58,170,.12)}
+.btn:active{transform:translateY(0);box-shadow:0 1px 2px rgba(76,58,170,.08)}
+.btn:disabled:hover{transform:none;box-shadow:0 1px 2px rgba(76,58,170,.06)}
 .btn-pri{
-  background:linear-gradient(135deg,#3B82F6,#2563EB);
-  border-color:#2563EB;color:#fff;
-  box-shadow:0 2px 12px rgba(37,99,235,.35)
+  background:var(--pri-grad);
+  border-color:transparent;color:#fff;
+  box-shadow:0 6px 16px rgba(91,71,224,.35),inset 0 1px 0 rgba(255,255,255,.35)
 }
-.btn-pri:hover{background:linear-gradient(135deg,#2563EB,#1D4ED8);box-shadow:0 4px 16px rgba(37,99,235,.45)}
-.btn-sm{min-height:34px;padding:0 11px;font-size:12px;border-radius:8px}
+.btn-pri:hover{background:linear-gradient(135deg,#7E6CFF 0%,#5F4BE0 55%,#4F3FCF 100%);border-color:transparent;box-shadow:0 10px 22px rgba(91,71,224,.45),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-sm{min-height:34px;padding:0 11px;font-size:12px;border-radius:10px}
 .btn-ok{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.35);color:var(--teal-ink)}
 .btn-zalo{background:var(--zalo);border-color:var(--zalo);color:#fff}
 .btn-line{border-color:var(--pri);color:var(--pri-ink)}
@@ -162,23 +231,26 @@ a{color:var(--pri-ink)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .chip{
   min-height:36px;padding:0 14px;border-radius:999px;
-  border:1px solid rgba(148,163,184,.35);
-  background:rgba(255,255,255,.65);backdrop-filter:blur(8px);
-  color:var(--ink);font-size:13px;font-weight:600
+  border:1px solid rgba(112,96,190,.18);
+  background:rgba(255,255,255,.7);
+  color:var(--ink);font-size:13px;font-weight:600;
+  transition:background .15s,box-shadow .15s,transform .15s
 }
-.chip[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:#fff;box-shadow:0 2px 10px rgba(37,99,235,.35)}
+.chip:hover{background:#fff;transform:translateY(-1px);box-shadow:0 4px 10px rgba(76,58,170,.1)}
+.chip[aria-pressed="true"]{background:var(--pri-grad);border-color:transparent;color:#fff;box-shadow:0 4px 12px rgba(91,71,224,.35)}
 .pill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
 .pri-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-size:12px;font-weight:700}
 .chk{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
 .chk input{width:18px;height:18px;accent-color:var(--pri)}
 .field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--muted)}
 .field input,.field select,.field textarea{
-  height:40px;padding:0 10px;border-radius:8px;
-  border:1px solid rgba(148,163,184,.35);
-  background:rgba(255,255,255,.75);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  font-size:14px;font-weight:400;color:var(--ink);width:100%
+  height:40px;padding:0 10px;border-radius:10px;
+  border:1px solid rgba(112,96,190,.18);
+  background:rgba(255,255,255,.78);
+  font-size:14px;font-weight:400;color:var(--ink);width:100%;
+  transition:border-color .15s,box-shadow .15s
 }
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(109,90,230,.55);box-shadow:0 0 0 3px rgba(109,90,230,.14);outline:0}
 .field textarea{height:auto;min-height:70px;padding:8px 10px;resize:vertical}
 .field input:disabled,.field select:disabled,.field textarea:disabled{background:var(--soft);color:var(--muted)}
 .field.chkf{flex-direction:row;align-items:center;gap:8px;min-height:40px}
@@ -189,17 +261,17 @@ a{color:var(--pri-ink)}
 /* ─── Cards & Tables ─── */
 .stack{display:flex;flex-direction:column;gap:18px}
 .card{
-  background:rgba(255,255,255,.82);
-  backdrop-filter:blur(16px) saturate(1.8);
-  -webkit-backdrop-filter:blur(16px) saturate(1.8);
-  border:1px solid rgba(255,255,255,.7);
-  border-radius:14px;padding:18px 20px;
-  box-shadow:0 4px 24px rgba(30,58,138,.07),0 1px 3px rgba(30,58,138,.04)
+  background:rgba(255,255,255,.8);
+  border:1px solid var(--glass-line);
+  border-radius:var(--r-card);padding:18px 20px;
+  box-shadow:var(--sh-card);
+  transition:transform .2s ease,box-shadow .2s ease
 }
+.card:hover{transform:translateY(-2px);box-shadow:var(--sh-card-h)}
 .card h2{margin:0;font-size:15px;font-weight:700}
 .band{display:flex;align-items:center;gap:12px}
 .band span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pri)}
-.band i{flex:1;height:1px;background:rgba(148,163,184,.3)}
+.band i{flex:1;height:1px;background:var(--line2)}
 .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
@@ -210,24 +282,22 @@ a{color:var(--pri-ink)}
 .tile .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--faint)}
 .tag{display:inline-flex;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600}
 .tbl{
-  background:rgba(255,255,255,.82);
-  backdrop-filter:blur(14px) saturate(1.8);
-  -webkit-backdrop-filter:blur(14px) saturate(1.8);
-  border:1px solid rgba(255,255,255,.68);
-  border-radius:14px;overflow:hidden;
-  box-shadow:0 4px 20px rgba(30,58,138,.06)
+  background:rgba(255,255,255,.8);
+  border:1px solid var(--glass-line);
+  border-radius:var(--r-card);overflow:hidden;
+  box-shadow:var(--sh-card)
 }
 .tbl-x{overflow-x:auto}
 .tbl-h{
   display:flex;align-items:center;gap:10px;padding:12px 18px;
-  background:rgba(219,234,254,.45);
-  border-bottom:1px solid rgba(148,163,184,.2);flex-wrap:wrap
+  background:var(--tint);
+  border-bottom:1px solid var(--line2);flex-wrap:wrap
 }
-.tbl-h h2{margin:0;font-size:15px;font-weight:700;color:var(--pri-ink)}
-.tr{display:grid;grid-template-columns:var(--cols);gap:10px;align-items:center;padding:0 18px;min-height:44px;border-bottom:1px solid rgba(148,163,184,.12);min-width:var(--minw,0)}
+.tbl-h h2{margin:0;font-size:15px;font-weight:700;color:var(--ink)}
+.tr{display:grid;grid-template-columns:var(--cols);gap:10px;align-items:center;padding:0 18px;min-height:44px;border-bottom:1px solid rgba(112,96,190,.09);min-width:var(--minw,0);transition:background .12s}
 .tr:last-child{border-bottom:0}
-.tr.th{min-height:36px;font-size:12px;font-weight:600;color:var(--muted);background:rgba(219,234,254,.3)}
-.tr:not(.th):hover{background:rgba(219,234,254,.4)}
+.tr.th{min-height:36px;font-size:12px;font-weight:600;color:var(--muted);background:rgba(109,90,230,.045)}
+.tr:not(.th):hover{background:var(--tint)}
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lk{background:none;border:0;padding:0;color:var(--pri-ink);text-align:left;font-size:13px}
 .lk:hover{text-decoration:underline}
@@ -235,18 +305,18 @@ a{color:var(--pri-ink)}
 .cnt-b{padding:1px 9px;border-radius:999px;background:var(--pri-soft);color:var(--pri-ink);font-size:12px;font-weight:700}
 .empty{
   padding:40px 20px;text-align:center;
-  background:rgba(255,255,255,.55);
-  border:1px dashed rgba(148,163,184,.45);
-  border-radius:14px;color:var(--muted)
+  background:rgba(255,255,255,.5);
+  border:1px dashed rgba(112,96,190,.32);
+  border-radius:var(--r-card);color:var(--muted)
 }
-.bar-bg{height:10px;border-radius:5px;background:rgba(148,163,184,.2)}
+.bar-bg{height:10px;border-radius:5px;background:rgba(112,96,190,.14)}
 .bar{height:10px;border-radius:5px}
 .heat-row{display:grid;grid-template-columns:190px repeat(14,minmax(0,1fr)) 36px;gap:4px;align-items:center}
 .heat-c{height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
-.legend-i{display:flex;align-items:center;gap:10px;min-height:34px;padding:0 8px;border:0;border-radius:6px;background:transparent;width:100%;text-align:left;font-size:13px}
-.legend-i:hover{background:rgba(219,234,254,.45)}
-.todo-i{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;padding:0 10px;border:0;border-radius:8px;background:transparent;width:100%;text-align:left;font-size:13px}
-.todo-i:hover{background:rgba(219,234,254,.45)}
+.legend-i{display:flex;align-items:center;gap:10px;min-height:34px;padding:0 8px;border:0;border-radius:8px;background:transparent;width:100%;text-align:left;font-size:13px}
+.legend-i:hover{background:var(--tint)}
+.todo-i{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px;padding:0 10px;border:0;border-radius:10px;background:transparent;width:100%;text-align:left;font-size:13px;transition:background .12s}
+.todo-i:hover{background:var(--tint)}
 .todo-i b{min-width:32px;padding:2px 8px;border-radius:6px;background:var(--lav);color:var(--pri-ink);text-align:center}
 
 /* ─── Suggestions ─── */
@@ -254,103 +324,109 @@ a{color:var(--pri-ink)}
 .gy-card{
   display:flex;align-items:stretch;
   background:rgba(255,255,255,.78);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.65);
-  border-radius:12px;box-shadow:0 2px 12px rgba(30,58,138,.06)
+  border:1px solid var(--glass-line);
+  border-radius:16px;box-shadow:var(--sh-card);
+  transition:transform .2s ease,box-shadow .2s ease
 }
+.gy-card:hover{transform:translateY(-2px);box-shadow:var(--sh-card-h)}
 .gy-card.sel{
   border:2px solid var(--pri);
-  box-shadow:0 4px 20px rgba(37,99,235,.2)
+  box-shadow:0 10px 28px rgba(109,90,230,.22)
 }
 .gy-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;padding:12px 16px;border:0;background:transparent;text-align:left}
 .gy-side{
   display:flex;flex-direction:column;justify-content:center;gap:6px;
-  padding:10px 14px;background:rgba(219,234,254,.35);
-  border-radius:0 12px 12px 0;min-width:140px
+  padding:10px 14px;background:var(--tint);
+  border-radius:0 14px 14px 0;min-width:140px
 }
 .panel{position:sticky;top:90px;display:flex;flex-direction:column;gap:14px}
 .order{
   margin:0;white-space:pre-wrap;font-family:var(--mono),'Noto Sans SC',monospace;
   font-size:12px;line-height:1.6;
-  background:rgba(219,234,254,.35);
-  border:1px solid rgba(148,163,184,.25);border-radius:8px;padding:12px
+  background:var(--tint);
+  border:1px solid rgba(112,96,190,.16);border-radius:12px;padding:12px
 }
 .kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 10px;font-size:13px}
 .kv span:nth-child(odd){color:var(--muted)}
 
 /* ─── Drawer / Modal ─── */
-.drawer-wrap{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(15,23,42,.28);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.drawer-wrap{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(40,30,90,.3);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.drawer-wrap.in{animation:scrimIn .2s ease-out}
 .drawer-wrap>.close-area{flex:1;border:0;background:transparent}
 .drawer{
   width:560px;max-width:100%;height:100%;overflow-y:auto;
-  background:rgba(255,255,255,.95);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  box-shadow:-8px 0 40px rgba(15,23,42,.18);display:flex;flex-direction:column
+  background:rgba(255,255,255,.93);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  box-shadow:-16px 0 50px rgba(50,35,120,.25);display:flex;flex-direction:column
 }
+.drawer-wrap.in .drawer{animation:drawerIn .24s ease-out}
 .drawer-h{
   position:sticky;top:0;z-index:2;
-  background:rgba(255,255,255,.88);
+  background:rgba(255,255,255,.86);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(148,163,184,.2);padding:16px 20px;display:flex;align-items:flex-start;gap:12px
+  border-bottom:1px solid var(--line2);padding:16px 20px;display:flex;align-items:flex-start;gap:12px
 }
 .drawer-b{padding:18px 20px;display:flex;flex-direction:column;gap:18px}
 .drawer-f{
   position:sticky;bottom:0;
-  background:rgba(255,255,255,.88);
+  background:rgba(255,255,255,.86);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-top:1px solid rgba(148,163,184,.2);
+  border-top:1px solid var(--line2);
   padding:12px 20px;display:flex;gap:10px;justify-content:flex-end
 }
 .steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
 .step{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:11px;line-height:1.3;color:var(--muted)}
-.step b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:99px;font-size:12px;background:rgba(148,163,184,.15);color:var(--faint)}
+.step b{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:99px;font-size:12px;background:rgba(112,96,190,.12);color:var(--faint)}
 .step.done b{background:var(--pri-soft);color:var(--pri-ink)}
-.step.cur b{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.35)}
+.step.cur b{background:var(--pri-grad);color:#fff;box-shadow:0 4px 10px rgba(91,71,224,.35)}
 .step.cur{color:var(--ink);font-weight:600}
 .sec{display:flex;flex-direction:column;gap:12px}
 .sec>h3{margin:0;font-size:13px;font-weight:700;color:var(--pri-ink)}
 .x-btn{
-  width:40px;height:40px;border-radius:10px;
-  border:1px solid rgba(148,163,184,.35);
-  background:rgba(255,255,255,.65);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0
+  width:40px;height:40px;border-radius:12px;
+  border:1px solid rgba(112,96,190,.16);
+  background:rgba(255,255,255,.7);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .15s,transform .15s
 }
+.x-btn:hover{background:#fff;transform:rotate(90deg)}
 
 /* ─── Toast & Login ─── */
 #toast{
   position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;
-  padding:12px 18px;border-radius:10px;
-  background:rgba(15,23,42,.9);
+  padding:12px 18px;border-radius:12px;
+  background:rgba(28,26,51,.92);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   color:#fff;font-size:13px;font-weight:500;
-  box-shadow:0 8px 32px rgba(15,23,42,.3);max-width:min(640px,calc(100vw - 32px));display:none
+  box-shadow:0 12px 36px rgba(28,26,51,.35);max-width:min(640px,calc(100vw - 32px));display:none
 }
-#toast.show{display:block}
+#toast.show{display:block;animation:fadeUp .2s ease-out}
 #toast.err{background:var(--red)}
 .login{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;
-  background:linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 30%,#BFDBFE 65%,#93C5FD 100%)
+  position:relative;z-index:1;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px
 }
 .login-card{
   width:420px;max-width:100%;
-  background:rgba(255,255,255,.88);
-  backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);
-  border:1px solid rgba(255,255,255,.7);
-  border-radius:16px;padding:28px;
-  box-shadow:0 16px 48px rgba(30,58,138,.16);
-  display:flex;flex-direction:column;gap:16px
+  background:rgba(255,255,255,.74);
+  backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);
+  border:1px solid var(--glass-line);
+  border-radius:24px;padding:30px;
+  box-shadow:0 34px 90px rgba(60,40,140,.24),0 2px 6px rgba(60,40,140,.08),inset 0 1px 0 rgba(255,255,255,.95);
+  display:flex;flex-direction:column;gap:16px;
+  animation:fadeUp .35s ease-out
 }
-.login-card h1{margin:0;font-size:22px;color:var(--pri-ink)}
+.login-card h1{margin:0;font-size:22px;color:var(--ink)}
 .tabs2{
-  display:flex;gap:4px;padding:4px;border-radius:10px;
-  background:rgba(219,234,254,.45)
+  display:flex;gap:4px;padding:4px;border-radius:12px;
+  background:rgba(109,90,230,.08)
 }
-.tabs2 button{flex:1;min-height:36px;border:0;border-radius:8px;background:transparent;font-weight:600;color:var(--muted)}
+.tabs2 button{flex:1;min-height:36px;border:0;border-radius:9px;background:transparent;font-weight:600;color:var(--muted)}
 .tabs2 button[aria-pressed="true"]{
-  background:rgba(255,255,255,.9);color:var(--pri-ink);
-  box-shadow:0 1px 3px rgba(30,58,138,.12)
+  background:#fff;color:var(--pri-ink);
+  box-shadow:0 2px 6px rgba(76,58,170,.14)
 }
-.msg{font-size:13px;padding:10px 12px;border-radius:8px;background:var(--lav);color:var(--lav-ink)}
+.msg{font-size:13px;padding:10px 12px;border-radius:10px;background:var(--lav);color:var(--lav-ink)}
 .msg.err{background:var(--red-bg);color:var(--red-ink)}
 .loading{padding:80px 0;text-align:center;color:var(--muted)}
 
@@ -361,9 +437,13 @@ a{color:var(--pri-ink)}
   .panel{position:static}
 }
 @media (max-width:900px){
-  .side{position:fixed;left:0;top:0;z-index:50;transform:translateX(-100%);transition:transform .2s ease;visibility:hidden}
-  .app.nav-open .side{transform:none;visibility:visible;box-shadow:8px 0 32px rgba(30,58,138,.3)}
-  .app.nav-open .scrim{display:block;position:fixed;inset:0;z-index:45;background:rgba(15,23,42,.28);border:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+  .app,.app.app-in{inset:0;border-radius:0;animation:none}
+  .app::before{border:0;border-radius:0;box-shadow:none;background:rgba(255,255,255,.7)}
+  .bg3d .sh-crane{display:none}
+  .side{position:fixed;left:0;top:0;height:100vh;height:100dvh;z-index:50;transform:translateX(-100%);transition:transform .22s ease;visibility:hidden;
+    background:rgba(255,255,255,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-right:1px solid var(--glass-line)}
+  .app.nav-open .side{transform:none;visibility:visible;box-shadow:8px 0 32px rgba(50,35,120,.28)}
+  .app.nav-open .scrim{display:block;position:fixed;inset:0;z-index:45;background:rgba(40,30,90,.3);border:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
   .menu-btn{display:flex}
   .top{padding:10px 14px;min-height:60px;gap:10px}
   .top h1{font-size:18px}
@@ -373,13 +453,15 @@ a{color:var(--pri-ink)}
   .span2{grid-column:auto}
   .heat-row{grid-template-columns:110px repeat(14,minmax(0,1fr)) 28px}
   .gy-card{flex-direction:column}
-  .gy-side{border-radius:0 0 12px 12px;flex-direction:row;align-items:center;justify-content:space-between}
+  .gy-side{border-radius:0 0 14px 14px;flex-direction:row;align-items:center;justify-content:space-between}
   .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .card:hover,.gy-card:hover{transform:none}
   .bottom-nav{
     display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;
-    background:rgba(255,255,255,.85);
-    backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);
-    border-top:1px solid rgba(148,163,184,.25);
+    background:rgba(255,255,255,.86);
+    backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);
+    border-top:1px solid rgba(255,255,255,.9);
+    box-shadow:0 -8px 30px rgba(60,40,140,.1);
     padding:4px 6px calc(8px + env(safe-area-inset-bottom))
   }
   .bottom-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px;border:0;background:transparent;font-size:11px;font-weight:500;color:var(--muted)}
@@ -396,6 +478,9 @@ a{color:var(--pri-ink)}
   .cards .tr>.btn{margin-left:auto}
   .cards [data-l]::before{content:attr(data-l) ": ";color:var(--muted);font-size:12px;font-weight:400}
 }
+@media (min-width:901px){
+  .drawer{height:calc(100% - 24px);margin:12px 12px 12px 0;border-radius:22px;border:1px solid var(--glass-line)}
+}
 @media (max-width:560px){
   .g4{grid-template-columns:minmax(0,1fr)}
   .grid2,.grid3{grid-template-columns:minmax(0,1fr)}
@@ -403,6 +488,45 @@ a{color:var(--pri-ink)}
 </style>
 </head>
 <body>
+<!-- Lớp nền 3D (trang trí, không nhận chuột): khối màu, quả cầu, cont / tàu / cần cẩu trôi chậm sau khung kính -->
+<div class="bg3d" aria-hidden="true">
+  <i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><i class="sph"></i>
+  <svg class="sh-crane" viewBox="0 0 300 340" fill="none">
+    <polygon points="150,18 108,78 192,78" fill="#C9BEFF"/>
+    <path d="M150 18 L12 78 M150 18 L288 78" stroke="#B8A6FF" stroke-width="3" stroke-linecap="round"/>
+    <rect x="0" y="76" width="300" height="12" rx="3" fill="#A08BFF"/>
+    <rect x="56" y="108" width="188" height="16" rx="3" fill="#8C6CFF"/>
+    <rect x="70" y="120" width="14" height="216" fill="#B8A6FF"/><rect x="216" y="120" width="14" height="216" fill="#B8A6FF"/>
+    <path d="M84 184 L216 184 M84 254 L216 254 M84 184 L216 254 M216 184 L84 254" stroke="#C9BEFF" stroke-width="3"/>
+    <rect x="56" y="334" width="188" height="6" rx="2" fill="#C9BEFF"/>
+    <rect x="40" y="88" width="22" height="10" rx="2" fill="#7C6BF0"/>
+    <path d="M51 98 L51 152" stroke="#8C6CFF" stroke-width="2"/>
+    <rect x="30" y="150" width="42" height="8" rx="2" fill="#7C6BF0"/>
+    <rect x="26" y="158" width="50" height="26" rx="3" fill="#F0ABFC"/>
+  </svg>
+  <svg class="sh-ship" viewBox="0 0 520 230" fill="none">
+    <rect x="418" y="78" width="64" height="76" rx="4" fill="#EFEBFF"/>
+    <rect x="452" y="52" width="18" height="28" rx="2" fill="#8C6CFF"/>
+    <path d="M428 92 h44 M428 108 h44 M428 124 h44" stroke="#B8A6FF" stroke-width="6"/>
+    <g>
+      <rect x="60" y="134" width="26" height="18" rx="2" fill="#F0ABFC"/><rect x="88" y="134" width="26" height="18" rx="2" fill="#C4B5FD"/><rect x="116" y="134" width="26" height="18" rx="2" fill="#FDBA74"/><rect x="144" y="134" width="26" height="18" rx="2" fill="#A78BFA"/><rect x="172" y="134" width="26" height="18" rx="2" fill="#C4B5FD"/><rect x="200" y="134" width="26" height="18" rx="2" fill="#F0ABFC"/><rect x="228" y="134" width="26" height="18" rx="2" fill="#93C5FD"/><rect x="256" y="134" width="26" height="18" rx="2" fill="#A78BFA"/><rect x="284" y="134" width="26" height="18" rx="2" fill="#FDBA74"/><rect x="312" y="134" width="26" height="18" rx="2" fill="#C4B5FD"/><rect x="340" y="134" width="26" height="18" rx="2" fill="#F0ABFC"/><rect x="368" y="134" width="26" height="18" rx="2" fill="#A78BFA"/>
+      <rect x="88" y="114" width="26" height="18" rx="2" fill="#A78BFA"/><rect x="116" y="114" width="26" height="18" rx="2" fill="#F0ABFC"/><rect x="144" y="114" width="26" height="18" rx="2" fill="#93C5FD"/><rect x="172" y="114" width="26" height="18" rx="2" fill="#FDBA74"/><rect x="200" y="114" width="26" height="18" rx="2" fill="#C4B5FD"/><rect x="228" y="114" width="26" height="18" rx="2" fill="#A78BFA"/><rect x="256" y="114" width="26" height="18" rx="2" fill="#F0ABFC"/><rect x="284" y="114" width="26" height="18" rx="2" fill="#C4B5FD"/><rect x="312" y="114" width="26" height="18" rx="2" fill="#93C5FD"/><rect x="340" y="114" width="26" height="18" rx="2" fill="#FDBA74"/>
+      <rect x="116" y="94" width="26" height="18" rx="2" fill="#C4B5FD"/><rect x="144" y="94" width="26" height="18" rx="2" fill="#F0ABFC"/><rect x="172" y="94" width="26" height="18" rx="2" fill="#A78BFA"/><rect x="200" y="94" width="26" height="18" rx="2" fill="#FDBA74"/><rect x="228" y="94" width="26" height="18" rx="2" fill="#C4B5FD"/><rect x="256" y="94" width="26" height="18" rx="2" fill="#93C5FD"/><rect x="284" y="94" width="26" height="18" rx="2" fill="#F0ABFC"/><rect x="312" y="94" width="26" height="18" rx="2" fill="#A78BFA"/>
+    </g>
+    <rect x="44" y="128" width="40" height="26" rx="3" fill="#7C6BF0"/>
+    <path d="M10 152 H506 L472 214 H62 Z" fill="#6D5AE6"/>
+    <path d="M38 190 H488 L472 214 H62 Z" fill="#5B47E0"/>
+    <rect x="10" y="152" width="496" height="6" fill="#A899FF"/>
+  </svg>
+  <svg class="sh-cont" viewBox="0 0 260 210" fill="none">
+    <polygon points="20,80 130,25 240,80 130,135" fill="#E9E3FF"/>
+    <polygon points="20,80 130,135 130,205 20,150" fill="#B8A6FF"/>
+    <polygon points="130,135 240,80 240,150 130,205" fill="#8C6CFF"/>
+    <path d="M36 88 v70 M52 96 v70 M68 104 v70 M84 112 v70 M100 120 v70 M116 128 v70" stroke="#A08BFF" stroke-width="3"/>
+    <path d="M146 127 v70 M162 119 v70 M178 111 v70 M194 103 v70 M210 95 v70 M226 87 v70" stroke="#7C6BF0" stroke-width="3"/>
+    <path d="M20 80 L130 135 L240 80" stroke="#F4F0FF" stroke-width="2.5" stroke-linejoin="round"/>
+  </svg>
+</div>
 <div id="root"><div class="loading">Đang tải… 加载中…</div></div>
 <div id="drawer"></div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -410,6 +534,7 @@ a{color:var(--pri-ink)}
 <script src="kiem_dich_wizard.js"></script>
 <script>
 'use strict';
+try { if ((navigator.hardwareConcurrency || 4) <= 2 || (navigator.deviceMemory || 4) <= 2) document.documentElement.classList.add('lite'); } catch (e) {}
 /* =========================================================
    Web điều độ cont chuối — Đại Cát Lâm
    Dữ liệu: Supabase (dự án dieu-do). Khoá dưới đây là khoá công khai
@@ -426,7 +551,7 @@ const D = {
   tong:['Tổng quan','总览'], goiy:['Gợi ý chờ duyệt','待确认建议'], homnay:['Kế hoạch hôm nay','今日计划'],
   taikho:['Tại kho','在厂'], bai:['Bãi tạm','堆场'], board:['Container','货柜'], kd:['Kiểm dịch','检疫'], lo:['Lô / Booking','批次 / 订舱'],
   tim:['Tìm cont','查柜'], danhmuc:['Danh mục','基础资料'],
-  gDieuDo:['Điều độ','调度'], gTheoDoi:['Theo dõi cont','柜子跟踪'], gTraCuu:['Tra cứu','查询'],
+  suco:['Lô có sự cố','异常批次'], gDieuDo:['Điều độ','调度'], gTheoDoi:['Theo dõi cont','柜子跟踪'], gTraCuu:['Tra cứu','查询'],
   refresh:['Chạy lại gợi ý','重新生成建议'], searchPh:['Tìm cont, seal, lô, mã đơn…','搜索柜号、封条、批次、订单号…'],
   todo:['Việc cần làm','待办'], closing72:['Lô sắp closing · 72 giờ tới','72小时内截关的批次'],
   byCarrier:['Cont theo nhà xe · tháng này','本月各车队柜数'], byKho:['Kho đang giữ cont','在厂柜数（按装货点）'],
@@ -541,7 +666,7 @@ const ICON = {
   kd:'M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6zM9 12l2 2 4-4',
   lo:'M3 17l2 3h14l2-3M5 17v-6h14v6M8 11V7h8v4M12 4v3', tim:'M11 4a7 7 0 1 0 0 14a7 7 0 0 0 0-14zM20 20l-4-4',
   danhmuc:'M4 5h16M4 12h16M4 19h10', truck:'M2 16h13V7H2zM15 10h4l3 3v3h-7zM6 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4zM18 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4z',
-  hacang:'M3 18h18M5 18l1-5h12l1 5M8 13V8h8v5M12 8V4', menu:'M4 7h16M4 12h16M4 17h16', x:'M6 6l12 12M18 6L6 18', refresh:'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7', plus:'M12 5v14M5 12h14'
+  hacang:'M3 18h18M5 18l1-5h12l1 5M8 13V8h8v5M12 8V4', suco:'M12 3l10 18H2L12 3zM12 10v4M12 17.5v.5', menu:'M4 7h16M4 12h16M4 17h16', x:'M6 6l12 12M18 6L6 18', refresh:'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7', plus:'M12 5v14M5 12h14'
 };
 function ico(k, size, color) { return '<svg width="' + (size || 18) + '" height="' + (size || 18) + '" viewBox="0 0 24 24" fill="none" stroke="' + (color || 'currentColor') + '" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + ICON[k] + '"/></svg>'; }
 let _tt;
@@ -559,7 +684,7 @@ const S = {
   recent: [], shipped: 0, loaded: false, live: false,
   gyType: 'all', gyPri: 'all', gyHide: true, sel: null, pick: {}, copied: null, confirmApply: null,
   tkSeg: '2', loOpen: true, q: '', results: null, searching: false, dmTab: 'nhaxe', navOpen: false,
-  chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, eportRunning: false,
+  chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, hcF: {}, suco: [], ttcu: [], eportRunning: false,
   kdWiz: null, boardSeg: '1'
 };
 function canWrite() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
@@ -569,11 +694,28 @@ function canPlan() { return S.me && ['Quản lý', 'Điều độ'].indexOf(S.me
 function isAdmin() { return S.me && S.me.vai_tro === 'Quản lý'; }
 /* ---- Quy trình kiểm dịch → hạ cảng (cơ sở dữ liệu cũng chặn y hệt) ---- */
 const BAI_KD = ['HLS', 'PD', 'HT'];
+function canDm() { return S.me && ['Quản lý', 'Điều độ'].indexOf(S.me.vai_tro) > -1; } // bãi tạm, giá cước, đổi mã lô: Quản lý + Điều độ (anh Hi 23/09)
 function canKd() { return S.me && ['Quản lý', 'Điều độ'].indexOf(S.me.vai_tro) > -1; }
 function gioHaThang() { return +S.cauhinh['Giờ trước closing hạ thẳng cảng'] || 48; }
 function cheDoThu() { return /^(bật|bat|on|1|có)$/i.test(String(S.cauhinh['Chế độ thử: cho xoá dữ liệu đã chạy'] || '').trim()); }
+function suCo(lo) { return lo ? S.suco.find(x => x.lo === lo) || null : null; }
+const SC_HUONG = { 'Rớt tàu':['Đổi tàu / booking', 'Hủy lô'], 'KD không đạt':['Đổi cont', 'Xông trùng, giữ cont', 'Hủy lô'] };
+function scPill(l) { const x = l && suCo(l.lo); return x ? ' ' + pill(T1('Sự cố', '异常') + ': ' + x.loai, 'var(--red-bg)', 'var(--red-ink)') : ''; }
+// Thông tin cũ (bị thay khi xử lý sự cố) — in nghiêng dưới thông tin mới; chỉ Quản lý sửa / xoá
+function ttCu(kind, key, truong) { return S.ttcu.filter(r => (kind === 'lo' ? r.lo === key : r.cont_id === key) && r.truong === truong); }
+function cuHtml(rows) {
+  if (!rows.length) return '';
+  return rows.map(r => '<span class="cu-old" style="display:flex;gap:6px;align-items:center;font-size:11px;font-style:italic;color:var(--muted);font-weight:400">' +
+    (isAdmin() ? '<input id="ttcu-' + r.id + '" value="' + esc(r.gia_tri || '') + '" style="font-style:italic;font-size:11px;height:24px;padding:0 6px;border:1px dashed #D8D2EE;border-radius:6px;min-width:0;flex:1">' +
+      '<button type="button" class="btn btn-sm" style="height:24px;padding:0 8px;font-size:11px" data-act="ttcu-save" data-id="' + r.id + '">' + esc(T('save')) + '</button><button type="button" class="x-btn" data-act="ttcu-del" data-id="' + r.id + '" aria-label="' + esc(T('delete')) + '">' + ico('x', 12) + '</button>'
+      : '<span class="ell">' + esc(T1('cũ', '旧') + ': ' + (r.gia_tri || '—')) + '</span>') +
+    '<span class="faint" style="white-space:nowrap">' + esc((r.ly_do || '')) + '</span></span>').join('');
+}
+function withCu(fieldHtml, rows) { const i = fieldHtml.lastIndexOf('</label>'); return rows.length && i > -1 ? fieldHtml.slice(0, i) + cuHtml(rows) + fieldHtml.slice(i) : fieldHtml; }
+function contCell(c) { const old = ttCu('cont', c.id, 'so_cont'); return old.length ? '<span style="display:flex;flex-direction:column;align-items:flex-start;min-width:0">' + contBtn(c) + '<i class="faint ell" style="font-size:11px">' + esc(T1('cũ', '旧') + ': ' + old.map(r => r.gia_tri).join(', ')) + '</i></span>' : contBtn(c); }
 function kdCont(lo) { return lo ? S.conts.find(c => c.lo === lo && c.cont_kiem_dich && c.trang_thai !== '9') || null : null; }
 function kdWhy(l) {
+  if (suCo(l.lo)) return T1('Lô đang có sự cố (' + suCo(l.lo).loai + ') — xử lý xong mới tích được', '批次异常，处理后才能勾选');
   const c = kdCont(l.lo);
   if (!c) return T1('Lô chưa chọn cont kiểm dịch', '本批未选检疫柜');
   if (c.trang_thai !== '4') return T1('Cont kiểm dịch ' + (c.so_cont || c.ma_don || '') + ' đang "' + stLabel(c.trang_thai) + '" — phải về bãi HLS / PD / HT', '检疫柜需先到 HLS/PD/HT 堆场');
@@ -584,10 +726,16 @@ function kdWhy(l) {
 function nPortNoKd(l) { return l && !l.da_kiem_dich ? S.conts.filter(c => c.lo === l.lo && c.trang_thai === '5').length : 0; }
 function stBlock(c, l, k) {
   const st = c.trang_thai || '1'; if (k === st) return '';
+  if (l && suCo(l.lo)) return T1('lô đang có sự cố – chờ Điều độ xử lý', '批次异常，待调度处理');
   if ((st === '9' || (k !== '9' && k < st)) && !canKd()) return T1('chỉ Quản lý / Điều độ được lùi', '仅管理/调度可回退');
   if ((k === '5' || k === '6') && !(l && l.da_kiem_dich)) return T1('lô chưa kiểm dịch', '未检疫');
   if (k === '5' && ['1', '2', '3'].indexOf(st) > -1) { const h = hLeft(l.closing); if (h === null || h > gioHaThang()) return T1('CLS còn > ' + gioHaThang() + 'h: phải hạ bãi', '截关>' + gioHaThang() + '小时须先进堆场'); }
   return '';
+}
+// Nút bỏ tích "Lô đã kiểm dịch" (tích nhầm). DB cũng chặn: chỉ QL/Điều độ, không cho khi lô đã có cont ở cảng / lên tàu.
+function kdUndoBtn(l) {
+  const nPort = S.conts.filter(x => x.lo === l.lo && (x.trang_thai === '5' || x.trang_thai === '6')).length;
+  return '<button type="button" class="btn btn-sm" data-act="kd-undo" data-lo="' + esc(l.lo) + '"' + (nPort ? ' disabled title="' + esc(T1('Lô đã có ' + nPort + ' cont ở cảng / lên tàu — lùi các cont đó về bãi trước', '已有 ' + nPort + ' 个柜回港/上船')) + '"' : '') + '>' + esc(T1('Bỏ tích kiểm dịch', '取消检疫勾选')) + '</button>';
 }
 function kdBlock(l) {
   const c = kdCont(l.lo), why = l.da_kiem_dich ? '' : kdWhy(l), v = nPortNoKd(l), port = S.conts.filter(x => x.lo === l.lo && x.trang_thai === '5').length;
@@ -601,6 +749,7 @@ function kdBlock(l) {
     '<p class="muted" style="margin:6px 0 0;font-size:11px">' + esc(T1('Quy tắc: 1 lô 1 cont kiểm dịch; cont đó phải về bãi HLS / PD / HT và có mã KDTV mới tích được; chưa kiểm dịch thì không cont nào được hạ cảng; đã kiểm dịch: cont ở kho chỉ hạ thẳng cảng khi CLS còn ≤ ' + gioHaThang() + 'h.', '规则：每批1个检疫柜；检疫柜须在HLS/PD/HT堆场且有检疫单号；未检疫不得回港；已检疫：截关≤' + gioHaThang() + '小时才可直接回港。')) + '</p>' +
     (canKd() ? '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">' +
       '<button type="button" class="btn btn-sm btn-pri" data-act="open-kd-wizard" data-lo="' + esc(l.lo) + '">' + esc(T('kdShort')) + ' Wizard</button>' +
+      (l.da_kiem_dich ? kdUndoBtn(l) : '') +
       '</div>' : '') +
     '</div>';
 }
@@ -628,6 +777,9 @@ async function loadData() {
   ]);
   S.conts = c.data; S.goiy = g.data; S.lots = {}; l.data.forEach(x => { S.lots[x.lo] = normLot(x); });
   S.recent = rc.data; S.shipped = sh.count || 0;
+  // Lô có sự cố + thông tin cũ (bảng mới 23/09 — chưa cài trên DB thì coi như rỗng)
+  try { const [sc, tc] = await Promise.all([q(sb.from('lo_su_co').select('*').eq('da_xu_ly', false).order('bao_luc')), q(sb.from('thong_tin_cu').select('*').order('luc'))]); S.suco = sc.data || []; S.ttcu = tc.data || []; }
+  catch (e) { S.suco = []; S.ttcu = []; console.warn(e); }
   try { const ids = S.conts.filter(x => x.trang_thai >= '3').map(x => x.id); S.chiphi = {};
     if (ids.length) { const cp = await q(sb.from('chi_phi_cont').select('*').in('cont_id', ids).order('tao_luc')); cp.data.forEach(r => { (S.chiphi[r.cont_id] = S.chiphi[r.cont_id] || []).push(r); }); } } catch (e) { console.warn(e); }
   S.loaded = true;
@@ -647,6 +799,8 @@ function startRealtime() {
     .on('postgres_changes', { event:'*', schema:'public', table:'cont' }, scheduleReload)
     .on('postgres_changes', { event:'*', schema:'public', table:'lo' }, scheduleReload)
     .on('postgres_changes', { event:'*', schema:'public', table:'goi_y' }, scheduleReload)
+    .on('postgres_changes', { event:'*', schema:'public', table:'lo_su_co' }, scheduleReload)
+    .on('postgres_changes', { event:'*', schema:'public', table:'thong_tin_cu' }, scheduleReload)
     .subscribe(st => { S.live = st === 'SUBSCRIBED'; const el = document.getElementById('live'); if (el) el.className = 'live' + (S.live ? ' on' : ''); });
 }
 
@@ -683,7 +837,7 @@ function gyView(g) {
 const NEXT = { '1':['2','toDen'], '2':['3','toDay'], '3':['4','toBai'], '4':['5','toCang'], '5':['6','toTau'] };
 
 /* ---------------- khung trang ---------------- */
-const NAV_GROUPS = [['gDieuDo', ['tong', 'workflow', 'lo']], ['gTheoDoi', ['board', 'kd', 'hacang']], ['gTraCuu', ['tim', 'danhmuc']]];
+const NAV_GROUPS = [['gDieuDo', ['tong', 'workflow', 'lo']], ['gTheoDoi', ['board', 'kd', 'hacang', 'suco']], ['gTraCuu', ['tim', 'danhmuc']]];
 function navCount(k) {
   const n = counts();
   if (k === 'workflow') { const pending = S.goiy.filter(g => !g.duyet).length; const ready = S.goiy.filter(g => g.duyet && !g.da_ap_dung).length; return pending + ready; }
@@ -695,15 +849,16 @@ function navCount(k) {
   if (k === 'kd') return kdList().length;
   if (k === 'lo') return openLots().length;
   if (k === 'hacang') return haCangLots(false).length;
+  if (k === 'suco') return S.suco.length;
   return '';
 }
 function renderShell() {
-  const me = S.me || {};
+  const me = S.me || {}, first = !document.getElementById('app');  /* khung kính chỉ hiện dần lần đầu, không lặp khi đổi tab */
   document.getElementById('root').innerHTML =
-    '<div class="app' + (S.navOpen ? ' nav-open' : '') + '" id="app">' +
+    '<div class="app' + (S.navOpen ? ' nav-open' : '') + (first ? ' app-in' : '') + '" id="app">' +
     '<button class="scrim" data-act="nav-close" aria-label="' + esc(T('close')) + '"></button>' +
     '<nav class="side" aria-label="Menu">' +
-      '<div class="brand"><div class="brand-logo">' + ico('truck', 22, '#4B3C8C') + '</div><div><div class="brand-name">Điều độ 调度</div><div class="brand-sub">Đại Cát Lâm · cont chuối</div></div></div>' +
+      '<div class="brand"><div class="brand-logo">' + ico('truck', 22, '#fff') + '</div><div><div class="brand-name">Điều độ 调度</div><div class="brand-sub">Đại Cát Lâm · cont chuối</div></div></div>' +
       NAV_GROUPS.map(g => '<div class="nav-g"><div class="nav-h">' + esc(T(g[0])) + '</div>' + g[1].map(k => '<button class="nav-i" data-act="tab" data-tab="' + k + '" aria-current="' + (S.tab === k ? 'page' : 'false') + '">' + ico(k) + '<span>' + esc(T(k)) + '</span><span class="cnt" data-cnt="' + k + '"></span></button>').join('') + '</div>').join('') +
       '<div style="flex:1"></div>' +
       '<div class="nav-g"><div class="nav-h">Ngôn ngữ 语言</div><div class="langs" role="group">' +
@@ -731,7 +886,7 @@ function setTitle(t, sub) { const a = document.getElementById('title'), b = docu
 function renderMain() {
   const el = document.getElementById('main'); if (!el) return;
   if (!S.loaded) { el.innerHTML = '<div class="loading">Đang tải dữ liệu… 数据加载中…</div>'; return; }
-  const V = { tong:vTong, workflow:vWorkflowHub, goiy:vGoiY, homnay:vHomNay, board:vBoard, taikho:vTaiKho, bai:vBai, kd:vKD, hacang:vHaCang, lo:vLo, tim:vTim, danhmuc:vDanhMuc };
+  const V = { tong:vTong, workflow:vWorkflowHub, goiy:vGoiY, homnay:vHomNay, board:vBoard, taikho:vTaiKho, bai:vBai, kd:vKD, hacang:vHaCang, suco:vSuCo, lo:vLo, tim:vTim, danhmuc:vDanhMuc };
   setTitle(T(S.tab), (S.me ? S.me.email : '') + (canWrite() ? '' : ' · ' + T('readOnly')));
   el.innerHTML = (V[S.tab] || vTong)();
 }
@@ -949,7 +1104,24 @@ function vHomNay() {
 
 /* ---------------- TẠI KHO ---------------- */
 function contBtn(c) { return c.so_cont ? '<button class="lk mono" data-act="open-cont" data-id="' + esc(c.id) + '">' + esc(c.so_cont) + '</button>' : '<button class="lk" style="font-style:italic;color:var(--muted)" data-act="open-cont" data-id="' + esc(c.id) + '">' + esc(T('noCont')) + '</button>'; }
-function nextBtn(c) { const nx = NEXT[c.trang_thai]; if (!nx || !canWrite()) return '<span></span>'; return '<button class="btn btn-sm btn-line" data-act="move" data-id="' + esc(c.id) + '" data-to="' + nx[0] + '">' + esc(T(nx[1])) + ' →</button>'; }
+// Gợi ý đã duyệt (chưa chạy) dùng đơn rỗng này → hiện nhà xe + cont đầy được duyệt kéo về (anh Hi 24/09)
+function gyDuyetRong(id) { return S.goiy.find(g => g.duyet && !g.da_ap_dung && g.id_cont_rong === id) || null; }
+function gyNx(g) { return g ? (g.nha_xe_chon || g.nha_xe_goi_y || '') : ''; }
+function keHoachRong(c) {
+  const g = gyDuyetRong(c.id); if (!g) return '';
+  const cd = g.id_cont_day ? S.conts.find(x => x.id === g.id_cont_day) : null, nx = gyNx(g);
+  const day = g.cont_day || (cd && cd.so_cont);
+  return '<div data-ke-hoach style="padding:0 16px 10px 16px;font-size:12px;color:var(--teal-ink);display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
+    '<b>↳ ' + esc(T1('Đã duyệt', '已确认')) + ' · ' + esc(g.loai_lenh || '') + '</b>' + (nx ? '<span>· ' + esc(T('carrier')) + ' <b>' + esc(nx) + '</b></span>' : '') +
+    (day ? '<span>· ' + esc(T1('Kéo đầy về', '拉满柜')) + ': ' + (cd ? contBtn(cd) : '<b class="mono">' + esc(day) + '</b>') + (cd && cd.lo ? ' ' + esc(T('loCol')) + ' ' + esc(cd.lo) : '') + (g.noi_ha ? ' → ' + esc(g.noi_ha) : '') + '</span>' : '') + '</div>';
+}
+// Vào bãi: nhà xe HLS → thẳng bãi HLS; nhà xe khác → chọn bãi (anh Hi 24/09)
+const BAI_THEO_NX = { HLS:'HLS' };
+function baiChon(c) {
+  return '<span data-chon-bai style="display:inline-flex;gap:4px;flex-wrap:wrap;align-items:center">' + S.bai.map(b => '<button type="button" class="btn btn-sm btn-line" style="min-width:48px" data-act="move-bai" data-id="' + esc(c.id) + '" data-bai="' + esc(b.ma) + '" title="' + esc(b.ten || b.ma) + '">' + esc(b.ma) + '</button>').join('') +
+    '<button type="button" class="x-btn" data-act="pick-bai-x" aria-label="' + esc(T('cancel')) + '">' + ico('x', 12) + '</button></span>';
+}
+function nextBtn(c) { const nx = NEXT[c.trang_thai]; if (!nx || !canWrite()) return '<span></span>'; if (suCo(c.lo)) return '<span style="font-size:12px;font-weight:600;color:var(--red-ink)">' + esc(T1('Sự cố – chờ xử lý', '异常待处理')) + '</span>'; if (nx[0] === '4' && S.pickBai === c.id) return baiChon(c); return '<button class="btn btn-sm btn-line" data-act="move" data-id="' + esc(c.id) + '" data-to="' + nx[0] + '">' + esc(T(nx[1])) + ' →</button>'; }
 function loOrder(a, b) {
   const la = S.lots[a.lo] || {}, lb = S.lots[b.lo] || {};
   const ta = la.thu_tu != null ? la.thu_tu : 1e9, tb = lb.thu_tu != null ? lb.thu_tu : 1e9;
@@ -970,7 +1142,7 @@ function taiKhoBody(seg) {
   const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('madon')) + '</span><span>' + esc(seg === '1' ? T('can') : T('den')) + '</span><span>' + esc(T('day')) + '</span><span>' + esc(T('carrier')) + '</span><span>' + esc(T('kdShort')) + '</span><span>' + esc(T('clsUse') + ' · ' + T('clsMail') + ' / ' + T('clsEport')) + '</span><span></span></div>';
   return (list.length ? Object.keys(g).sort((a, b) => g[b].length - g[a].length).map(k => { const ki = S.kho.find(x => x.ten === k) || {};
       return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:12px">' + esc([ki.khu_vuc, ki.ten_tq].filter(Boolean).join(' · ')) + '</span><span style="flex:1"></span><span class="cnt-b">' + g[k].length + '</span></div><div class="tbl-x">' + head +
-        g[k].slice().sort(loOrder).map(c => { const l = lotOf(c); return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + (l && l.dong_trong_ngay ? ' <span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + '</span><span>' + esc(c.ma_don || '—') + '</span><span data-l="' + esc(seg === '1' ? T('can') : T('den')) + '">' + (seg === '1' ? fTs(c.ngay_can_len_kho) : fDate(c.ngay_den_kho)) + '</span><span data-l="' + esc(T('day')) + '" style="' + (c.du_kien_day ? '' : 'color:#8A5A00;font-style:italic') + '">' + (c.du_kien_day ? fTs(c.du_kien_day) : esc(T('notEntered'))) + '</span><span data-l="' + esc(T('carrier')) + '">' + esc(c.nha_xe || '—') + '</span><span>' + (c.cont_kiem_dich ? pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('')
+        g[k].slice().sort(loOrder).map(c => { const l = lotOf(c); return '<div class="tr" style="' + cols + '">' + contCell(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + (l && l.dong_trong_ngay ? ' <span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + (suCo(c.lo) ? ' ' + pill('!', 'var(--red-bg)', 'var(--red-ink)') : '') + '</span><span>' + esc(c.ma_don || '—') + '</span><span data-l="' + esc(seg === '1' ? T('can') : T('den')) + '">' + (seg === '1' ? fTs(c.ngay_can_len_kho) : fDate(c.ngay_den_kho)) + '</span><span data-l="' + esc(T('day')) + '" style="' + (c.du_kien_day ? '' : 'color:#8A5A00;font-style:italic') + '">' + (c.du_kien_day ? fTs(c.du_kien_day) : esc(T('notEntered'))) + '</span><span data-l="' + esc(T('carrier')) + '">' + esc(c.nha_xe || (gyDuyetRong(c.id) ? gyNx(gyDuyetRong(c.id)) : '') || '—') + '</span><span>' + (c.cont_kiem_dich ? pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span>' + nextBtn(c) + '</div>' + (seg === '1' ? keHoachRong(c) : ''); }).join('') + '</div></section>'; }).join('')
       : '<div class="empty">' + esc(T1('Không có cont nào ở bước này.', '没有柜子处于此状态。')) + '</div>');
 }
 function vTaiKho() {
@@ -981,22 +1153,31 @@ function vTaiKho() {
 /* ---------------- BÃI TẠM ---------------- */
 function baiBody() {
   const list = S.conts.filter(c => c.trang_thai === '4');
-  const sorters = { vao:(a, b) => new Date(a.gio_vao_bai || 0) - new Date(b.gio_vao_bai || 0), cls:(a, b) => { const la = lotOf(a), lb = lotOf(b); return (la && la.closing ? new Date(la.closing) : 9e15) - (lb && lb.closing ? new Date(lb.closing) : 9e15); }, lo:loOrder, tien:(a, b) => baiCost(b).tong - baiCost(a).tong };
+  const vao = (a, b) => new Date(a.gio_vao_bai || 0) - new Date(b.gio_vao_bai || 0);
+  const sorters = { vao, kd:(a, b) => (b.cont_kiem_dich ? 1 : 0) - (a.cont_kiem_dich ? 1 : 0) || vao(a, b), cls:(a, b) => { const la = lotOf(a), lb = lotOf(b); return (la && la.closing ? new Date(la.closing) : 9e15) - (lb && lb.closing ? new Date(lb.closing) : 9e15); }, lo:loOrder, tien:(a, b) => baiCost(b).tong - baiCost(a).tong };
   const bais = S.bai.map(b => b.ma).concat(list.some(c => !c.bai_tam) ? ['—'] : []);
-  const cols = '--cols:140px 58px 96px 64px 104px 96px 104px 96px 110px minmax(150px,1fr) 70px 104px;--minw:1280px';
+  const cols = '--cols:140px 92px 96px 64px 104px 96px 104px 96px 110px minmax(150px,1fr) 70px 104px;--minw:1314px';
   const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('yardIn')) + '</span><span>' + esc(T('hours')) + '</span><span>' + esc(T1('Tiền điện', '电费')) + '</span><span>' + esc(T('nangHa')) + '</span><span>' + esc(T('haCangFee')) + '</span><span>' + esc(T('phatSinh')) + '</span><span>' + esc(T('tongCP')) + '</span><span>' + esc(T('closing')) + '</span><span style="text-align:center">' + esc(T('allowPort')) + '</span><span></span></div>';
-  const sortSel = '<label class="chk" style="gap:6px">' + esc(T1('Sắp xếp trong bãi', '堆场内排序')) + '<select data-on="bai-sort" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff">' + [['vao', T1('Giờ vào bãi', '进场时间')], ['cls', T1('CLS gần nhất', '截关')], ['lo', T1('Thứ tự lô', '批次')], ['tien', T1('Chi phí cao nhất', '费用最高')]].map(o => '<option value="' + o[0] + '"' + (S.baiSort === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select></label>';
+  const sortSel = '<label class="chk" style="gap:6px">' + esc(T1('Sắp xếp trong bãi', '堆场内排序')) + '<select data-on="bai-sort" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff">' + [['vao', T1('Giờ vào bãi', '进场时间')], ['kd', T1('Cont kiểm dịch', '检疫柜')], ['cls', T1('CLS gần nhất', '截关')], ['lo', T1('Thứ tự lô', '批次')], ['tien', T1('Chi phí cao nhất', '费用最高')]].map(o => '<option value="' + o[0] + '"' + (S.baiSort === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select></label>';
   const cards = '<div class="g4">' + S.bai.map(bi => { const cs = list.filter(c => c.bai_tam === bi.ma), tong = cs.reduce((a, c) => a + baiCost(c).tong, 0);
     return '<section class="card" style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;align-items:baseline;justify-content:space-between"><b style="font-size:16px;color:var(--pri-ink)">' + esc(bi.ma) + '</b><span class="num" style="font-size:28px;font-weight:700">' + cs.length + '</span></div><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span class="muted" style="font-size:12px">' + esc(T1('Điện', '电费')) + ' ' + (bi.dien_moi_gio ? money(bi.dien_moi_gio) + T('perHour') : '—') + ' · ' + esc(T('nangHa')) + ' ' + money(bi.nang_ha) + ' · ' + esc(T1('Hạ cảng', '回港')) + ' ' + money(bi.trucking) + '</span><span style="font-size:13px">' + esc(T('tongCP')) + ': <b>' + money(tong) + '</b></span></section>'; }).join('') + '</div>';
   return cards + '<div class="chips">' + sortSel + '<span class="muted" style="font-size:12px">' + esc(T1('Điện tính theo giờ thực tế (làm tròn lên), nâng hạ 1 lần khi hạ vào bãi, hạ cảng theo giá từng bãi.', '电费按实际小时（向上取整），吊装一次，回港按堆场价。')) + '</span></div>' +
     bais.map(ma => { const cs = list.filter(c => (c.bai_tam || '—') === ma).sort(sorters[S.baiSort] || sorters.vao); if (!cs.length) return '';
-      const tong = cs.reduce((a, c) => a + baiCost(c).tong, 0), bi = S.bai.find(x => x.ma === ma) || {};
-      return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(ma) + '</h2><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span style="flex:1"></span><span class="muted" style="font-size:13px">' + esc(T('tongCP')) + ' <b style="color:var(--ink)">' + money(tong) + '</b></span><span class="cnt-b">' + cs.length + '</span></div><div class="tbl-x">' + head +
+      const tong = cs.reduce((a, c) => a + baiCost(c).tong, 0), bi = S.bai.find(x => x.ma === ma) || {}, nKd = cs.filter(c => c.cont_kiem_dich).length;
+      return '<section class="tbl cards"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(ma) + '</h2><span class="muted" style="font-size:12px">' + esc(bi.ten || '') + '</span><span style="flex:1"></span>' +
+        (nKd ? '<button class="btn btn-sm" data-act="copy-kd-bai" data-bai="' + esc(ma) + '">' + esc(S.copied === 'kdbai-' + ma ? T('copied') : T1('Chép cont kiểm dịch', '复制检疫柜') + ' (' + nKd + ')') + '</button>' : '') +
+        '<span class="muted" style="font-size:13px">' + esc(T('tongCP')) + ' <b style="color:var(--ink)">' + money(tong) + '</b></span><span class="cnt-b">' + cs.length + '</span></div><div class="tbl-x">' + head +
         cs.map(c => { const l = lotOf(c), k = baiCost(c);
-          return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + '</span><span data-l="' + esc(T('yardIn')) + '">' + fTs(c.gio_vao_bai) + '</span><span class="num" data-l="' + esc(T('hours')) + '">' + (k.gio === null ? '—' : k.gio) + '</span><span class="num" data-l="' + esc(T1('Tiền điện', '电费')) + '">' + money(k.dien) + '</span><span class="num" data-l="' + esc(T('nangHa')) + '">' + money(k.nang) + '</span><span class="num" data-l="' + esc(T('haCangFee')) + '">' + money(k.hacang) + '</span><span class="num" data-l="' + esc(T('phatSinh')) + '">' + (k.ps ? money(k.ps) : '—') + '</span><span class="num" style="font-weight:700" data-l="' + esc(T('tongCP')) + '">' + money(k.tong) + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span><span style="text-align:center">' + tick(l && (l.cho_keo_ha_cang || l.da_kiem_dich)) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('') +
+          return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + (c.cont_kiem_dich ? ' ' + pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + (suCo(c.lo) ? ' ' + pill('!', 'var(--red-bg)', 'var(--red-ink)') : '') + '</span><span data-l="' + esc(T('yardIn')) + '">' + fTs(c.gio_vao_bai) + '</span><span class="num" data-l="' + esc(T('hours')) + '">' + (k.gio === null ? '—' : k.gio) + '</span><span class="num" data-l="' + esc(T1('Tiền điện', '电费')) + '">' + money(k.dien) + '</span><span class="num" data-l="' + esc(T('nangHa')) + '">' + money(k.nang) + '</span><span class="num" data-l="' + esc(T('haCangFee')) + '">' + money(k.hacang) + '</span><span class="num" data-l="' + esc(T('phatSinh')) + '">' + (k.ps ? money(k.ps) : '—') + '</span><span class="num" style="font-weight:700" data-l="' + esc(T('tongCP')) + '">' + money(k.tong) + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span><span style="text-align:center">' + tick(l && (l.cho_keo_ha_cang || l.da_kiem_dich)) + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('') +
     (list.length ? '' : '<div class="empty">' + esc(T1('Không có cont nào ở bãi tạm.', '堆场没有柜子。')) + '</div>');
 }
 function vBai() { return '<div class="stack" style="gap:16px">' + baiBody() + '</div>'; }
+// Chép danh sách cont kiểm dịch đang ở 1 bãi — gửi quản lý bãi đó chuẩn bị (chỉ tiếng Việt).
+function kdBaiText(ma) {
+  const cs = S.conts.filter(c => c.trang_thai === '4' && (c.bai_tam || '—') === ma && c.cont_kiem_dich).sort(loOrder);
+  return 'CONT KIỂM DỊCH TẠI BÃI ' + ma + ' · ' + fTs(new Date().toISOString(), true) + ' · ' + cs.length + ' cont\n' + cs.map((c, i) => { const l = lotOf(c) || {};
+    return (i + 1) + '. ' + (c.so_cont || '—') + ' · Seal ' + (c.so_seal || '—') + ' · Lô ' + (c.lo || '—') + ' · Mã KDTV ' + (l.ma_don_kdtv || '—') + ' · CLS ' + fTs(l.closing, true) + (l.da_kiem_dich ? ' (lô đã kiểm dịch)' : ''); }).join('\n');
+}
 
 /* ---------------- KIỂM DỊCH ---------------- */
 function kdGroups() {
@@ -1038,22 +1219,122 @@ const HC_GIO = 72; // màn Hạ cảng: lô đã KD có cont ở bãi, CLS còn 
 function haCangLots(all) {
   const g = {}; S.conts.filter(c => c.trang_thai === '4' && c.lo).forEach(c => { (g[c.lo] = g[c.lo] || []).push(c); });
   return Object.keys(g).map(k => ({ l:S.lots[k] || { lo:k }, cs:g[k] }))
-    .filter(x => x.l.da_kiem_dich && (all || (hLeft(x.l.closing) !== null && hLeft(x.l.closing) <= HC_GIO)))
+    .filter(x => x.l.da_kiem_dich && !suCo(x.l.lo) && (all || (hLeft(x.l.closing) !== null && hLeft(x.l.closing) <= HC_GIO)))
     .sort((a, b) => (a.l.closing ? new Date(a.l.closing) : 9e15) - (b.l.closing ? new Date(b.l.closing) : 9e15));
 }
+// Lệnh chép gửi quản lý bãi: chỉ tiếng Việt, không có Booking. Chép đúng các cont đang hiện theo bộ lọc.
 function haCangText(items) {
-  return 'DANH SÁCH KÉO HẠ CẢNG 回港计划 · ' + fTs(new Date().toISOString(), true) + '\n' + items.map((x, i) => (i + 1) + '. Lô ' + x.l.lo + ' · Booking ' + (x.l.booking || '—') + '\n   Tàu ' + (x.l.ten_tau || '—') + ' · CLS ePort ' + fTs(x.l.closing_eport, true) + (x.l.closing_eport && x.l.closing && x.l.closing !== x.l.closing_eport ? ' (CLS dùng ' + fTs(x.l.closing, true) + ')' : x.l.closing_eport ? '' : ' · CLS ' + fTs(x.l.closing, true)) + '\n   Hạ cảng 还柜: ' + (x.l.cang_ha || (x.l.eport_cang ? (x.l.eport_cang === 'SPITC' ? 'SPITC' : 'Cát Lái') + ' (theo ePort)' : 'theo booking')) + '\n' +
+  const bais = Array.from(new Set([].concat.apply([], items.map(x => x.cs.map(c => c.bai_tam || '—')))));
+  return 'DANH SÁCH KÉO HẠ CẢNG' + (bais.length === 1 ? ' · Bãi ' + bais[0] : '') + ' · ' + fTs(new Date().toISOString(), true) + '\n' + items.map((x, i) => (i + 1) + '. Lô ' + x.l.lo + '\n   Tàu ' + (x.l.ten_tau || '—') + ' · CLS ePort ' + fTs(x.l.closing_eport, true) + (x.l.closing_eport && x.l.closing && x.l.closing !== x.l.closing_eport ? ' (CLS dùng ' + fTs(x.l.closing, true) + ')' : x.l.closing_eport ? '' : ' · CLS ' + fTs(x.l.closing, true)) + '\n   Hạ cảng: ' + (x.l.cang_ha || (x.l.eport_cang ? (x.l.eport_cang === 'SPITC' ? 'SPITC' : 'Cát Lái') + ' (theo ePort)' : 'theo booking')) + '\n' +
     x.cs.map(c => '   - ' + (c.so_cont || '—') + ' · Seal ' + (c.so_seal || '—') + ' · Bãi ' + (c.bai_tam || '—')).join('\n')).join('\n');
 }
+// Bộ lọc màn Hạ cảng: Tàu / Bãi / Lô / CLS — giá trị lấy từ chính danh sách đang có.
+function hcOpts(items) {
+  const u = a => Array.from(new Set(a.filter(Boolean)));
+  return {
+    tau: u(items.map(x => x.l.ten_tau)).sort(),
+    bai: u([].concat.apply([], items.map(x => x.cs.map(c => c.bai_tam)))).sort(),
+    lo: u(items.map(x => x.l.lo)),
+    cls: u(items.map(x => x.l.closing)).sort((a, b) => new Date(a) - new Date(b))
+  };
+}
+function hcFilter(items) {
+  const o = hcOpts(items), f = S.hcF || {}, v = k => (f[k] && o[k].indexOf(f[k]) > -1 ? f[k] : '');
+  const tau = v('tau'), bai = v('bai'), lo = v('lo'), cls = v('cls');
+  return items.filter(x => (!tau || x.l.ten_tau === tau) && (!lo || x.l.lo === lo) && (!cls || x.l.closing === cls))
+    .map(x => ({ l:x.l, cs:bai ? x.cs.filter(c => c.bai_tam === bai) : x.cs }))
+    .filter(x => x.cs.length);
+}
+function hcSel(k, label, vals, fmt) {
+  const cur = (S.hcF || {})[k] || '';
+  return '<label class="chk" style="gap:6px">' + esc(label) + '<select data-on="hc-f" data-k="' + k + '" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff;max-width:220px"><option value="">' + esc(T1('Tất cả', '全部')) + '</option>' +
+    vals.map(v => '<option value="' + esc(v) + '"' + (v === cur ? ' selected' : '') + '>' + esc(fmt ? fmt(v) : v) + '</option>').join('') + '</select></label>';
+}
 function vHaCang() {
-  const items = haCangLots(S.hcAll);
+  const all = haCangLots(S.hcAll), o = hcOpts(all), items = hcFilter(all);
+  const loc = all.length ? '<div class="chips">' + hcSel('tau', T('vessel'), o.tau) + hcSel('bai', T('bai'), o.bai) + hcSel('lo', T('loCol'), o.lo) + hcSel('cls', 'CLS', o.cls, v => fTs(v, true)) + '</div>' : '';
   const head = '<div class="chips"><label class="chk"><input type="checkbox" data-on="hc-all"' + (S.hcAll ? ' checked' : '') + '>' + esc(T1('Xem mọi lô đã kiểm dịch đang ở bãi (không chỉ CLS trong ' + HC_GIO + ' giờ)', '显示全部已检疫在堆场批次')) + '</label><span class="muted" style="font-size:13px">' + items.length + ' ' + esc(T1('lô', '批')) + ' · ' + items.reduce((a, x) => a + x.cs.length, 0) + ' cont</span><span style="flex:1"></span>' +
-    (items.length ? '<button class="btn btn-pri btn-sm" data-act="copy-hc">' + esc(S.copied === 'hc' ? T('copied') : T1('Chép gửi quản lý bãi', '复制发给堆场')) + '</button>' : '') + (canWrite() ? eportBtn() : '') + '</div>' +
+    (items.length ? '<button class="btn btn-pri btn-sm" data-act="copy-hc">' + esc(S.copied === 'hc' ? T('copied') : T1('Chép gửi quản lý bãi', '复制发给堆场')) + '</button>' : '') + (canWrite() ? eportBtn() : '') + '</div>' + loc +
     '<div class="msg">' + esc(T1('Lô đã kiểm dịch xong (1 cont kiểm dịch đạt = cả lô đạt), đang ở bãi tạm, CLS còn ≤ ' + HC_GIO + ' giờ → cần kéo hạ cảng.', '批次已检疫完（一个检疫柜通过=整批通过），在堆场，截关≤' + HC_GIO + '小时 → 需回港。')) + '</div>';
-  if (!items.length) return '<div class="stack" style="gap:14px">' + head + '<div class="empty">' + esc(T1('Chưa có lô nào cần kéo hạ cảng.', '暂无需回港批次。')) + '</div></div>';
-  return '<div class="stack" style="gap:14px">' + head + '<div class="g2" style="align-items:start">' + items.map(x => '<section class="tbl"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + x.l.lo) + '</h2>' + clChip(x.l.closing) + '<span class="muted" style="font-size:12px">' + esc(x.l.booking || '') + '</span></div>' +
+  if (!items.length) return '<div class="stack" style="gap:14px">' + head + '<div class="empty">' + esc(all.length ? T1('Không có cont nào khớp bộ lọc.', '没有符合筛选的柜子。') : T1('Chưa có lô nào cần kéo hạ cảng.', '暂无需回港批次。')) + '</div></div>';
+  return '<div class="stack" style="gap:14px">' + head + '<div class="g2" style="align-items:start">' + items.map(x => '<section class="tbl"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + x.l.lo) + '</h2>' + clChip(x.l.closing) + '<span class="muted" style="font-size:12px">' + esc(x.l.booking || '') + '</span>' + (canKd() ? '<span style="flex:1"></span>' + kdUndoBtn(x.l) : '') + '</div>' +
     '<div class="kv" style="padding:6px 16px 10px;font-size:13px"><span>' + esc(T('vessel')) + '</span><span>' + esc(x.l.ten_tau || '—') + (x.l.eport_chuyen ? ' <span class="muted">(ePort ' + esc(x.l.eport_chuyen) + ')</span>' : '') + '</span><span>' + esc(T('clsEport')) + '</span><span><b>' + fTs(x.l.closing_eport, true) + '</b>' + (x.l.closing_eport && x.l.eport_cang ? ' <span class="muted">' + esc(eportCang(x.l)) + '</span>' : '') + '</span><span>' + esc(T('clsUse')) + '</span><span>' + fTs(x.l.closing, true) + '</span><span>' + esc(T('portDrop')) + '</span><span>' + esc(cangHa(x.l)) + '</span></div>' +
     x.cs.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 70px 110px">' + contBtn(c) + '<span class="mono" style="font-size:12px">' + esc(c.so_seal || '—') + '</span><span style="font-weight:700;color:var(--teal-ink)">' + esc(c.bai_tam || '—') + '</span>' + nextBtn(c) + '</div>').join('') + '</section>').join('') + '</div></div>';
+}
+/* ---------------- LÔ CÓ SỰ CỐ ---------------- */
+// KD không đạt (dịch hại) / Rớt tàu → cả lô khóa "Đang chờ xử lý"; Điều độ / Quản lý báo + xử lý (anh Hi chốt 23/09)
+function scLoaiSel(id) { return '<select id="' + id + '"><option value="">—</option><option value="KD không đạt">' + esc(T1('KD không đạt (có dịch hại)', '检疫不合格（有害虫）')) + '</option><option value="Rớt tàu">' + esc(T1('Rớt tàu', '甩船')) + '</option></select>'; }
+function scHuongBtns(l) {
+  const x = suCo(l.lo); if (!x || !canKd()) return '';
+  return (SC_HUONG[x.loai] || []).map(h => '<button type="button" class="btn btn-sm' + (h === 'Hủy lô' ? ' btn-danger' : ' btn-pri') + '" data-act="xu-ly" data-lo="' + esc(l.lo) + '" data-huong="' + esc(h) + '">' + esc(h) + ' ▸</button>').join('');
+}
+function suCoBlock(l) {
+  const x = suCo(l.lo);
+  if (x) return '<div class="msg err" style="display:flex;flex-direction:column;gap:6px" data-suco-banner><b>⚠ ' + esc(T1('Lô có sự cố: ', '批次异常：') + x.loai + ' — ' + T1('đang chờ xử lý', '待处理')) + '</b>' +
+    (x.ghi_chu ? '<span>' + esc(x.ghi_chu) + '</span>' : '') + '<span style="font-size:12px">' + esc(((x.bao_boi || '').split('@')[0]) + ' · ') + fTs(x.bao_luc, true) + '</span>' +
+    '<span style="font-size:12px">' + esc(T1('Cả lô bị khóa: cont giữ nguyên vị trí, không chuyển bước, không hạ cảng, không ra gợi ý mới.', '整批锁定：柜子位置不变，不能推进、回港或生成建议。')) + '</span>' +
+    (canKd() ? '<div style="display:flex;gap:8px;flex-wrap:wrap">' + scHuongBtns(l) + '</div>' : '') + '</div>';
+  if (!canKd() || l.da_huy) return '';
+  return '<div class="sec" style="border:1px dashed var(--red-ink);border-radius:10px;padding:12px 14px"><h3 style="margin-bottom:6px;color:var(--red-ink)">' + esc(T1('Báo sự cố cho lô', '报告批次异常')) + '</h3><div class="grid2">' +
+    '<label class="field">' + esc(T1('Loại sự cố', '异常类型')) + scLoaiSel('bsc-loai-d') + '</label><label class="field">' + esc(T('note')) + '<input id="bsc-ghichu-d" type="text" maxlength="300"></label></div>' +
+    '<div style="margin-top:8px"><button type="button" class="btn btn-sm btn-danger" data-act="bao-su-co" data-lo="' + esc(l.lo) + '" data-src="d">' + esc(T1('Báo sự cố', '报告异常')) + '</button></div></div>';
+}
+function vSuCo() {
+  const items = S.suco.map(x => ({ x, l:S.lots[x.lo] || { lo:x.lo }, cs:S.conts.filter(c => c.lo === x.lo) }));
+  const cand = openLots().filter(l => !l.da_huy && !suCo(l.lo)).sort((a, b) => a.lo.localeCompare(b.lo));
+  const form = canKd() ? '<section class="card" style="display:flex;flex-direction:column;gap:10px"><b style="color:var(--red-ink)">' + esc(T1('Báo sự cố', '报告异常')) + '</b><div class="grid3" style="align-items:end">' +
+    '<label class="field">' + esc(T('loCol')) + '<select id="bsc-lo"><option value="">—</option>' + cand.map(l => '<option value="' + esc(l.lo) + '">' + esc(l.lo + (l.ten_tau ? ' · ' + l.ten_tau : '')) + '</option>').join('') + '</select></label>' +
+    '<label class="field">' + esc(T1('Loại sự cố', '异常类型')) + scLoaiSel('bsc-loai') + '</label><label class="field">' + esc(T('note')) + '<input id="bsc-ghichu" type="text" maxlength="300"></label></div>' +
+    '<div><button class="btn btn-danger" data-act="bao-su-co">' + esc(T1('Báo sự cố', '报告异常')) + '</button> <span class="muted" style="font-size:12px">' + esc(T1('KD không đạt → lô tự bỏ tích "Đã kiểm dịch". Cả lô bị khóa đến khi xử lý xong.', '检疫不合格→自动取消检疫勾选。整批锁定至处理完。')) + '</span></div></section>' : '';
+  const card = it => '<section class="tbl" style="border-color:var(--red-ink)" data-suco-lo="' + esc(it.l.lo) + '"><div class="tbl-h" style="flex-wrap:wrap"><h2>' + esc(T('loCol') + ' ' + it.l.lo) + '</h2>' + pill(it.x.loai, 'var(--red-bg)', 'var(--red-ink)') + clChip(it.l.closing) + '<span class="muted" style="font-size:12px">' + esc(((it.x.bao_boi || '').split('@')[0]) + ' · ') + fTs(it.x.bao_luc, true) + '</span><span style="flex:1"></span><button class="btn btn-sm" data-act="open-lo" data-lo="' + esc(it.l.lo) + '">' + esc(T1('Hồ sơ lô', '批次详情')) + '</button></div>' +
+    (it.x.ghi_chu ? '<p style="margin:0;padding:6px 16px 0;font-size:13px">' + esc(it.x.ghi_chu) + '</p>' : '') +
+    '<div class="kv" style="padding:6px 16px 8px;font-size:12px"><span>' + esc(T('vessel')) + '</span><span>' + esc(it.l.ten_tau || '—') + '</span><span>' + esc(T('booking')) + '</span><span class="mono">' + esc(it.l.booking || '—') + '</span></div>' +
+    it.cs.map(c => '<div class="tr" style="--cols:150px minmax(0,1fr) 150px">' + contCell(c) + '<span class="ell">' + esc(c.trang_thai === '4' ? T('bai') + ' ' + (c.bai_tam || '') : (c.kho || '—')) + (c.cont_kiem_dich ? ' ' + pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span><span>' + stPill(c.trang_thai) + '</span></div>').join('') +
+    (canKd() ? '<div style="display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px 14px">' + scHuongBtns(it.l) + '</div>' : '') + '</section>';
+  return '<div class="stack" style="gap:16px">' + form +
+    '<div class="chips"><b style="font-size:15px;color:var(--red-ink)">' + esc(T1('Lô đang chờ xử lý', '待处理批次')) + '</b><span class="cnt-b">' + items.length + '</span></div>' +
+    (items.length ? '<div class="g2" style="align-items:start">' + items.map(card).join('') + '</div>' : '<div class="empty">' + esc(T1('Không có lô nào đang gặp sự cố.', '暂无异常批次。')) + '</div>') + '</div>';
+}
+function openXuLy(lo, huong) {
+  const l = S.lots[lo] || { lo }, x = suCo(lo); if (!x) { toast(T1('Lô không còn sự cố chờ xử lý', '该批次已无待处理异常'), true); return; }
+  const inp = (label, id, val, type, ph, req) => '<label class="field">' + esc(label + (req ? ' *' : '')) + '<input id="' + id + '" type="' + (type || 'text') + '" value="' + esc(val == null ? '' : val) + '" placeholder="' + esc(ph || '') + '"' + (req ? ' required' : '') + '></label>';
+  let body = '<div class="msg err">' + esc(T1('Sự cố: ', '异常：') + x.loai + (x.ghi_chu ? ' — ' + x.ghi_chu : '')) + '</div>';
+  if (huong === 'Đổi tàu / booking') {
+    body += '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Nhập thông tin booking mới. Thông tin cũ được lưu lại, hiện chữ nghiêng nhỏ dưới thông tin mới (chỉ Quản lý sửa được). CLS ePort của tàu cũ sẽ bị xoá để tra lại theo tàu mới.', '输入新订舱信息，旧信息以斜体保留（仅管理员可改）。')) + '</p><div class="grid2">' +
+      inp(T('booking') + ' ' + T1('mới', '新'), 'xl-booking', '', 'text', T1('cũ: ', '旧：') + (l.booking || '—'), true) + inp(T('vessel') + ' / ' + T1('chuyến mới', '新航次'), 'xl-ten_tau', '', 'text', T1('cũ: ', '旧：') + (l.ten_tau || '—'), true) +
+      '<label class="field">' + esc(T('shipLine')) + '<select id="xl-hang_tau">' + opt(S.hangtau.map(h => [h.ma, h.ma]), l.hang_tau, true) + '</select></label>' +
+      inp(T('clsMail') + ' ' + T1('mới', '新'), 'xl-closing_mail', '', 'datetime-local', '', true) + inp(T('etd'), 'xl-etd', l.etd, 'date') + inp(T('eta'), 'xl-eta', l.eta, 'date') + '</div>';
+  } else if (huong === 'Đổi cont') {
+    const cs = S.conts.filter(c => c.lo === lo && c.trang_thai !== '9');
+    body += '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Nhập số cont mới thay cho từng cont (để trống = không đổi cont đó). Cont cũ chuyển "Hủy / đổi cont" (giữ lịch sử, chi phí); cont mới về "Chờ cắt rỗng", số cont cũ hiện chữ nghiêng dưới số mới.', '为每个柜输入新柜号（留空=不换）。旧柜转“取消/换柜”，新柜回到“待提空”。')) + '</p>' +
+      '<div class="tbl"><div class="tr th" style="--cols:minmax(0,1fr) 150px 120px"><span>' + esc(T1('Cont hiện tại', '当前柜')) + '</span><span>' + esc(T1('Số cont mới', '新柜号')) + '</span><span>' + esc(T1('Seal mới', '新封条')) + '</span></div>' +
+      cs.map(c => '<div class="tr" style="--cols:minmax(0,1fr) 150px 120px"><span class="ell"><b class="mono">' + esc(c.so_cont || c.ma_don || c.id) + '</b> <span class="muted" style="font-size:12px">' + esc(stLabel(c.trang_thai) + (c.bai_tam && c.trang_thai === '4' ? ' · ' + c.bai_tam : '')) + '</span>' + (c.cont_kiem_dich ? ' ' + pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span>' +
+        '<input class="xl-cont" data-id="' + esc(c.id) + '" autocapitalize="characters" style="height:34px;padding:0 8px;border-radius:8px;border:1px solid #D8D2EE;font-family:var(--mono);min-width:0"><input class="xl-seal" data-id="' + esc(c.id) + '" style="height:34px;padding:0 8px;border-radius:8px;border:1px solid #D8D2EE;min-width:0"></div>').join('') + '</div>' +
+      '<div class="grid2">' + inp(T('can') + ' (' + T1('cont mới', '新柜') + ')', 'xl-can', '', 'datetime-local') + '</div>';
+  } else if (huong === 'Xông trùng, giữ cont') {
+    body += '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Giữ nguyên cont, ghi cách xử lý. Lô vẫn "chưa kiểm dịch" — kiểm lại đạt thì Điều độ tích kiểm dịch như bình thường.', '保留柜子并记录处理方式。批次仍为未检疫，复检合格后再勾选。')) + '</p>';
+  } else if (huong === 'Hủy lô') {
+    body += '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Dùng chức năng Hủy lô: chỉ hủy được khi các cont chưa chạy thực tế (tới kho / bãi / cảng).', '使用取消批次功能：仅在柜子未实际运行时可取消。')) + '</p>';
+  }
+  const needNote = huong === 'Xông trùng, giữ cont' || huong === 'Hủy lô';
+  body += '<label class="field">' + esc((huong === 'Hủy lô' ? T1('Lý do hủy', '取消原因') : T1('Ghi chú cách xử lý', '处理说明')) + (needNote ? ' *' : '')) + '<textarea id="xl-ghichu"' + (needNote ? ' required' : '') + '></textarea></label>';
+  S.drawer = { kind:'xuly', id:lo, huong };
+  document.getElementById('drawer').innerHTML = drawerFrame('<b style="font-size:20px;color:var(--red-ink)">' + esc(T1('Xử lý sự cố', '处理异常') + ' · ' + T('loCol') + ' ' + lo) + '</b>', '<span class="muted" style="font-size:13px">' + esc(huong) + '</span>', body, 'f-xuly');
+}
+async function saveXuLy(form) {
+  const d = S.drawer || {}, lo = d.id, huong = d.huong, v = id => { const el = form.querySelector('#' + id); return el ? el.value.trim() : ''; };
+  let du = {};
+  if (huong === 'Đổi tàu / booking') du = { booking:v('xl-booking'), ten_tau:v('xl-ten_tau'), hang_tau:v('xl-hang_tau'), closing_mail:inputToTs(v('xl-closing_mail')), etd:v('xl-etd'), eta:v('xl-eta') };
+  else if (huong === 'Đổi cont') {
+    du = { ngay_can_len_kho:inputToTs(v('xl-can')), conts:Array.from(form.querySelectorAll('.xl-cont')).map(el => ({ id:el.dataset.id, so_cont:el.value.toUpperCase().replace(/\s+/g, ''), so_seal:(form.querySelector('.xl-seal[data-id="' + el.dataset.id + '"]') || {}).value || '' })).filter(x => x.so_cont) };
+    if (!du.conts.length) { toast(T1('Nhập ít nhất 1 số cont mới.', '请至少输入一个新柜号。'), true); return; }
+  }
+  const btn = document.getElementById('save-btn'); if (btn) { btn.disabled = true; btn.textContent = T('saving'); }
+  try {
+    const r = await q(sb.rpc('xu_ly_su_co', { p_lo:lo, p_huong:huong, p_du_lieu:du, p_ghi_chu:v('xl-ghichu') }));
+    toast(T1('Đã xử lý sự cố lô ' + lo + ' · ' + huong + (huong === 'Đổi cont' ? ' · ' + r.data + ' cont' : ''), '已处理批次异常 ' + lo));
+    closeDrawer(); await loadData(); renderMain(); renderNavCounts(); if (S.lots[lo]) openLo(S.lots[lo]);
+  } catch (e) { if (btn) { btn.disabled = false; btn.textContent = T('save'); } toast(errMsg(e), true); }
 }
 function eportBtn() {
   return '<button class="btn btn-sm" data-act="eport-run"' + (S.eportRunning ? ' disabled' : '') + '>' + ico('refresh', 14) + esc(S.eportRunning ? T1('Đang tra ePort…', 'ePort查询中…') : T('eportBtn')) + '</button>';
@@ -1206,15 +1487,15 @@ function vDanhMuc() {
     body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('kho')) + '</span><span>' + esc(T('area')) + '</span><span>' + esc(T('mainCust')) + '</span><span>' + esc(T('cnName')) + '</span><span>' + esc(T('contact')) + '</span><span>' + esc(T('phone')) + '</span><span>' + esc(T('map')) + '</span><span style="text-align:center">' + esc(T('active')) + '</span><span></span><span></span></div>' +
       S.kho.concat(addOk ? [{ _new:true }] : []).map(k => '<form class="tr" style="' + cols + (k.hoat_dong === false ? ';opacity:.55' : '') + '" data-form="kho" data-key="' + esc(k.ten || '') + '">' + (k._new ? dmInp('ten', '', T('add') + '…') : '<b class="ell" title="' + esc(k.ten) + '">' + esc(k.ten) + '</b>') + dmInp('khu_vuc', k.khu_vuc, '', ro) + dmInp('khach_hang_chinh', k.khach_hang_chinh, '', ro) + dmInp('ten_tq', k.ten_tq, '', ro) + dmInp('nguoi_lien_he', k.nguoi_lien_he, '', ro) + dmInp('sdt', k.sdt, '', ro) + dmInp('google_map', k.google_map, 'https://maps…', ro) + dmChk('hoat_dong', k.hoat_dong, ro || !addOk) + (ro ? '<span></span>' : '<button class="btn btn-sm" type="submit">' + esc(k._new ? T('add') : T('save')) + '</button>') + (addOk && !k._new ? dmDel('kho', k.ten) : '<span></span>') + '</form>').join('');
   } else if (S.dmTab === 'bai') {
-    const ro = !isAdmin();
+    const ro = !canDm();
     const cols = '--cols:80px minmax(160px,1fr) 130px 130px 150px minmax(120px,1fr) 80px;--minw:960px';
-    note = T1('Giá bãi do Quản lý nhập. Điện tính theo giờ thực tế; nâng hạ tính 1 lần khi hạ vào bãi; vận chuyển hạ cảng mỗi bãi 1 giá.', '堆场价格由管理员填写。');
+    note = T1('Giá bãi do Quản lý, Điều độ nhập. Điện tính theo giờ thực tế; nâng hạ tính 1 lần khi hạ vào bãi; vận chuyển hạ cảng mỗi bãi 1 giá.', '堆场价格由管理员、调度填写。');
     body = '<div class="tr th" style="' + cols + '"><span>' + esc(T1('Mã', '代码')) + '</span><span>' + esc(T1('Tên bãi', '堆场名')) + '</span><span>' + esc(T1('Điện / giờ', '电费/小时')) + '</span><span>' + esc(T('nangHa')) + '</span><span>' + esc(T('haCangFee')) + '</span><span>' + esc(T('note')) + '</span><span></span></div>' +
       S.bai.concat(ro ? [] : [{ _new:true }]).map(b => '<form class="tr" style="' + cols + '" data-form="bai" data-key="' + esc(b.ma || '') + '">' + (b._new ? dmInp('ma', '', T('add') + '…') : '<b>' + esc(b.ma) + '</b>') + dmInp('ten', b.ten, '', ro) + dmInp('dien_moi_gio', b.dien_moi_gio, '25000', ro, 'number') + dmInp('nang_ha', b.nang_ha, '600000', ro, 'number') + dmInp('trucking', b.trucking, '500000', ro, 'number') + dmInp('ghi_chu', b.ghi_chu, '', ro) + (ro ? '<span></span>' : '<button class="btn btn-sm" type="submit">' + esc(b._new ? T('add') : T('save')) + '</button>') + '</form>').join('');
   } else if (S.dmTab === 'gia') {
-    const ro = !isAdmin();
+    const ro = !canDm();
     const cols = '--cols:120px 160px repeat(4,120px) minmax(100px,1fr) 80px;--minw:1100px';
-    note = T1('Giá cước để máy ước tính chi phí và chọn nhà xe rẻ nhất cho cắt mooc / đóng trong ngày. Khu vực “Tất cả” = giá chung khi chưa có giá riêng khu vực. Chỉ Quản lý sửa được.', '运价用于估算费用并选择最便宜车队；“全部”为通用价。');
+    note = T1('Giá cước để máy ước tính chi phí và chọn nhà xe rẻ nhất cho cắt mooc / đóng trong ngày. Khu vực “Tất cả” = giá chung khi chưa có giá riêng khu vực. Quản lý, Điều độ sửa được.', '运价用于估算费用并选择最便宜车队；“全部”为通用价。');
     const rows = {}; S.giacuoc.forEach(g => { const k = g.nha_xe + '||' + g.khu_vuc; (rows[k] = rows[k] || { nha_xe:g.nha_xe, khu_vuc:g.khu_vuc, gia:{}, ghi_chu:g.ghi_chu }).gia[g.loai] = g.gia; });
     const list = Object.values(rows).sort((a, b) => a.nha_xe.localeCompare(b.nha_xe) || a.khu_vuc.localeCompare(b.khu_vuc, 'vi'));
     const sel = (name, val, opts) => '<select name="' + name + '" style="height:36px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;width:100%">' + opts.map(o => '<option value="' + esc(o) + '"' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
@@ -1258,13 +1539,110 @@ async function loadDon() {
   } catch (e) { box.innerHTML = '<div class="msg err">' + esc(errMsg(e)) + '</div>'; }
 }
 
+/* ---------------- LỌC TIN NHẮN KHÁCH → ĐIỀN FORM ĐƠN / CONT MỚI (anh Hi 23/09) ----------------
+   Tin khách viết kiểu nào cũng được: có nhãn ("Chủ hàng: …") hoặc viết tự do. Khách / kho khớp theo Danh mục. */
+function khongDau(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase(); }
+const TN_HANG = ['cosco', 'oocl', 'one', 'evergreen', 'wan hai', 'msc', 'maersk', 'yang ming', 'yangming', 'cma', 'hapag', 'zim', 'hmm', 'sitc', 'kmtc'];
+const TN_CANG = [['thượng hải', 'shanghai'], ['ninh ba', 'ningbo'], ['thiên tân', 'tianjin'], ['thanh đảo', 'qingdao'], ['quảng châu', 'guangzhou', 'nansha'], ['hạ môn', 'xiamen'], ['đại liên', 'dalian'], ['thâm quyến', 'shenzhen']];
+const TN_NHAN = [['so', ['số thứ tự', 'stt', 'số đơn', 'mã đơn']], ['ngayDat', ['ngày đặt hàng', 'ngày đặt']], ['lenCont', ['ngày lên cont', 'lên cont']], ['chuHang', ['chủ hàng', 'khách hàng']], ['kho', ['kho đóng hàng', 'kho đóng']], ['soLuong', ['số lượng', 'sl']], ['noiDen', ['nơi đến', 'cảng đến', 'pod']], ['tau', ['tàu ngày', 'etd']]];
+function tnNgay(txt) {
+  const m = /(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/.exec(txt || ''); if (!m) return null;
+  const t = todayVN(), cm = +t.slice(5, 7); let y = +t.slice(0, 4), mo = +m[2];
+  if (m[3]) y = +m[3] < 100 ? 2000 + +m[3] : +m[3]; else if (mo < cm - 6) y++;
+  if (mo < 1 || mo > 12 || +m[1] < 1 || +m[1] > 31) return null;
+  return y + '-' + String(mo).padStart(2, '0') + '-' + String(+m[1]).padStart(2, '0');
+}
+function tnGio(txt) {
+  const l = khongDau(txt), m = /(\d{1,2})\s*h(?:(\d{2})(?![\d\/]))?/.exec(l);
+  if (m && +m[1] < 24) return String(+m[1]).padStart(2, '0') + ':' + (m[2] || '00');
+  if (/sang/.test(l)) return '07:00'; if (/trua/.test(l)) return '11:00'; if (/chieu/.test(l)) return '13:00'; if (/toi/.test(l)) return '18:00';
+  return '08:00';
+}
+function parseTinNhan(text) {
+  const blocks = String(text || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean);
+  const b = blocks[0] || '', low = b.toLowerCase(), F = {}, used = [];
+  const take = (s, e) => { if (s >= e || used.some(u => s < u[1] && e > u[0])) return false; used.push([s, e]); return true; };
+  const reEsc = x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // 1. Tin có nhãn
+  const hits = [];
+  TN_NHAN.forEach(([key, ls]) => ls.slice().sort((x, y) => y.length - x.length).some(l => {
+    const m = new RegExp('(^|\\n|\\s)' + reEsc(l) + '\\s*:', 'i').exec(low);
+    if (m && !hits.some(h => h.key === key || (m.index >= h.ls && m.index < h.vs))) { hits.push({ key, ls:m.index, vs:m.index + m[0].length }); return true; }
+    return false;
+  }));
+  hits.sort((a, c) => a.ls - c.ls);
+  hits.forEach((h, i) => { const end = i + 1 < hits.length ? hits[i + 1].ls : b.length, raw = b.slice(h.vs, end), v = raw.trim().replace(/\s+/g, ' '); if (v) { F[h.key] = v; take(h.vs, end); } });
+  // 2. Viết tự do
+  let m;
+  if (!F.so && (m = /\b([A-Z]{2,5})\s?(\d{3,6})\b/.exec(b)) && !/^[A-Z]{4}\d{7}$/.test(m[0].replace(/\s/g, '')) && take(m.index, m.index + m[0].length)) F.so = m[0];
+  if (!F.soLuong && (m = /(\d{1,3})\s*(?:x\s*)?(?:cont|container|cnt)\b(?:\s*(?:40\s?HC|40\s?HQ|40|20|45))?/i.exec(b)) && take(m.index, m.index + m[0].length)) F.soLuong = m[0].replace(/\s+/g, ' ');
+  if (!F.noiDen) TN_CANG.some(ws => ws.some(w => { const i = low.indexOf(w); if (i > -1 && take(i, i + w.length)) { F.noiDen = b.slice(i, i + w.length); return true; } return false; }));
+  if (!F.kho && (m = /\bkho\s+(?!đóng hàng)([^,\n.;]+?)(?=\s*(?:,|\n|;|\.|\s-\s|$|\s(?:tàu|đi|lên)\b))/i.exec(b)) && take(m.index, m.index + m[0].length)) F.kho = m[1].trim();
+  const re = /\b(\d{1,2})\/(\d{1,2})(?:\/\d{2,4})?\b/g;
+  while ((m = re.exec(b))) {
+    if (used.some(u => m.index >= u[0] && m.index < u[1])) continue;
+    const before = low.slice(Math.max(0, m.index - 28), m.index), after = low.slice(m.index, m.index + 18);
+    let type = null;
+    if (/đặt/.test(before) && !F.ngayDat) type = 'ngayDat';
+    else if ((/tàu|etd|chạy/.test(before) || TN_HANG.some(h => new RegExp('\\b' + h + '\\b').test(before + ' ' + after))) && !F.tau) type = 'tau';
+    else if (!F.lenCont) type = 'lenCont'; else if (!F.tau) type = 'tau';
+    if (!type) continue;
+    let s0 = m.index, e0 = m.index + m[0].length;
+    if (type === 'lenCont') {
+      const pre = /((?:sáng|chiều|tối|trưa)\s*(?:(?:trước|sau|lúc)\s*\d{1,2}\s*h(?:\d{2})?)?\s*)$/i.exec(b.slice(Math.max(0, s0 - 24), s0)); if (pre) s0 -= pre[1].length;
+      const post = /^(\s*(?:(?:sáng|chiều|tối)\s*)?(?:trước|sau|lúc)\s*\d{1,2}\s*h(?:\d{2})?)/i.exec(b.slice(e0)); if (post) e0 += post[1].length;
+    }
+    if (take(s0, e0)) F[type] = b.slice(s0, e0).replace(/\s+/g, ' ').trim();
+  }
+  TN_HANG.some(h => { const mm = new RegExp('\\b' + h + '\\b', 'i').exec(b); if (mm) { F.hang = mm[0].toUpperCase(); return true; } return false; });
+  if (F.tau) F.tau = F.tau.replace(new RegExp('\\s*\\b(' + TN_HANG.join('|') + ')\\b\\s*', 'i'), ' ').trim();
+  // 3. Khớp danh mục
+  const nb = khongDau(b);
+  const kh = S.khachhang.map(x => x.ten).filter(t => t && nb.includes(khongDau(t))).sort((a, c) => c.length - a.length)[0]
+    || (F.chuHang ? (S.khachhang.find(x => khongDau(x.ten).startsWith(khongDau(F.chuHang).split(' ')[0])) || {}).ten : null);
+  const words = t => khongDau(t).split(/[^a-z0-9]+/).filter(w => w.length >= 3 && ['kho', 'dong', 'hang', 'ngoai', 'anh', 'chi'].indexOf(w) < 0);
+  const khoWords = words((F.kho || '') + ' ' + (F.chuHang || '') + ' ' + (kh || ''));
+  let khoBest = null, khoScore = 0;
+  khoActive().forEach(k => { const hay = khongDau(k.ten + ' ' + (k.khu_vuc || '') + ' ' + (k.khach_hang_chinh || '')); const sc = khoWords.filter(w => hay.includes(w)).length + (F.kho && hay.includes(khongDau(F.kho)) ? 3 : 0); if (sc > khoScore) { khoScore = sc; khoBest = k.ten; } });
+  const cang = F.noiDen ? S.cangden.find(c => [c.ten_vn, c.ma, c.ten_tq].some(x => x && khongDau(F.noiDen).includes(khongDau(x)))) : null;
+  const n = F.soLuong ? +(/\d+/.exec(F.soLuong) || [1])[0] : 1;
+  const ngay = tnNgay(F.lenCont);
+  return { F, nBlocks: blocks.length, khach: kh || null, kho: khoBest, cang: cang ? cang.ma : null, n: Math.max(1, Math.min(n, 50)),
+    can: ngay ? ngay + 'T' + tnGio(F.lenCont) : null, gioTxt: F.lenCont ? F.lenCont.replace(/\d{1,2}\/\d{1,2}(\/\d{2,4})?/, '').trim() : '' };
+}
+function tinNhanBlock() {
+  return '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px" data-tin-nhan><h3 style="margin-bottom:4px">' + esc(T1('Lọc từ tin nhắn khách', '从客户消息提取')) + '</h3>' +
+    '<p class="muted" style="margin:0 0 6px;font-size:12px">' + esc(T1('Dán nguyên tin Zalo / WeChat (viết kiểu nào cũng được) rồi bấm Lọc — máy điền sẵn các ô bên dưới, anh chị kiểm tra rồi Lưu như bình thường.', '粘贴客户消息后点“提取”，系统自动填写下方栏位。')) + '</p>' +
+    '<textarea id="tn-in" rows="5" style="width:100%;box-sizing:border-box;border:1px solid #D8D2EE;border-radius:10px;padding:10px;font:inherit;font-size:14px;resize:vertical" placeholder="' + esc(T1('VD: Số thứ tự: ABC 12345 · Ngày lên cont: sáng trước 8h 23/09 · Chủ hàng: … · Số lượng: 2 cont · Nơi đến: Thượng Hải · Tàu ngày: 29/09 cosco', '例：客户消息')) + '"></textarea>' +
+    '<div style="display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap"><button type="button" class="btn btn-sm btn-pri" data-act="tn-loc">' + esc(T1('Lọc & điền vào form', '提取并填写')) + '</button><span id="tn-kq" class="muted" style="font-size:12px"></span></div>' +
+    '<div id="tn-sl"></div></div>';
+}
+function tnDien() {
+  const form = document.getElementById('f-cont'), box = document.getElementById('tn-in'); if (!form || !box) return;
+  const r = parseTinNhan(box.value), F = r.F, done = [], miss = [];
+  const setV = (name, v, label) => { const el = form.querySelector('[name="' + name + '"]'); if (!el || v == null || v === '') return false;
+    if (el.tagName === 'SELECT' && !Array.from(el.options).some(o => o.value === v)) return false;
+    el.value = v; el.style.outline = '2px solid var(--teal)'; el.style.outlineOffset = '1px'; done.push(label); return true; };
+  if (!box.value.trim()) { toast(T1('Dán tin nhắn khách vào ô trước.', '请先粘贴消息。'), true); return; }
+  setV('ma_don', F.so, T('madon'));
+  if (!setV('khach_hang', r.khach, T('kh')) && F.chuHang) miss.push(T('kh') + ' "' + F.chuHang + '"');
+  if (!setV('kho', r.kho, T('kho')) && (F.kho || F.chuHang)) miss.push(T('kho') + ' "' + (F.kho || F.chuHang) + '"');
+  if (!setV('ngay_can_len_kho', r.can, T('can')) && F.lenCont) miss.push(T('can') + ' "' + F.lenCont + '"');
+  setV('gio_len_kho_ghi_chu', r.gioTxt, T('gioGhiChu'));
+  const info = [F.noiDen && T1('Nơi đến', '目的港') + ': ' + F.noiDen, (F.tau || F.hang) && T1('Tàu', '船') + ': ' + [F.tau, F.hang].filter(Boolean).join(' '), F.soLuong && T1('SL', '数量') + ': ' + F.soLuong, F.ngayDat && T1('Đặt', '下单') + ': ' + F.ngayDat].filter(Boolean).join(' · ');
+  const gc = form.querySelector('[name="ghi_chu"]');
+  if (gc && info && gc.value.indexOf(info) < 0) { gc.value = (gc.value ? gc.value + '\n' : '') + T1('Tin khách', '客户消息') + ': ' + info; gc.style.outline = '2px solid var(--teal)'; done.push(T('note')); }
+  document.getElementById('tn-sl').innerHTML = r.n > 1 ? '<label class="field" style="margin-top:8px;max-width:260px">' + esc(T1('Số đơn tạo cùng lúc (tin ghi ' + F.soLuong + ')', '同时建单数量')) + '<input id="tn-n" type="number" min="1" max="50" step="1" value="' + r.n + '"></label>' : '';
+  document.getElementById('tn-kq').innerHTML = esc(T1('Đã điền: ', '已填写：') + (done.join(', ') || '—')) + (miss.length ? '<br><span style="color:var(--amb-ink)">' + esc(T1('Chưa khớp danh mục — chọn tay: ', '未匹配，请手选：') + miss.join('; ')) + '</span>' : '') + (r.nBlocks > 1 ? '<br><span style="color:var(--amb-ink)">' + esc(T1('Tin có ' + r.nBlocks + ' đơn — mới điền đơn đầu, lưu xong dán đơn tiếp.', '含多个订单，仅填写第一个。')) + '</span>' : '');
+}
 /* ---------------- NGĂN KÉO: CONT ---------------- */
 function opt(list, val, blank) { return (blank ? '<option value="">—</option>' : '') + list.map(o => '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(val == null ? '' : val) ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join(''); }
 function fIn(label, name, val, type, extra) { return '<label class="field">' + esc(label) + '<input name="' + name + '" type="' + (type || 'text') + '" value="' + esc(val == null ? '' : val) + '"' + (extra || '') + (canWrite() ? '' : ' disabled') + '></label>'; }
 function fSel(label, name, opts, extra) { return '<label class="field">' + esc(label) + '<select name="' + name + '"' + (extra || '') + (canWrite() ? '' : ' disabled') + '>' + opts + '</select></label>'; }
 function fChk(label, name, val) { return '<label class="field chkf"><input type="checkbox" name="' + name + '"' + (val ? ' checked' : '') + (canWrite() ? '' : ' disabled') + '>' + esc(label) + '</label>'; }
+function drawerIn() { const d = document.getElementById('drawer'); return d && d.firstChild ? '' : ' in'; }  /* chỉ trượt vào khi mở mới, không lặp khi vẽ lại */
 function drawerFrame(title, sub, body, formId) {
-  return '<div class="drawer-wrap"><button class="close-area" data-act="close-drawer" aria-label="' + esc(T('close')) + '"></button><aside class="drawer" role="dialog" aria-label="' + esc(title) + '"><div class="drawer-h"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">' + title + sub + '</div><button class="x-btn" data-act="close-drawer" aria-label="' + esc(T('close')) + '">' + ico('x', 16) + '</button></div>' +
+  return '<div class="drawer-wrap' + drawerIn() + '"><button class="close-area" data-act="close-drawer" aria-label="' + esc(T('close')) + '"></button><aside class="drawer" role="dialog" aria-label="' + esc(title) + '"><div class="drawer-h"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">' + title + sub + '</div><button class="x-btn" data-act="close-drawer" aria-label="' + esc(T('close')) + '">' + ico('x', 16) + '</button></div>' +
     '<form class="drawer-b" id="' + formId + '" data-form="' + formId + '">' + body + '</form>' +
     (canWrite() ? '<div class="drawer-f"><button class="btn" data-act="close-drawer">' + esc(T('cancel')) + '</button><button class="btn btn-pri" type="submit" form="' + formId + '" id="save-btn">' + esc(T('save')) + '</button></div>' : '') + '</aside></div>';
 }
@@ -1285,17 +1663,19 @@ function openCont(c) {
   const lots = Object.keys(S.lots).sort().reverse().map(k => [k, k]);
   if (c.lo && !S.lots[c.lo]) lots.unshift([c.lo, c.lo]);
   const body =
+    (isNew && canWrite() ? tinNhanBlock() : '') +
     (isNew ? '' : '<div class="steps">' + order.map((k, i) => '<div class="step' + (i < idx ? ' done' : i === idx ? ' cur' : '') + '"><b>' + (i + 1) + '</b>' + esc(stLabel(k)) + '</div>').join('') + '</div>' +
       (nx && canWrite() ? (stBlock(c, l, nx[0]) ? '<div><button type="button" class="btn" disabled data-next-block>' + esc(T('nextStep') + ': ' + T(nx[1])) + '</button> <span style="font-size:12px;color:var(--red-ink)">' + esc(stBlock(c, l, nx[0])) + '</span></div>'
-        : '<button type="button" class="btn btn-pri" data-act="move" data-id="' + esc(c.id) + '" data-to="' + nx[0] + '">' + esc(T('nextStep') + ': ' + T(nx[1])) + ' →</button>') : '') +
+        : (nx[0] === '4' && S.pickBai === c.id ? '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-size:13px">' + esc(T1('Chọn bãi kéo về', '选择堆场')) + ':</b>' + baiChon(c) + '</div>' : '<button type="button" class="btn btn-pri" data-act="move" data-id="' + esc(c.id) + '" data-to="' + nx[0] + '">' + esc(T('nextStep') + ': ' + T(nx[1])) + ' →</button>')) : '') +
       (canWrite() && st === '3' && !stBlock(c, l, '5') ? ' <button type="button" class="btn" style="border-color:var(--teal);color:var(--teal-ink)" data-act="move" data-id="' + esc(c.id) + '" data-to="5" data-ha-thang>' + esc(T1('Hạ thẳng cảng (CLS ≤ ' + gioHaThang() + 'h)', '直接回港')) + ' →</button>' : '')) +
     '<div class="sec"><h3>' + esc(T('containerTank')) + '</h3><div class="grid2">' +
-      fIn(T('cont'), 'so_cont', c.so_cont, 'text', ' autocapitalize="characters" style="font-family:var(--mono)"') + fIn(T('seal'), 'so_seal', c.so_seal) +
+      withCu(fIn(T('cont'), 'so_cont', c.so_cont, 'text', ' autocapitalize="characters" style="font-family:var(--mono)"'), isNew ? [] : ttCu('cont', c.id, 'so_cont')) + withCu(fIn(T('seal'), 'so_seal', c.so_seal), isNew ? [] : ttCu('cont', c.id, 'so_seal')) +
       fSel(T('loCol'), 'lo', opt(lots, c.lo, true)) + fIn(T('madon'), 'ma_don', c.ma_don) +
       fSel(T('kh'), 'khach_hang', opt(S.khachhang.map(x => [x.ten, x.ten]), c.khach_hang, true)) + fSel(T('kho'), 'kho', opt(khoActive(c.kho).map(x => [x.ten, x.ten]), c.kho, true)) +
       fSel(T('status'), 'trang_thai', Object.keys(ST).map(k => { const b = isNew ? '' : stBlock(c, l, k); return '<option value="' + esc(k) + '"' + (k === st ? ' selected' : '') + (b ? ' disabled' : '') + '>' + esc(k + ' · ' + stLabel(k) + (b ? ' — ' + b : '')) + '</option>'; }).join('')) + fSel(T('carrier'), 'nha_xe', opt(nxActive(c.nha_xe).map(x => [x.ma, x.ma]), c.nha_xe, true)) +
       fIn(T('truck'), 'so_xe', c.so_xe) + fIn(T('cskh'), 'cskh', c.cskh) +
       fChk(T('needTem'), 'can_tem', c.can_tem) + (function () { const kc = kdCont(c.lo || l.lo); if (kc && kc.id !== c.id) return '<label class="field chkf" data-kd-lock><input type="checkbox" name="cont_kiem_dich" disabled>' + esc(T('kdCont')) + ' <span class="muted" style="font-size:11px">(' + esc(T1('lô đã có cont KD ', '本批已有检疫柜 ') + (kc.so_cont || kc.ma_don || '')) + ')</span></label>';
+        if (c.cont_kiem_dich && l.da_kiem_dich && S.me && S.me.vai_tro === 'CSKH') return '<label class="field chkf" data-kd-cskh-lock><input type="checkbox" name="cont_kiem_dich" checked disabled>' + esc(T('kdCont')) + ' <span class="muted" style="font-size:11px">(' + esc(T1('lô đã kiểm dịch — CSKH không đổi được, báo Điều độ', '已检疫，客服不能修改')) + ')</span></label>';
         return fChk(T('kdCont'), 'cont_kiem_dich', c.cont_kiem_dich) + (c.cont_kiem_dich && l.da_kiem_dich ? '<span class="muted" style="font-size:11px">' + esc(T1('Bỏ dấu / hủy cont này → lô về chưa kiểm dịch', '取消后本批恢复未检疫')) + '</span>' : ''); })() +
     '</div></div>' +
     '<div class="sec"><h3>' + esc(T1('Thời gian', '时间')) + '</h3><div class="grid2">' +
@@ -1325,11 +1705,12 @@ function openLo(l) {
   const sub = isNew ? '' : '<div style="display:flex;gap:8px;align-items:center">' + clChip(l.closing) + '<span class="muted" style="font-size:13px">' + esc((l.so_cont_dang_chay || 0) + ' / ' + (l.so_cont || 0) + ' cont') + '</span></div>';
   const huyBanner = l.da_huy ? '<div class="msg err" style="display:flex;flex-direction:column;gap:8px"><b>' + esc(T1('Lô đã hủy', '批次已取消')) + '</b><span>' + esc(T1('Lý do', '原因') + ': ' + (l.ly_do_huy || '—')) + '</span><span style="font-size:12px">' + esc((l.huy_boi || '') + ' · ') + fTs(l.huy_luc, true) + '</span>' + (canPlan() ? '<div><button type="button" class="btn btn-sm" data-act="khoi-phuc-lo" data-lo="' + esc(l.lo) + '">' + esc(T1('Khôi phục lô', '恢复批次')) + '</button></div>' : '') + '</div>' : '';
   const body = huyBanner +
-    '<div class="grid2">' + (isNew ? fIn(T('loCol') + ' *', 'lo', '', 'text', ' required') : '') + fIn(T('booking'), 'booking', l.booking) +
-      fSel(T('shipLine'), 'hang_tau', opt(S.hangtau.map(x => [x.ma, x.ma]), l.hang_tau, true)) + fIn(T('vessel'), 'ten_tau', l.ten_tau) +
+    (isNew ? '' : suCoBlock(l)) +
+    '<div class="grid2">' + (isNew ? fIn(T('loCol') + ' *', 'lo', '', 'text', ' required') : '') + withCu(fIn(T('booking'), 'booking', l.booking), isNew ? [] : ttCu('lo', l.lo, 'booking')) +
+      withCu(fSel(T('shipLine'), 'hang_tau', opt(S.hangtau.map(x => [x.ma, x.ma]), l.hang_tau, true)), isNew ? [] : ttCu('lo', l.lo, 'hang_tau')) + withCu(fIn(T('vessel'), 'ten_tau', l.ten_tau), isNew ? [] : ttCu('lo', l.lo, 'ten_tau')) +
       fSel(T('pod'), 'cang_den', opt(S.cangden.map(x => [x.ma, x.ma + ' · ' + (x.ten_vn || '') + (x.ten_tq ? ' ' + x.ten_tq : '')]), l.cang_den, true)) + fSel(T('portDrop'), 'cang_ha', opt(S.cangha.map(x => [x.ten, x.ten]), l.cang_ha, true)) +
-      fIn(T('etdKho'), 'etd_kho', l.etd_kho, 'date') + fIn(T('etd'), 'etd', l.etd, 'date') + fIn(T('eta'), 'eta', l.eta, 'date') +
-      fIn(T('clsMail'), 'closing_mail', tsToInput(l.closing_mail), 'datetime-local') + fIn(T('clsTay'), 'closing', tsToInput(isNew ? l.closing : l.closing_tay), 'datetime-local') +
+      fIn(T('etdKho'), 'etd_kho', l.etd_kho, 'date') + withCu(fIn(T('etd'), 'etd', l.etd, 'date'), isNew ? [] : ttCu('lo', l.lo, 'etd')) + withCu(fIn(T('eta'), 'eta', l.eta, 'date'), isNew ? [] : ttCu('lo', l.lo, 'eta')) +
+      withCu(fIn(T('clsMail'), 'closing_mail', tsToInput(l.closing_mail), 'datetime-local'), isNew ? [] : ttCu('lo', l.lo, 'closing_mail')) + fIn(T('clsTay'), 'closing', tsToInput(isNew ? l.closing : l.closing_tay), 'datetime-local') +
       fIn(T('kdtv'), 'ma_don_kdtv', l.ma_don_kdtv) + fIn(T('tokhai'), 'so_to_khai', l.so_to_khai) + fIn(T('cskh'), 'cskh', l.cskh) +
       fIn(T1('Số lượng cont', '柜数') + (isNew ? '' : ' (' + T1('đã có', '已有') + ' ' + (l.so_cont || 0) + ')'), 'so_luong_cont', l.so_luong_cont, 'number', ' min="0" max="200" step="1"') +
       fIn(T1('Thứ tự (số nhỏ xếp trước)', '顺序（小的排前）'), 'thu_tu', l.thu_tu, 'number', ' step="1"') +
@@ -1342,9 +1723,11 @@ function openLo(l) {
     '<div class="grid2">' + fChk(T('dongNgay') + ' ⚡', 'dong_trong_ngay', l.dong_trong_ngay) + '</div>' +
     '<div class="grid2">' + fChk('Eport', 'da_khai_eport', l.da_khai_eport) + fChk(T('tl'), 'thanh_ly', l.thanh_ly) + '</div>' + (isNew ? '' : kdBlock(l)) +
     '<label class="field">' + esc(T('note')) + '<textarea name="ghi_chu"' + (canWrite() ? '' : ' disabled') + '>' + esc(l.ghi_chu || '') + '</textarea></label>' +
-    (mine.length ? '<div class="sec"><h3>' + esc(T('contsOfLo')) + '</h3><div class="tbl">' + mine.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 140px">' + contBtn(c) + '<span class="ell">' + esc(c.kho || '—') + '</span><span>' + stPill(c.trang_thai) + '</span></div>').join('') + '</div></div>' : '') +
+    (mine.length ? '<div class="sec"><h3>' + esc(T('contsOfLo')) + '</h3><div class="tbl">' + mine.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 140px">' + contCell(c) + '<span class="ell">' + esc(c.kho || '—') + '</span><span>' + stPill(c.trang_thai) + '</span></div>').join('') + '</div></div>' : '') +
     (canWrite() && !isNew && !l.da_huy ? '<button type="button" class="btn" data-act="new-cont" data-lo="' + esc(l.lo) + '">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') +
     (!isNew ? historyBlock('lo', l.lo) : '') +
+    (canDm() && !isNew ? '<div class="sec" style="border-top:1px solid var(--line);padding-top:14px"><h3>' + esc(T1('Đổi mã lô (Quản lý, Điều độ)', '修改批次号（管理员、调度）')) + '</h3><p class="muted" style="margin:0;font-size:12px">' + esc(T1('Dùng khi nhập sai mã lô. Mọi cont của lô đổi theo, tích kiểm dịch và lịch sử giữ nguyên.', '批次号录错时使用。所有柜子随之更改，检疫勾选和历史保留。')) + '</p>' +
+      '<label class="field">' + esc(T1('Mã lô mới', '新批次号')) + '<input id="doi-ma-lo" type="text" maxlength="40" autocomplete="off" placeholder="' + esc(l.lo) + '"></label><div><button type="button" class="btn" data-act="doi-ma-lo" data-lo="' + esc(l.lo) + '">' + esc(T1('Đổi mã lô', '修改批次号')) + '</button></div></div>' : '') +
     (!isNew && canPlan() && !l.da_huy ? '<div class="sec" style="border-top:1px solid var(--line);padding-top:14px"><h3>' + esc(T1('Hủy lô (không dùng nữa)', '取消批次（不再使用）')) + '</h3><p class="muted" style="margin:0;font-size:12px">' + esc(T1('Lô bị ẩn khỏi danh sách, các đơn chưa chạy chuyển sang “Hủy”, gợi ý liên quan bị bỏ. Có thể khôi phục lại. Lô đã có cont chạy thực tế thì không hủy được.', '批次将被隐藏，未执行订单转为“取消”，相关建议删除。可恢复。已实际运行的批次不能取消。')) + '</p>' +
       '<label class="field">' + esc(T1('Lý do hủy *', '取消原因 *')) + '<input id="huy-ly-do" type="text" maxlength="200" placeholder="' + esc(T1('VD: khách hủy đơn, đổi booking…', '例：客户取消、换订舱…')) + '"></label><div><button type="button" class="btn btn-danger" data-act="huy-lo" data-lo="' + esc(l.lo) + '">' + esc(T1('Hủy lô', '取消批次')) + '</button></div></div>' : '') +
     (isAdmin() && !isNew ? '<div class="sec" style="border-top:1px solid var(--line);padding-top:14px"><h3>' + esc(T1('Xoá hẳn (chỉ Quản lý)', '彻底删除（仅管理员）')) + '</h3><p class="muted" style="margin:0;font-size:12px">' + esc(cheDoThu() ? T1('CHẾ ĐỘ THỬ đang BẬT (Cấu hình): xoá được cả lô đã chạy tới kho / bãi / cảng / lên tàu. Dữ liệu bị xoá vẫn được lưu bản chụp trong Nhật ký. Khi chạy chính thức hãy Tắt.', '测试模式开启：可删除已运行批次。删除内容仍保留在日志中。') : T1('Chỉ dùng khi nhập nhầm / nhập thử. Dữ liệu bị xoá vẫn được lưu bản chụp trong Nhật ký. Chỉ xoá được khi các cont của lô còn ở “Chờ cắt rỗng” hoặc “Hủy”.', '仅用于录错/测试数据。删除内容仍保留在日志中。仅当柜子都处于“待提空”或“取消”时可删除。')) + '</p><div><button type="button" class="btn btn-danger" data-act="del-lo" data-lo="' + esc(l.lo) + '" data-n="' + (l.so_cont || 0) + '">' + esc(delLoLabel(l)) + '</button></div></div>' : '');
@@ -1379,7 +1762,20 @@ async function loadHistory(bang, khoa, boxId) {
   box.innerHTML = '<div class="muted">…</div>';
   try {
     const r = await q(sb.from('nhat_ky').select('*').eq('bang', bang).eq('khoa', khoa).order('luc', { ascending:false }).limit(100));
-    box.innerHTML = r.data.length ? r.data.map(x => nkLine(x)).join('') : '<div class="muted" style="font-size:13px">' + esc(T1('Chưa có thay đổi nào được ghi (dữ liệu nạp từ file cũ không có lịch sử).', '暂无记录（从旧文件导入的数据没有历史）。')) + '</div>';
+    let rows = r.data || [];
+    // Lô đã đổi mã: nối thêm lịch sử của mã cũ (dòng nhật ký "lo: cũ → mới" nằm dưới mã mới)
+    if (bang === 'lo') {
+      const seen = new Set([khoa]); let cur = rows;
+      for (let i = 0; i < 5; i++) {
+        const olds = cur.filter(x => x.thay_doi && Array.isArray(x.thay_doi.lo) && seen.has(x.thay_doi.lo[1])).map(x => x.thay_doi.lo[0]).filter(v => v && !seen.has(v));
+        if (!olds.length) break;
+        olds.forEach(v => seen.add(v));
+        const r2 = await q(sb.from('nhat_ky').select('*').eq('bang', 'lo').in('khoa', olds).order('luc', { ascending:false }).limit(100));
+        cur = r2.data || []; rows = rows.concat(cur);
+      }
+      rows.sort((a, b) => new Date(b.luc) - new Date(a.luc));
+    }
+    box.innerHTML = rows.length ? rows.map(x => nkLine(x)).join('') : '<div class="muted" style="font-size:13px">' + esc(T1('Chưa có thay đổi nào được ghi (dữ liệu nạp từ file cũ không có lịch sử).', '暂无记录（从旧文件导入的数据没有历史）。')) + '</div>';
   } catch (e) { box.innerHTML = '<div class="msg err">' + esc(errMsg(e)) + '</div>'; }
 }
 function historyBlock(bang, khoa) {
@@ -1390,7 +1786,7 @@ function openPw() {
   S.navOpen = false; const a = document.getElementById('app'); if (a) a.classList.remove('nav-open');
   S.drawer = { kind:'pw' };
   const t = '<b style="font-size:20px;color:var(--pri-ink)">' + esc(T('pwChange')) + '</b>';
-  document.getElementById('drawer').innerHTML = '<div class="drawer-wrap"><button class="close-area" data-act="close-drawer" aria-label="' + esc(T('close')) + '"></button><aside class="drawer" role="dialog" aria-label="' + esc(T('pwChange')) + '"><div class="drawer-h"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">' + t + '<span class="muted" style="font-size:13px">' + esc((S.me && S.me.email) || '') + '</span></div><button class="x-btn" data-act="close-drawer" aria-label="' + esc(T('close')) + '">' + ico('x', 16) + '</button></div>' +
+  document.getElementById('drawer').innerHTML = '<div class="drawer-wrap' + drawerIn() + '"><button class="close-area" data-act="close-drawer" aria-label="' + esc(T('close')) + '"></button><aside class="drawer" role="dialog" aria-label="' + esc(T('pwChange')) + '"><div class="drawer-h"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">' + t + '<span class="muted" style="font-size:13px">' + esc((S.me && S.me.email) || '') + '</span></div><button class="x-btn" data-act="close-drawer" aria-label="' + esc(T('close')) + '">' + ico('x', 16) + '</button></div>' +
     '<form class="drawer-b" id="f-pw" data-form="f-pw">' + pwField(T1('Mật khẩu mới', '新密码'), 'p1', 'new-password') + pwField(T1('Nhập lại mật khẩu mới', '再次输入新密码'), 'p2', 'new-password') +
     '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Ít nhất 6 ký tự. Lần sau đăng nhập bằng mật khẩu mới này.', '至少6位。下次请用新密码登录。')) + '</p></form>' +
     '<div class="drawer-f"><button class="btn" data-act="close-drawer">' + esc(T('cancel')) + '</button><button class="btn btn-pri" type="submit" form="f-pw" id="save-btn">' + esc(T('save')) + '</button></div></aside></div>';
@@ -1422,7 +1818,12 @@ async function saveCont(form) {
   const btn = document.getElementById('save-btn'); if (btn) { btn.disabled = true; btn.textContent = T('saving'); }
   try {
     if (id) await q(sb.from('cont').update(o).eq('id', id));
-    else { if (!o.kho) throw new Error(T('required') + ': ' + T('kho')); if (o.so_cont && o.lo) o.id = o.so_cont + '-' + o.lo; await q(sb.from('cont').insert(o)); }
+    else {
+      if (!o.kho) throw new Error(T('required') + ': ' + T('kho'));
+      const nEl = document.getElementById('tn-n'), n = nEl ? Math.max(1, Math.min(50, parseInt(nEl.value, 10) || 1)) : 1;
+      if (n > 1) { const rows = []; for (let i = 0; i < n; i++) rows.push(Object.assign({}, o, i ? { so_cont:null, so_seal:null } : {})); await q(sb.from('cont').insert(rows)); toast(T1('Đã tạo ' + n + ' đơn', '已建 ' + n + ' 单')); }
+      else { if (o.so_cont && o.lo) o.id = o.so_cont + '-' + o.lo; await q(sb.from('cont').insert(o)); }
+    }
     closeDrawer(); await loadData();
     if (!id) {
       const st = o.trang_thai || '1';
@@ -1458,11 +1859,12 @@ async function saveLo(form) {
     else toast(T('saved'));
   } catch (e) { toast(errMsg(e), true); if (btn) { btn.disabled = false; btn.textContent = T('save'); } }
 }
-async function moveCont(id, to) {
+async function moveCont(id, to, bai) {
+  S.pickBai = null;
   const c = S.conts.find(x => x.id === id) || {}, now = new Date().toISOString(), patch = { trang_thai:to };
   if (to === '2' && !c.ngay_den_kho) patch.ngay_den_kho = todayVN();
   if (to === '3' && !c.du_kien_day) patch.du_kien_day = now;
-  if (to === '4') { patch.gio_vao_bai = c.gio_vao_bai || now; patch.bai_tam = c.bai_tam || S.cauhinh['Bãi tạm mặc định'] || 'HLS'; }
+  if (to === '4') { patch.gio_vao_bai = c.gio_vao_bai || now; patch.bai_tam = bai || c.bai_tam || S.cauhinh['Bãi tạm mặc định'] || 'HLS'; }
   if (to === '5' && c.trang_thai === '4') patch.gio_ra_bai = now;
   try { await q(sb.from('cont').update(patch).eq('id', id)); toast((c.so_cont || c.ma_don || id) + ' → ' + stLabel(to)); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'cont' && S.drawer.id === id) openContById(id); }
   catch (e) { toast(errMsg(e), true); }
@@ -1479,6 +1881,8 @@ async function approveGy(id, val) {
     } else {
       await q(sb.from('goi_y').update({ duyet:val, nha_xe_chon: val ? nx : g.nha_xe_chon }).eq('id', id));
       Object.assign(g, { duyet:val, nha_xe_chon: val ? nx : g.nha_xe_chon });
+      const cr = g.id_cont_rong ? S.conts.find(x => x.id === g.id_cont_rong) : null;
+      if (cr && cr.trang_thai === '1') { if (val && nx) cr.nha_xe = nx; else if (!val && cr.nha_xe === nx) cr.nha_xe = null; }
       toast((g.cont_day || g.ma_don_rong || id) + ' · ' + (val ? T('approved') : T('unapprove')));
       renderMain(); renderNavCounts();
     }
@@ -1571,7 +1975,7 @@ async function runGoiY() {
 
 /* ---------------- sự kiện ---------------- */
 const ACT = {
-  'tab': d => { S.tab = d.tab; if (d.seg) { S.tkSeg = d.seg; S.boardSeg = d.seg; } S.navOpen = false; closeDrawer(); renderShell(); window.scrollTo(0, 0); },
+  'tab': d => { S.tab = d.tab; if (d.seg) { S.tkSeg = d.seg; S.boardSeg = d.seg; } S.navOpen = false; closeDrawer(); renderShell(); const m = document.getElementById('main'); if (m) { m.classList.add('swap'); m.parentElement.scrollTop = 0; } window.scrollTo(0, 0); },
   'nav-open': () => { S.navOpen = true; document.getElementById('app').classList.add('nav-open'); },
   'nav-close': () => { S.navOpen = false; document.getElementById('app').classList.remove('nav-open'); },
   'lang': d => { LANG = d.lang; try { localStorage.setItem('dd_lang', LANG); } catch (e) {} renderShell(); if (S.drawer) { const dr = S.drawer; if (dr.kind === 'cont') { if (dr.id) openContById(dr.id); } else if (dr.kind === 'lo' && dr.id) openLo(S.lots[dr.id]); } },
@@ -1595,7 +1999,8 @@ const ACT = {
   'eport-run': () => runEport(),
   'kdtv-sync': () => runKdtvSync(),
   'copy-kd': async () => { const ok = await copyText(kdPlanText(kdGroups().filter(x => x.nhom <= 2))); if (ok) { S.copied = 'kd'; renderMain(); setTimeout(() => { if (S.copied === 'kd') { S.copied = null; renderMain(); } }, 2000); } },
-  'copy-hc': async () => { const ok = await copyText(haCangText(haCangLots(S.hcAll))); if (ok) { S.copied = 'hc'; renderMain(); setTimeout(() => { if (S.copied === 'hc') { S.copied = null; renderMain(); } }, 2000); } },
+  'copy-hc': async () => { const ok = await copyText(haCangText(hcFilter(haCangLots(S.hcAll)))); if (ok) { S.copied = 'hc'; renderMain(); setTimeout(() => { if (S.copied === 'hc') { S.copied = null; renderMain(); } }, 2000); } },
+  'copy-kd-bai': async d => { const k = 'kdbai-' + d.bai, ok = await copyText(kdBaiText(d.bai)); if (ok) { S.copied = k; renderMain(); setTimeout(() => { if (S.copied === k) { S.copied = null; renderMain(); } }, 2000); } },
   'cp-add': async (d, el) => {
     const loai = document.getElementById('cp-loai').value, tien = document.getElementById('cp-tien').value, gc = document.getElementById('cp-ghichu').value.trim();
     if (tien === '' || +tien < 0) { toast(T1('Nhập số tiền phát sinh.', '请输入金额。'), true); return; }
@@ -1631,6 +2036,16 @@ const ACT = {
     try { const r = await q(sb.rpc('huy_lo', { p_lo:d.lo, p_ly_do:why })); toast(T1('Đã hủy lô ' + d.lo + (r.data ? ' · ' + r.data + ' đơn chuyển sang Hủy' : ''), '已取消批次 ' + d.lo)); await loadData(); renderMain(); renderNavCounts(); if (S.lots[d.lo]) openLo(S.lots[d.lo]); else closeDrawer(); }
     catch (e) { el.disabled = false; el.textContent = T1('Hủy lô', '取消批次'); toast(errMsg(e), true); }
   },
+  'doi-ma-lo': async (d, el) => {
+    const inp = document.getElementById('doi-ma-lo'), moi = inp ? inp.value.trim() : '', lbl = T1('Đổi mã lô', '修改批次号');
+    if (!moi) { toast(T1('Nhập mã lô mới.', '请输入新批次号。'), true); if (inp) inp.focus(); return; }
+    if (moi === d.lo) { toast(T1('Mã lô mới trùng mã cũ.', '新批次号与原来相同。'), true); return; }
+    const k = 'doi-' + d.lo + '>' + moi;
+    if (S.confirmDel !== k) { S.confirmDel = k; el.textContent = T1('Bấm lần nữa để đổi ' + d.lo + ' → ' + moi, '再点一次确认 ' + d.lo + ' → ' + moi); setTimeout(() => { if (S.confirmDel === k) { S.confirmDel = null; if (el.isConnected) el.textContent = lbl; } }, 5000); return; }
+    S.confirmDel = null; el.disabled = true;
+    try { const r = await q(sb.rpc('doi_ma_lo', { p_cu:d.lo, p_moi:moi })); delete S.lots[d.lo]; toast(T1('Đã đổi mã lô ' + d.lo + ' → ' + moi + (r.data ? ' · ' + r.data + ' cont đổi theo' : ''), '已修改批次号 ' + d.lo + ' → ' + moi)); await loadData(); renderMain(); renderNavCounts(); if (S.lots[moi]) openLo(S.lots[moi]); else closeDrawer(); }
+    catch (e) { el.disabled = false; el.textContent = lbl; const m = errMsg(e); toast(/doi_ma_lo/.test(m) && /find|PGRST202|not exist/i.test(m) ? T1('Chức năng đổi mã lô chưa được cài lên Supabase — cần chạy file supabase/migrations/20260923190000_doi_ma_lo.sql.', '修改批次号功能尚未安装到Supabase。') : m, true); }
+  },
   'khoi-phuc-lo': async (d, el) => {
     el.disabled = true;
     try { const r = await q(sb.rpc('khoi_phuc_lo', { p_lo:d.lo })); toast(T1('Đã khôi phục lô ' + d.lo + (r.data ? ' · ' + r.data + ' đơn quay lại Chờ cắt rỗng' : ''), '已恢复批次 ' + d.lo)); await loadData(); renderMain(); renderNavCounts(); if (S.lots[d.lo]) openLo(S.lots[d.lo]); }
@@ -1648,7 +2063,36 @@ const ACT = {
   'copy-grp': async (d) => { const t = S.goiy.filter(g => g.duyet && !g.da_ap_dung).map(gyView).filter(g => (g.nx || '—') === d.nx).map(g => g.text).join('\n\n'); await copyText(t); S.copied = 'grp-' + d.nx; toast(T('copied')); if (!d.keep) renderMain(); },
   'tk-seg': d => { S.tkSeg = d.v; renderMain(); },
   'board-seg': d => { S.boardSeg = d.v; renderMain(); },
-  'move': d => moveCont(d.id, d.to),
+  'move': d => {
+    if (d.to === '4') {
+      const c = S.conts.find(x => x.id === d.id) || {}, bai = BAI_THEO_NX[c.nha_xe];
+      if (bai && S.bai.some(b => b.ma === bai)) return moveCont(d.id, '4', bai);
+      S.pickBai = d.id; renderMain(); if (S.drawer && S.drawer.kind === 'cont' && S.drawer.id === d.id) openContById(d.id); return;
+    }
+    moveCont(d.id, d.to);
+  },
+  'move-bai': d => moveCont(d.id, '4', d.bai),
+  'pick-bai-x': () => { const id = S.pickBai; S.pickBai = null; renderMain(); if (S.drawer && S.drawer.kind === 'cont' && S.drawer.id === id) openContById(id); },
+  'bao-su-co': async (d, el) => {
+    const g = id => { const x = document.getElementById(id); return x ? x.value.trim() : ''; }, dr = d.src === 'd';
+    const lo = dr ? d.lo : g('bsc-lo'), loai = g(dr ? 'bsc-loai-d' : 'bsc-loai'), gc = g(dr ? 'bsc-ghichu-d' : 'bsc-ghichu');
+    if (!lo) { toast(T1('Chọn lô.', '请选择批次。'), true); return; }
+    if (!loai) { toast(T1('Chọn loại sự cố.', '请选择异常类型。'), true); return; }
+    const k = 'bsc-' + lo;
+    if (S.confirmDel !== k) { S.confirmDel = k; el.textContent = T1('Bấm lần nữa: báo sự cố lô ' + lo, '再点一次确认 ' + lo); setTimeout(() => { if (S.confirmDel === k) { S.confirmDel = null; if (el.isConnected) el.textContent = T1('Báo sự cố', '报告异常'); } }, 5000); return; }
+    S.confirmDel = null; el.disabled = true;
+    try { await q(sb.rpc('bao_su_co', { p_lo:lo, p_loai:loai, p_ghi_chu:gc })); toast(T1('Đã báo sự cố lô ' + lo + ' · ' + loai + ' — cả lô đang chờ xử lý', '已报告批次异常 ' + lo)); await loadData(); renderMain(); renderNavCounts(); if (dr && S.lots[lo]) openLo(S.lots[lo]); }
+    catch (e) { el.disabled = false; el.textContent = T1('Báo sự cố', '报告异常'); toast(errMsg(e), true); }
+  },
+  'xu-ly': d => openXuLy(d.lo, d.huong),
+  'tn-loc': () => tnDien(),
+  'ttcu-save': async d => { const el = document.getElementById('ttcu-' + d.id); try { await q(sb.from('thong_tin_cu').update({ gia_tri:el ? el.value.trim() || null : null }).eq('id', +d.id)); toast(T('saved')); await loadData(); if (S.drawer && S.drawer.kind === 'lo' && S.lots[S.drawer.id]) openLo(S.lots[S.drawer.id]); else if (S.drawer && S.drawer.kind === 'cont') openContById(S.drawer.id); } catch (e) { toast(errMsg(e), true); } },
+  'ttcu-del': async (d, el) => {
+    const k = 'ttcu-' + d.id;
+    if (S.confirmDel !== k) { S.confirmDel = k; toast(T1('Bấm ✕ lần nữa để xoá thông tin cũ này', '再点一次删除')); setTimeout(() => { if (S.confirmDel === k) S.confirmDel = null; }, 4000); return; }
+    S.confirmDel = null;
+    try { await q(sb.from('thong_tin_cu').delete().eq('id', +d.id)); toast(T1('Đã xoá', '已删除')); await loadData(); if (S.drawer && S.drawer.kind === 'lo' && S.lots[S.drawer.id]) openLo(S.lots[S.drawer.id]); else if (S.drawer && S.drawer.kind === 'cont') openContById(S.drawer.id); } catch (e) { toast(errMsg(e), true); }
+  },
   'kd-done': async d => { try { await q(sb.from('lo').update({ da_kiem_dich:true }).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + T('kdDone')); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'lo' && S.drawer.id === d.lo && S.lots[d.lo]) openLo(S.lots[d.lo]); } catch (e) { toast(errMsg(e), true); } },
   'kd-undo': async d => { try { await q(sb.from('lo').update({ da_kiem_dich:false }).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + T1('đã bỏ tích kiểm dịch', '已取消检疫勾选')); await loadData(); renderMain(); renderNavCounts(); if (S.drawer && S.drawer.kind === 'lo' && S.drawer.id === d.lo && S.lots[d.lo]) openLo(S.lots[d.lo]); } catch (e) { toast(errMsg(e), true); } },
   'open-cont': d => openContById(d.id),
@@ -1677,6 +2121,7 @@ document.addEventListener('change', e => {
   else if (el.dataset.on === 'lo-huy') { S.loHuy = el.checked; renderMain(); }
   else if (el.dataset.on === 'bai-sort') { S.baiSort = el.value; renderMain(); }
   else if (el.dataset.on === 'hc-all') { S.hcAll = el.checked; renderMain(); }
+  else if (el.dataset.on === 'hc-f') { S.hcF = Object.assign({}, S.hcF, { [el.dataset.k]: el.value }); renderMain(); }
   else if (el.dataset.on === 'don-all') { document.querySelectorAll('.don-cb').forEach(x => { x.checked = el.checked; }); }
   else if (el.dataset.on === 'nk-bang') { S.nkBang = el.value; loadNhatKy(); }
   else if (el.dataset.on === 'lo-sortk') setLoSort(el.value, el.value === 'moi' ? -1 : 1);
@@ -1695,6 +2140,7 @@ document.addEventListener('submit', e => {
   const f = e.target; e.preventDefault();
   if (f.dataset.form === 'f-cont') saveCont(f);
   else if (f.dataset.form === 'f-lo') saveLo(f);
+  else if (f.dataset.form === 'f-xuly') saveXuLy(f);
   else if (['nhaxe', 'kho', 'nv', 'bai', 'gia', 'cangden', 'cangha'].indexOf(f.dataset.form) > -1) saveDm(f);
   else if (f.dataset.form === 'nv-new') createNhanVien(f);
   else if (f.dataset.form === 'setpw') setNhanVienPassword(f);

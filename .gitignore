@@ -13,3 +13,14 @@ __pycache__/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Công cụ nạp Excel: bảng ánh xạ tên thật + SQL sinh ra chứa dữ liệu thật — không đưa lên GitHub
+tools/*.local.json
+sao-luu/*.json
+sao-luu/nap_*.sql
+
+# Test có số cont / mã đơn thật làm fixture — chạy local, không đưa lên GitHub
+tests/test_*.py
+# Ảnh chụp màn hình (có số cont thật), file nháp
+Claude outputs/
+_to_delete/
