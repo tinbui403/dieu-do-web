@@ -904,9 +904,50 @@ function gyView(g) {
   const mooc = cd && cd.nha_xe ? cd.nha_xe : null, locked = !!mooc;
   const kdChua = !!(cd && cd.cont_kiem_dich && !(lotOf(cd) && lotOf(cd).da_kiem_dich));
   const nx = locked ? mooc : (S.pick[g.id] || g.nha_xe_chon || g.nha_xe_goi_y || '');
-  let text = String(g.noi_dung_lenh || '');
-  text = /Nhà xe 车队:/.test(text) ? text.replace(/Nhà xe 车队: .*$/m, 'Nhà xe 车队: ' + (nx || '—')) : text + '\nNhà xe 车队: ' + (nx || '—');
+  const text = lenhText(g, nx, tk, cd);
   return Object.assign({}, g, { tk, nx, text, cd, mooc, locked, kdChua });
+}
+/* ---- 4 mẫu lệnh chỉ tiếng Việt (anh Hi chốt 24–25/09): nhà xe chỉ ở tiêu đề; STT đếm theo nhà xe trong ngày theo thứ tự duyệt ---- */
+function gyNxOf(g) { const cd = g.id_cont_day ? S.conts.find(c => c.id === g.id_cont_day) : null; return (cd && cd.nha_xe) || S.pick[g.id] || g.nha_xe_chon || g.nha_xe_goi_y || ''; }
+function lenhStt(g, nx) {
+  const day = g.ngay_kh || todayVN();
+  const same = S.goiy.filter(x => (x.ngay_kh || todayVN()) === day && gyNxOf(x) === nx)
+    .sort((a, b) => (a.duyet ? 0 : 1) - (b.duyet ? 0 : 1) || String(a.duyet_luc || '').localeCompare(String(b.duyet_luc || '')) || String(a.id).localeCompare(String(b.id)));
+  return same.findIndex(x => x.id === g.id) + 1;
+}
+function vi(s) { return splitVZ(s)[0] || ''; }   // bỏ phần chữ Hán (nơi hạ / kho lưu song ngữ)
+// Note giờ: từ đơn cắt rỗng — "Giờ lên kho (ghi chú)" + ngày cần lên kho; trống thì bỏ dòng
+function lenhNote(cr) {
+  if (!cr) return '';
+  const gc = (cr.gio_len_kho_ghi_chu || '').trim(), ng = cr.ngay_can_len_kho;
+  if (gc) return gc + (ng ? ' ' + fDate(ng) : '') + ' tới kho';
+  return ng ? fTs(ng) + ' tới kho' : '';
+}
+function lenhText(g, nx, tk, cd) {
+  tk = tk || typeKey(g.loai_lenh); cd = cd === undefined ? (g.id_cont_day ? S.conts.find(c => c.id === g.id_cont_day) || null : null) : cd;
+  const cr = g.id_cont_rong ? S.conts.find(c => c.id === g.id_cont_rong) || null : null;
+  const NX = (nx || '—').toUpperCase(), lc = cd ? lotOf(cd) : null, lr = cr ? lotOf(cr) : null;
+  const bk = g.booking_lay_rong || (lr && lr.booking) || (lc && lc.booking) || 'chưa có booking';
+  const contDay = (g.cont_day || (cd && cd.so_cont) || '—') + (cd && cd.cont_kiem_dich ? ' (CONT KIỂM DỊCH)' : '');
+  const khoRong = g.kho_cat_rong || (cr && cr.kho) || '—', noiHa = vi(g.noi_ha) || (lc ? vi(cangHa(lc)) : '') || '—';
+  const note = lenhNote(cr), L = [];
+  if (tk === 'dong') {
+    L.push('Lệnh ĐÓNG TRONG NGÀY ' + NX, 'BOOKING: ' + bk, 'Cắt rỗng tại: ' + (g.kho_cat_rong || (cd && cd.kho) || khoRong));
+    if (note) L.push('NOTE: ' + note);
+    return L.join('\n');
+  }
+  L.push('Lệnh ' + lenhStt(g, nx) + ' ' + NX);
+  if (tk === 'rut') {
+    const viTri = cd && cd.trang_thai === '4' ? 'ĐANG Ở BÃI TẠM ' + (cd.bai_tam || '') : (g.kho_day || (cd && cd.kho) || '—');
+    L.push('RÚT MOOC', 'cont đầy: ' + contDay, 'Kho đầy: ' + viTri.trim(), 'Nơi hạ: ' + noiHa, 'CUT-OFF: ' + (lc && lc.closing ? fTs(lc.closing) : g.closing ? fTs(g.closing) : '—'));
+  } else if (tk === 'cat') {
+    L.push('Số Booking: ' + bk, 'Cắt rỗng tại: ' + khoRong, 'CẮT MOOC MỚI');
+    if (note) L.push('Note: ' + note);
+  } else {
+    L.push('Số Booking: ' + bk, 'Cắt rỗng tại: ' + khoRong, 'cont đầy: ' + contDay, 'Kho đầy: ' + (g.kho_day || (cd && cd.kho) || '—'), 'Nơi hạ: ' + noiHa);
+    if (note) L.push('Note: ' + note);
+  }
+  return L.join('\n');
 }
 const NEXT = { '1':['2','toDen'], '2':['3','toDay'], '3':['4','toBai'], '4':['5','toCang'], '5':['6','toTau'] };
 

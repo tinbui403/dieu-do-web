@@ -2,7 +2,7 @@
 
 > **Dành cho Claude (bất kỳ tài khoản / phiên nào):** đọc `README.md` trước để hiểu hệ thống, rồi đọc file này để biết đang dở ở đâu. Xong mỗi mốc thì **cập nhật lại file này** (mục "Đang làm", "Bước kế tiếp", "Nhật ký phiên") trước khi dừng.
 
-Cập nhật lần cuối: **25/09/2026 ~01:00** (giờ VN, phiên XÂY LẠI PHASE II — tài khoản phụ)
+Cập nhật lần cuối: **25/09/2026 ~01:40** (giờ VN, phiên XÂY LẠI PHASE II + PHASE I — tài khoản phụ)
 
 ## ✅ ĐẨY GITHUB 24/09 — ĐÃ PUSH XONG (team dùng bản mới)
 
@@ -34,6 +34,13 @@ Yêu cầu gốc: `yeu-cau/trao_doi_xay_lai_24-09.md` (gitignore, có dữ liệ
 
 **Cách làm:** thứ tự **II → I → III → IV**; sửa trực tiếp trên master và đẩy dần (team ngưng dùng); dữ liệu thật trên Supabase phải giữ nguyên qua migration.
 
+## ✅ PHASE I — 4 mẫu lệnh chỉ tiếng Việt (25/09, tài khoản phụ, commit riêng sau Phase II)
+
+Anh Hi chốt thêm bằng trắc nghiệm: **STT lệnh đếm theo từng nhà xe trong ngày** (theo thứ tự duyệt gợi ý, chưa duyệt xếp sau); Rút mooc **"Kho đầy" = vị trí hiện tại** (tên kho, hoặc "ĐANG Ở BÃI TẠM [bãi]" khi cont ở bãi), **CUT-OFF = CLS máy dùng** của lô; dòng **Note = "Giờ lên kho (ghi chú)" + ngày cần lên kho của đơn cắt rỗng + " tới kho"** (trống thì bỏ dòng); Cắt mooc thêm Note giờ nếu đơn có.
+- Lệnh dựng **trên web** (`lenhText` trong `gyView`, không đổi DB — `noi_dung_lenh` song ngữ trong DB không dùng nữa). Nhà xe chỉ ở tiêu đề, không còn dòng "Nhà xe 车队". `noi_ha` song ngữ được cắt phần chữ Hán.
+- 4 mẫu: **Đổi rỗng kéo đầy** `Lệnh N NX / Số Booking / Cắt rỗng tại / cont đầy (CONT KIỂM DỊCH nếu là cont KD) / Kho đầy / Nơi hạ / Note`; **Rút mooc** `Lệnh N NX / RÚT MOOC / cont đầy / Kho đầy / Nơi hạ / CUT-OFF`; **Cắt mooc** `Lệnh N NX / Số Booking / Cắt rỗng tại / CẮT MOOC MỚI / Note`; **Đóng trong ngày** `Lệnh ĐÓNG TRONG NGÀY NX / BOOKING / Cắt rỗng tại / NOTE`. Booking lấy từ booking_lay_rong → lô của đơn rỗng → lô cont đầy.
+- Test `tests/test_lenh.py` 9/9; các bộ khác giữ đạt. Chép lệnh / chép cả nhóm dùng cùng hàm nên số thứ tự nhất quán.
+
 ## 🚧 PHASE II — Booking / Lô / Đơn hàng: ✅ DB ĐÃ CHẠY TRÊN SUPABASE + WEB ĐÃ LÀM, TEST 48/48 (25/09, tài khoản phụ) — CHƯA commit/push
 
 Làm đúng theo kế hoạch anh Hi chốt ở mục bên dưới. Team đang tạm ngưng dùng app nên sửa thẳng master.
@@ -57,7 +64,7 @@ Làm đúng theo kế hoạch anh Hi chốt ở mục bên dưới. Team đang t
 
 **Giả định đã làm, anh Hi xác nhận lại nếu khác ý:** (1) mã đơn nhiều cont thêm `-1, -2…` như dữ liệu cũ trong Excel; (2) tách lô khi rớt tàu = dùng "Đổi tàu / booking" trên hồ sơ lô (không thêm nút riêng); (3) xoá booking chỉ Quản lý và chỉ khi chưa có lô; (4) mã lô gợi ý: lô đầu của booking là số trơn (627), lô thứ hai cùng booking là 627B (lô đầu có thể đổi mã thành 627A bằng "Đổi mã lô").
 
-**Còn lại của Phase II:** đọc PDF booking bằng Gemini (Edge Function) — **chờ anh Hi cấp API key Google AI Studio** (đặt trong Supabase secrets, không đưa vào web). Sau đó Phase I (4 mẫu lệnh tiếng Việt), III (đã làm chung ở trên: nút Tạo đơn hàng + bộ lọc), IV (chatbot + cờ "AI được lưu").
+**Còn lại của Phase II:** đọc PDF booking bằng Gemini (Edge Function) — **chờ anh Hi cấp API key Google AI Studio** (đặt trong Supabase secrets, không đưa vào web). Phase I (4 mẫu lệnh) ✅ đã làm ngay sau (xem mục trên); III đã làm chung ở trên (nút Tạo đơn hàng + bộ lọc); còn IV (chatbot + cờ "AI được lưu") — cũng cần API key.
 
 ## ⚠ ĐỌC TRƯỚC: NHÁNH NÀO LÀ BẢN CHÍNH
 
@@ -219,6 +226,7 @@ Bộ test dùng 5 lô gần nhất trong file Excel vận hành ngày 22/09 (fil
 
 | Ngày | Tài khoản / phiên | Đã làm |
 |---|---|---|
+| 25/09/2026 (~01:30) | Cowork (tài khoản phụ · Phase I) | 4 mẫu lệnh tiếng Việt dựng trên web (`lenhText`): STT theo nhà xe/ngày, Kho đầy = vị trí hiện tại, CUT-OFF = CLS, Note = giờ lên kho đơn rỗng; bỏ dòng Nhà xe song ngữ. Test 9/9. Commit riêng. |
 | 25/09/2026 (~00:30–01:00) | Cowork (tài khoản phụ · Phase II) | Migration booking/lô/đơn hàng (bảng booking, lo.so_booking + khach_hang, cont yêu cầu tàu, trigger đồng bộ, backfill 143 booking / 235 lô, view booking_tong_hop, hàm goi_y_booking) chạy thử rồi chạy thật trên Supabase (SHA khớp). Web: tab Booking, form lô chọn booking + khách, Tạo đơn hàng (gợi ý mã đơn), Chờ cắt rỗng lọc + Tìm booking → tạo lô & gán, đổi tàu chọn booking có sẵn. Test mới 48/48, bộ cũ giữ đạt. Đồng bộ về máy, build khớp SHA. Chưa commit/push. |
 | 24/09/2026 (~01:30) | Cowork (tài khoản phụ · nạp Excel) | Nạp chồng "dư liệu hôm nay.xlsx" vào Supabase theo luật Excel-là-chuẩn (anh Hi chốt): 38 lô, 21 cont mới, 611A xoá, 613A→613 / 622→622A, 604B/607B/609E thêm, 617/624 phục hồi (rớt tàu). Sao lưu `private.sao_luu_20260924_truoc_nap`. Viết `tools/nap_excel.py` dùng lại hằng ngày (chạy thử rollback + báo cáo). Chưa commit/push. |
 | 24/09/2026 | Cowork (tài khoản phụ · giao diện 3D) | Đổi toàn bộ web sang phong cách kính 3D tím – chàm theo ảnh mẫu anh Hi gửi: viết lại `<style>`, khung kính cố định + `.main` cuộn trong, sidebar sáng, lớp nền `bg3d` (khối màu, quả cầu, cont/tàu/cẩu SVG trôi chậm), chuyển động nhẹ (hover nhấc thẻ, fade đổi tab, ngăn kéo trượt lần mở), fallback reduced-motion + máy yếu. Test mới `test_3d.py` 22/22, bộ cũ xanh. Build tại máy, hash khớp. Chưa commit/push (anh chốt đẩy một lần sau 3D). |
