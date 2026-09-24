@@ -2,18 +2,62 @@
 
 > **Dành cho Claude (bất kỳ tài khoản / phiên nào):** đọc `README.md` trước để hiểu hệ thống, rồi đọc file này để biết đang dở ở đâu. Xong mỗi mốc thì **cập nhật lại file này** (mục "Đang làm", "Bước kế tiếp", "Nhật ký phiên") trước khi dừng.
 
-Cập nhật lần cuối: **24/09/2026 ~02:00** (giờ VN, phiên NẠP EXCEL HÔM NAY — tài khoản phụ; giao diện kính 3D làm trước đó cùng đêm)
+Cập nhật lần cuối: **25/09/2026 ~01:00** (giờ VN, phiên XÂY LẠI PHASE II — tài khoản phụ)
 
-## 🚀 ĐẨY GITHUB 24/09 — ĐÃ COMMIT, CHỜ PUSH TRÊN MÁY
+## ✅ ĐẨY GITHUB 24/09 — ĐÃ PUSH XONG (team dùng bản mới)
 
-Đã commit toàn bộ code mới (giao diện 3D + 4 lỗi team + lô sự cố + lọc tin nhắn + duyệt gán nhà xe + tools/nap_excel.py + 4 migration) vào **master** và tạo sẵn nhánh **ban-public** (bản cho repo public). Đã quét sạch dữ liệu thật (mã đơn/số cont/tên khách) khỏi mọi file được git theo dõi; file test có cont thật (`tests/test_*.py`), `tools/*.local.json`, `Claude outputs/` đã cho vào `.gitignore`.
+Anh Hi đã push trên terminal Windows lúc ~01:47:
+- `only-me/master`: `ae731c0 → cf890d8` (bản lưu trữ đầy đủ).
+- `origin (dieu-do-web)/master`: `0d1eede → 5230791` (bản cho team, qua ban-public) → GitHub Pages build lại → **team đã dùng bản mới** (giao diện 3D, 4 lỗi team đã sửa, lô sự cố, lọc tin nhắn, duyệt gán nhà xe). Team nên Ctrl+F5 để bỏ cache bản cũ.
 
-**Máy ảo Cowork KHÔNG đăng nhập GitHub được** → phải push trên **terminal Windows** (mở tại thư mục dự án), 2 lệnh:
-```
-git push only-me master
-git push origin ban-public:master
-```
-Lệnh 2 xong → GitHub Pages build lại (vài phút) → team dùng bản mới. (Đừng `git push origin master` — theo quy ước dùng ban-public.)
+Nội dung đã đẩy: giao diện kính 3D + 4 lỗi team + lô sự cố + lọc tin nhắn + duyệt gán nhà xe + `tools/nap_excel.py` + 4 migration. Đã quét sạch dữ liệu thật khỏi mọi file git theo dõi; `tests/test_*.py`, `tools/*.local.json`, `Claude outputs/` nằm trong `.gitignore`.
+(Dòng trạng thái này cập nhật sau khi push, chưa commit riêng — sẽ vào commit kế tiếp. Quy ước public: luôn dùng ban-public, KHÔNG `git push origin master`.)
+
+## 🧭 KẾ HOẠCH XÂY LẠI — anh Hi chốt 24/09 (đang làm, team TẠM NGƯNG DÙNG app trong lúc này)
+
+Yêu cầu gốc: `yeu-cau/trao_doi_xay_lai_24-09.md` (gitignore, có dữ liệu thật). Đã hỏi trắc nghiệm 2 vòng, anh Hi chốt như sau — **làm đúng theo đây, không đoán**:
+
+**Mô hình dữ liệu (phần II, làm TRƯỚC):**
+- **Booking** thành bảng riêng: số booking, hãng tàu, tàu, chuyến, cảng đến, ETD, ETA, tổng số cont. **1 booking → nhiều lô.**
+- **Lô = 1 khách = 1 đơn** (khách đóng nhiều kho vẫn 1 lô). Nhiều khách đi chung booking → tách 604A/604B… cùng booking (đúng dữ liệu hiện có). Lô giữ mã KDTV, tờ khai, cont kiểm dịch, và **bản sao** tàu/ETD/ETA/CLS để sửa riêng.
+- **Booking sửa KHÔNG tự đồng bộ xuống lô.** Lô rớt (KD không đạt / đóng không kịp) → **tách thành lô độc lập gắn booking mới**.
+- **Đơn hàng = cont "Chờ cắt rỗng"** (không bảng riêng). Mã đơn = số thứ tự đơn, dạng `[viết tắt kho/khách][tháng][số đơn trong tháng]` (vd HX 09190). Thêm trên cont: ngày đặt hàng, ngày lên cont (đã có), cảng đến / ngày tàu / hãng **yêu cầu** (để tìm booking khi chưa có lô).
+- Luồng: **Tạo đơn hàng → tìm booking phù hợp (máy gợi ý + Điều độ tự chọn) → tạo lô → gán cont.**
+- Cảnh báo lô **thừa/thiếu cont so với booking**; thiếu thì chỉ **ghi chú nhắc "xin thêm cont + hãng tàu"** (không có quy trình riêng).
+- **Đọc PDF booking bằng Gemini** (mọi mẫu hãng): PDF → AI trích số booking/cảng/tàu/chuyến/ETD/ETA/hãng/SL → **người duyệt → lưu**, **không lưu file PDF**. Cần anh Hi cấp API key Google AI Studio → đặt trong Supabase secrets (Edge Function), không đưa vào web.
+
+**Mẫu lệnh (phần I):** chỉ tiếng Việt; tiêu đề `Lệnh [STT lệnh trong ngày] [NHÀ XE được phân công]` (nhà xe chỉ ở tiêu đề, bỏ dòng nhà xe song ngữ riêng); 4 mẫu đúng bố cục anh đưa: Đổi rỗng kéo đầy (Số Booking / Cắt rỗng tại / cont đầy (CONT KIỂM DỊCH) / Kho đầy / Nơi hạ / Note giờ), Rút mooc (cont đầy / Kho đầy = vị trí hiện tại / Nơi hạ / CUT-OFF), Cắt mooc (Số Booking / Cắt rỗng tại / CẮT MOOC MỚI), Đóng trong ngày (`Lệnh ĐÓNG TRONG NGÀY [NHÀ XE]` / BOOKING / Cắt rỗng tại / NOTE giờ).
+
+**Container (phần III):** nút "Thêm đơn / cont" → **"Tạo đơn hàng"**; tab Chờ cắt rỗng **gom theo đơn/lô + bộ lọc** (kho đóng hàng, khách, cảng…).
+
+**Chatbot AI (phần IV, làm CUỐI):** Gemini nhúng vào dữ liệu Supabase; làm được mọi việc ở dạng **đọc / đề xuất**; **quyền "AI được lưu" là cờ bật/tắt theo từng tài khoản do Quản lý bật** — người có cờ xác nhận thì AI mới ghi, người khác chỉ hỏi/xem.
+
+**Cách làm:** thứ tự **II → I → III → IV**; sửa trực tiếp trên master và đẩy dần (team ngưng dùng); dữ liệu thật trên Supabase phải giữ nguyên qua migration.
+
+## 🚧 PHASE II — Booking / Lô / Đơn hàng: ✅ DB ĐÃ CHẠY TRÊN SUPABASE + WEB ĐÃ LÀM, TEST 48/48 (25/09, tài khoản phụ) — CHƯA commit/push
+
+Làm đúng theo kế hoạch anh Hi chốt ở mục bên dưới. Team đang tạm ngưng dùng app nên sửa thẳng master.
+
+**DB — migration `supabase/migrations/20260924150000_booking_don_hang.sql` (đã chạy thật ~00:30 25/09, chạy thử rollback trước, SHA-256 khớp):**
+- Bảng mới **`public.booking`** (so_booking khoá chính IN HOA, hang_tau, ten_tau, chuyen, cang_den, etd, eta, so_luong_cont = số cont hãng cấp, ghi_chu, nguon, cap_nhat_luc, nguoi_cap_nhat). RLS giống bảng lô (QL/ĐĐ/CSKH thêm-sửa, chỉ QL xoá), nhật ký `nk_booking`, realtime.
+- Lô thêm **`so_booking`** (khoá → booking, đổi mã booking thì lô đổi theo, xoá booking thì lô về null) + **`khach_hang`** (lô = 1 khách). Cont thêm **`ngay_dat_hang`, `cang_den_yc`, `ngay_tau_yc`, `hang_tau_yc`** (đơn hàng = cont chờ cắt rỗng, yêu cầu tàu để tìm booking).
+- Trigger **`lo_dong_bo_booking`**: `lo.booking` (chữ, web cũ / nap_excel / xu_ly_su_co) ↔ `lo.so_booking` (khoá) luôn đồng bộ; lô gõ booking lạ → **tự tạo booking** (nguồn "tự tạo từ lô …"); lô vừa gắn booking → **ô trống chép từ booking** (hãng/tàu/cảng/ETD/ETA), ô đã có thì giữ. **Booking sửa KHÔNG kéo theo lô** (đúng ý anh Hi).
+- Backfill (tắt trigger lô nên không đổi "cập nhật lúc", không sinh nhật ký): 143 booking từ 235 lô (mỗi ô lấy giá trị đầu tiên không trống, ưu tiên lô chưa hủy mới nhất); 235/235 lô gắn khoá + khách (khách nhiều cont nhất trong lô); **số cont hãng cấp khởi tạo = số cont các lô đang dùng** (nên mọi booking cũ "Đủ", không báo động giả — Điều độ sửa lại số thật với booking đang chạy).
+- View `lo_tong_hop` thêm 2 cột cuối `so_booking, khach_hang`; view mới **`booking_tong_hop`** (so_lo, cont_ke_hoach, cont_thuc_te, **cont_da_xep** = Σ mỗi lô max(kế hoạch, cont thực tế), cac_lo); hàm **`goi_y_booking(cảng, ngày tàu, hãng, số cont)`** chấm điểm (đúng cảng 50, ETD trùng 40 / lệch ≤2 ngày 30 / ≤5 ngày 15, đúng hãng +20 khác −30, còn chỗ +25 thiếu −40) trả 10 booking kèm lý do.
+- Số liệu lúc chạy thử để team biết: 77 booking dùng chung nhiều lô (đúng mô hình); 9 lô cũ (462–567) có cont của 2 khách (giữ nguyên, lô lấy khách nhiều cont hơn); 55 lô cũ có tàu/ETD/cảng khác booking (đa số lô anh em bỏ trống tàu) — không sửa lô, web hiện ghi chú "bản sao khác booking".
+
+**WEB (`src/app.src.html` → `index.html`, build ở máy anh Hi khớp SHA):**
+- **Lô / Booking** có 2 chip: **Lô** (thêm cột Khách hàng, sắp xếp theo khách; ô booking báo "Vượt booking N" đỏ) và **Booking** (bảng: booking, hãng, tàu·chuyến, cảng, ETD, ETA, số cont hãng cấp, đã xếp, tình trạng **Đủ / Còn chỗ N / Vượt booking N — xin thêm cont với hãng tàu / chưa ghi số cont**, các lô kèm khách; mặc định ẩn booking đã qua ETD > 7 ngày). Nút **Thêm booking**; hồ sơ booking: sửa thông tin, danh sách lô, cảnh báo thừa/thiếu, nút **Thêm lô cho booking này**; QL xoá được booking chưa có lô.
+- **Form lô**: ô Booking là **ô chọn** (ghi kèm tàu · ETD · còn chỗ) + ô **Booking mới (nhập tay)** khi chưa có trong danh sách (DB tự tạo) + ô **Khách hàng**. Chọn booking → tự điền tàu/ETD/ETA/cảng/hãng còn trống (sửa tay được). Hồ sơ lô có khối **Booking của lô** (thông tin booking, tình trạng, lô cùng booking, ghi chú nếu bản sao khác booking). Nút trong lô đổi tên **"Thêm cont vào lô"** (khách mặc định = khách của lô).
+- **Container / Tại kho**: nút **"Tạo đơn hàng"** thay "Thêm đơn / cont" → form đơn: mã đơn (**máy gợi ý khi chọn khách**: chữ tắt khách + tháng + STT đơn trong tháng, vd `HX 09190`; nhiều cont → `-1, -2…`), ngày đặt hàng, khách, kho, ngày lên cont, giờ ghi chú, số cont, CSKH, **yêu cầu tàu** (cảng / ngày tàu / hãng), ghi chú; ô **Lọc từ tin nhắn khách** điền được cả cảng/ngày tàu/hãng/ngày đặt/số cont. Lưu → tạo N cont "Chờ cắt rỗng" chưa lô rồi mở màn Chờ cắt rỗng lọc sẵn theo kho.
+- **Chờ cắt rỗng**: **bộ lọc** kho đóng hàng / khách / cảng / lô (có "Chưa có lô") + đếm đơn, cột mới Mã đơn · Khách · Lô·Booking · Yêu cầu tàu; đơn chưa lô xếp trước và có nút **Tìm booking**.
+- **Tìm booking** (ngăn kéo): yêu cầu của đơn, tích chọn cont của đơn, **máy gợi ý** (gọi `goi_y_booking`, tự chọn khi điểm ≥ 60), hoặc chọn booking khác / nhập booking mới; **mã lô gợi ý** (booking đã có lô 604A → 604B; chưa có → số lớn nhất + 1); có thể **gán vào lô có sẵn cùng khách** thay vì tạo mới. Bấm **Tạo lô & gán N cont** → tạo lô (so_booking, khách, kế hoạch = N, chép tàu/ETD/ETA/cảng) → cont gán lô → mở hồ sơ lô.
+- **Rớt tàu → Đổi tàu / booking**: thêm ô "Chọn booking có sẵn" để máy điền booking/tàu/hãng/ETD/ETA; lô này tách sang booking mới, lô khác cùng booking cũ giữ nguyên (trigger lo).
+- Test: `tests/test_booking.py` **48/48**; các bộ cũ vẫn đạt (`test_moi` 40/40, `test_suco` 30/30, `test_duyet_bai` 12/12, `test_3d` 22/22, `test_tinnhan` 26/26 — 3 file test sửa theo form đơn hàng mới; `run_test.py` 39/40, lỗi còn lại là console "fonts.googleapis bị chặn" có từ trước). `tests/mock.js` mô phỏng bảng booking + trigger + `goi_y_booking`.
+
+**Giả định đã làm, anh Hi xác nhận lại nếu khác ý:** (1) mã đơn nhiều cont thêm `-1, -2…` như dữ liệu cũ trong Excel; (2) tách lô khi rớt tàu = dùng "Đổi tàu / booking" trên hồ sơ lô (không thêm nút riêng); (3) xoá booking chỉ Quản lý và chỉ khi chưa có lô; (4) mã lô gợi ý: lô đầu của booking là số trơn (627), lô thứ hai cùng booking là 627B (lô đầu có thể đổi mã thành 627A bằng "Đổi mã lô").
+
+**Còn lại của Phase II:** đọc PDF booking bằng Gemini (Edge Function) — **chờ anh Hi cấp API key Google AI Studio** (đặt trong Supabase secrets, không đưa vào web). Sau đó Phase I (4 mẫu lệnh tiếng Việt), III (đã làm chung ở trên: nút Tạo đơn hàng + bộ lọc), IV (chatbot + cờ "AI được lưu").
 
 ## ⚠ ĐỌC TRƯỚC: NHÁNH NÀO LÀ BẢN CHÍNH
 
@@ -141,6 +185,7 @@ Bộ test dùng 5 lô gần nhất trong file Excel vận hành ngày 22/09 (fil
 
 ## Bước kế tiếp
 
+-1. **Phase II (25/09):** anh Hi mở `index.html` (Ctrl+F5) xem tab Lô / Booking, form lô, Container → Tạo đơn hàng → Chờ cắt rỗng → Tìm booking; sửa **số cont hãng cấp** cho các booking đang chạy (đang = số cont lô đang dùng). Xong thì **commit + đẩy** (`only-me master` + ban-public theo quy ước). Cần **API key Google AI Studio** để làm đọc PDF booking + chatbot.
 0. **Anh Hi mở `index.html` xem giao diện kính 3D** (Tổng quan, Container, ngăn kéo, điện thoại). Anh chốt: xong 3D thì **đẩy GitHub một lần** cả 7 phần đang giữ (đổi mã lô, bỏ tích KD, lọc hạ cảng, lô sự cố, lọc tin nhắn, duyệt → nhà xe + chọn bãi, giao diện 3D) — `only-me master` + bản public theo quy ước commit-tree bên dưới. Chưa có lệnh đẩy → chưa đẩy.
 1. Hi mở `index.html` bản mới, bấm thử **Điều phối → Gợi ý**: khi có 2+ cont đầy tranh 1 rỗng sẽ thấy nhãn ★ Phương án, chọn 1 cont → các cont còn lại tự thành Rút mooc.
 2. **Push** commit gộp lên GitHub — chạy trên terminal Windows (VM Cowork không có đăng nhập GitHub): `git push only-me master` (+ `git push origin master` nếu muốn cập nhật bản public `dieu-do-web`).
@@ -174,6 +219,7 @@ Bộ test dùng 5 lô gần nhất trong file Excel vận hành ngày 22/09 (fil
 
 | Ngày | Tài khoản / phiên | Đã làm |
 |---|---|---|
+| 25/09/2026 (~00:30–01:00) | Cowork (tài khoản phụ · Phase II) | Migration booking/lô/đơn hàng (bảng booking, lo.so_booking + khach_hang, cont yêu cầu tàu, trigger đồng bộ, backfill 143 booking / 235 lô, view booking_tong_hop, hàm goi_y_booking) chạy thử rồi chạy thật trên Supabase (SHA khớp). Web: tab Booking, form lô chọn booking + khách, Tạo đơn hàng (gợi ý mã đơn), Chờ cắt rỗng lọc + Tìm booking → tạo lô & gán, đổi tàu chọn booking có sẵn. Test mới 48/48, bộ cũ giữ đạt. Đồng bộ về máy, build khớp SHA. Chưa commit/push. |
 | 24/09/2026 (~01:30) | Cowork (tài khoản phụ · nạp Excel) | Nạp chồng "dư liệu hôm nay.xlsx" vào Supabase theo luật Excel-là-chuẩn (anh Hi chốt): 38 lô, 21 cont mới, 611A xoá, 613A→613 / 622→622A, 604B/607B/609E thêm, 617/624 phục hồi (rớt tàu). Sao lưu `private.sao_luu_20260924_truoc_nap`. Viết `tools/nap_excel.py` dùng lại hằng ngày (chạy thử rollback + báo cáo). Chưa commit/push. |
 | 24/09/2026 | Cowork (tài khoản phụ · giao diện 3D) | Đổi toàn bộ web sang phong cách kính 3D tím – chàm theo ảnh mẫu anh Hi gửi: viết lại `<style>`, khung kính cố định + `.main` cuộn trong, sidebar sáng, lớp nền `bg3d` (khối màu, quả cầu, cont/tàu/cẩu SVG trôi chậm), chuyển động nhẹ (hover nhấc thẻ, fade đổi tab, ngăn kéo trượt lần mở), fallback reduced-motion + máy yếu. Test mới `test_3d.py` 22/22, bộ cũ xanh. Build tại máy, hash khớp. Chưa commit/push (anh chốt đẩy một lần sau 3D). |
 | 23/09/2026 | Cowork (phiên gộp nhánh) | Đối chiếu `only-me/main` ↔ `master`: main nằm trọn trong master (khác gốc, không merge được). Port tay Gợi ý v4 (`d129951`) vào redesign (vGoiY + vWorkflowHub + approveGy + runGoiY). Kiểm tra DB bằng SQL chỉ đọc: `tao_goi_y_v4`, `duyet_phuong_an`, cột `la_phuong_an`/`nhom_gy` đã có; cron đã chạy v4. Thêm migration `20260922120000_goi_y_v4_phuong_an.sql` (SHA khớp DB). Sửa lưới cột Cảng hạ/Cảng đến + nút Tạo tài khoản. Test Playwright 40/40 với 5 lô thật. Commit `a796eba`, Hi đã push `only-me/master` 23/09. |

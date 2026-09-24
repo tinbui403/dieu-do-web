@@ -837,7 +837,15 @@ const D = {
   hacang:['Hạ cảng','回港'], clsMail:['CLS mail','邮件截关'], clsEport:['CLS ePort','ePort截关'], clsTay:['CLS nhập tay','手填截关'], clsUse:['CLS máy dùng','计划用截关'],
   eportBtn:['Cập nhật CLS ePort','更新ePort截关'], kdtvBtn:['Cập nhật mã KDTV','更新检疫单号'], kdtvNoUrl:['Chưa cấu hình URL đồng bộ KDTV (cấu hình: URL đồng bộ KDTV)','未配置检疫单号同步URL'], baiTab:['Bãi tạm','堆场'], giaTab:['Giá cước nhà xe','车队运价'], donTab:['Dọn dữ liệu','清理数据'],
   dongNgay:['Đóng trong ngày','当天装柜'], nangHa:['Nâng hạ','吊装费'], haCangFee:['Vận chuyển hạ cảng','回港运费'], phatSinh:['Phát sinh','其他费用'], tongCP:['Tổng chi phí','费用合计'],
-  delete:['Xoá','删除'], inactive:['Đã ngưng','已停用']
+  delete:['Xoá','删除'], inactive:['Đã ngưng','已停用'],
+  bkTab:['Booking','订舱'], loTab:['Lô','批次'], addBooking:['Thêm booking','新增订舱'], newBooking:['Booking mới','新订舱'],
+  chuyen:['Chuyến','航次'], bkTong:['Số cont hãng cấp','船公司柜数'], bkXep:['Đã xếp','已排'], bkConLai:['Còn chỗ','剩余'],
+  bkVuot:['Vượt booking','超出订舱'], bkDu:['Đủ','刚好'], bkLots:['Các lô','批次'], bkNoLots:['Chưa có lô','暂无批次'],
+  donHang:['Tạo đơn hàng','新建订单'], ngayDat:['Ngày đặt hàng','下单日期'], ngayLen:['Ngày lên cont','上柜日期'],
+  cangYc:['Cảng đến yêu cầu','要求目的港'], tauYc:['Ngày tàu yêu cầu','要求船期'], hangYc:['Hãng tàu yêu cầu','要求船公司'],
+  timBk:['Tìm booking','找订舱'], chuaLo:['Chưa có lô','未分批'], bkMoi:['Booking mới (nếu chưa có trong danh sách)','新订舱号（列表中没有时填写）'],
+  bkCua:['Booking của lô','本批订舱'], loCung:['Lô cùng booking','同订舱批次'], taoLo:['Tạo lô & gán cont','建批次并分配柜'],
+  addContLo:['Thêm cont vào lô','向批次加柜'], ycTau:['Yêu cầu tàu','船期要求']
 };
 let LANG = 'vi';
 try { LANG = localStorage.getItem('dd_lang') || 'vi'; } catch (e) {}
@@ -921,7 +929,8 @@ const S = {
   gyType: 'all', gyPri: 'all', gyHide: true, sel: null, pick: {}, copied: null, confirmApply: null,
   tkSeg: '2', loOpen: true, q: '', results: null, searching: false, dmTab: 'nhaxe', navOpen: false,
   chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, hcF: {}, suco: [], ttcu: [], eportRunning: false,
-  kdWiz: null, boardSeg: '1'
+  kdWiz: null, boardSeg: '1',
+  bookings: [], bkMap: {}, loSeg: 'lo', bkAll: false, ccF: {}, tbk: null
 };
 function canWrite() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
 function canCat() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
@@ -1016,6 +1025,10 @@ async function loadData() {
   // Lô có sự cố + thông tin cũ (bảng mới 23/09 — chưa cài trên DB thì coi như rỗng)
   try { const [sc, tc] = await Promise.all([q(sb.from('lo_su_co').select('*').eq('da_xu_ly', false).order('bao_luc')), q(sb.from('thong_tin_cu').select('*').order('luc'))]); S.suco = sc.data || []; S.ttcu = tc.data || []; }
   catch (e) { S.suco = []; S.ttcu = []; console.warn(e); }
+  // Booking (bảng mới 25/09) — chưa cài migration thì coi như rỗng
+  try { const bk = await q(sb.from('booking_tong_hop').select('*').order('etd', { ascending:false, nullsFirst:true }).limit(3000)); S.bookings = bk.data || []; }
+  catch (e) { S.bookings = []; console.warn(e); }
+  S.bkMap = {}; S.bookings.forEach(b => { S.bkMap[b.so_booking] = b; });
   try { const ids = S.conts.filter(x => x.trang_thai >= '3').map(x => x.id); S.chiphi = {};
     if (ids.length) { const cp = await q(sb.from('chi_phi_cont').select('*').in('cont_id', ids).order('tao_luc')); cp.data.forEach(r => { (S.chiphi[r.cont_id] = S.chiphi[r.cont_id] || []).push(r); }); } } catch (e) { console.warn(e); }
   S.loaded = true;
@@ -1037,12 +1050,73 @@ function startRealtime() {
     .on('postgres_changes', { event:'*', schema:'public', table:'goi_y' }, scheduleReload)
     .on('postgres_changes', { event:'*', schema:'public', table:'lo_su_co' }, scheduleReload)
     .on('postgres_changes', { event:'*', schema:'public', table:'thong_tin_cu' }, scheduleReload)
+    .on('postgres_changes', { event:'*', schema:'public', table:'booking' }, scheduleReload)
     .subscribe(st => { S.live = st === 'SUBSCRIBED'; const el = document.getElementById('live'); if (el) el.className = 'live' + (S.live ? ' on' : ''); });
 }
 
 /* ---------------- mô hình tính toán ---------------- */
 // CLS máy dùng = cls (mail → ePort → tay); giữ CLS nhập tay ở closing_tay
 function normLot(x) { if (!x || x._n) return x; x._n = true; x.closing_tay = x.closing; if (x.cls) x.closing = x.cls; return x; }
+/* ---------------- BOOKING (1 booking → nhiều lô; lô giữ bản sao tàu/ETD) ---------------- */
+function bkOf(l) { return l && l.so_booking ? S.bkMap[l.so_booking] || null : null; }
+// Tình trạng cont của booking: đã xếp (mỗi lô lấy số lớn hơn giữa kế hoạch và cont thực tế) so với số cont hãng cấp
+function bkTinh(b) {
+  if (!b) return null;
+  const xep = b.cont_da_xep || 0, tong = b.so_luong_cont;
+  if (tong == null) return { k:'chua', xep, tong:null, n:0 };
+  if (xep > tong) return { k:'vuot', xep, tong, n:xep - tong };
+  if (xep < tong) return { k:'con', xep, tong, n:tong - xep };
+  return { k:'du', xep, tong, n:0 };
+}
+function bkPill(b) {
+  const t = bkTinh(b); if (!t) return '';
+  if (t.k === 'chua') return pill(T1('chưa ghi số cont', '未填柜数'), '#EEEBF7', '#625C7A');
+  if (t.k === 'vuot') return pill(T('bkVuot') + ' ' + t.n + ' — ' + T1('xin thêm cont với hãng tàu', '向船公司加柜'), 'var(--red-bg)', 'var(--red-ink)');
+  if (t.k === 'con') return pill(T('bkConLai') + ' ' + t.n, 'var(--amb-bg)', 'var(--amb-ink)');
+  return pill(T('bkDu') + ' ' + t.tong + ' cont', 'var(--teal-bg)', 'var(--teal-ink)');
+}
+function bkLabel(b) {
+  const t = bkTinh(b);
+  return b.so_booking + ' · ' + ([b.hang_tau, b.ten_tau].filter(Boolean).join(' ') || '—') + (b.cang_den ? ' → ' + b.cang_den : '') + (b.etd ? ' · ETD ' + fDate(b.etd) : '') +
+    (t && t.k === 'con' ? ' · ' + T1('còn', '剩') + ' ' + t.n : t && t.k === 'vuot' ? ' · ' + T1('vượt', '超') + ' ' + t.n : t && t.k === 'du' ? ' · ' + T1('đủ', '满') : '');
+}
+// Sắp xếp: booking sắp chạy (ETD ≥ hôm nay, gần trước) → chưa có ETD → đã qua (mới trước)
+function bkSorted() {
+  const t = todayVN();
+  return S.bookings.slice().sort((a, b) => { const x = a.etd || '9999', y = b.etd || '9999', ax = x >= t ? 0 : 1, by = y >= t ? 0 : 1;
+    return ax - by || (ax === 0 ? x.localeCompare(y) : y.localeCompare(x)) || String(a.so_booking).localeCompare(String(b.so_booking)); });
+}
+function bkLots(b) { return Object.values(S.lots).filter(l => l.so_booking === b.so_booking && !l.da_huy).sort((x, y) => String(x.lo).localeCompare(String(y.lo), 'vi', { numeric:true })); }
+function bkLotsHtml(b) { const ls = bkLots(b); return ls.length ? ls.map(l => '<button type="button" class="lk" style="font-weight:600" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button>' + (l.khach_hang ? ' <span class="muted">(' + esc(l.khach_hang) + ')</span>' : '')).join(', ') : esc(b.cac_lo || ''); }
+function bkHien() { const t7 = addDays(todayVN(), -7); return bkSorted().filter(b => S.bkAll || !b.etd || b.etd >= t7 || Object.values(S.lots).some(l => l.so_booking === b.so_booking && l.so_cont_dang_chay > 0)); }
+// Ô chọn booking cho lô: booking sắp chạy + booking hiện tại của lô (kể cả booking cũ chỉ có chữ)
+function bkOpts(l) {
+  const cur = (l && (l.so_booking || l.booking)) || '', list = bkSorted().filter(b => !b.etd || b.etd >= addDays(todayVN(), -7) || b.so_booking === cur);
+  const arr = list.map(b => [b.so_booking, bkLabel(b)]);
+  if (cur && !list.some(b => b.so_booking === cur)) arr.unshift([cur, cur + (S.bkMap[cur] ? '' : ' · ' + T1('(booking cũ)', '（旧订舱）'))]);
+  return opt(arr, cur, true);
+}
+// Chọn booking trong form lô → điền các ô còn trống (bản sao; sau đó lô sửa riêng)
+function loBkFill(el) {
+  const f = el.closest('form'), b = S.bkMap[el.value]; if (!f) return;
+  const m = f.querySelector('[name="booking_moi"]'); if (m && el.value) m.value = '';
+  if (!b) return;
+  let n = 0;
+  [['hang_tau', b.hang_tau], ['ten_tau', b.ten_tau], ['cang_den', b.cang_den], ['etd', b.etd], ['eta', b.eta]].forEach(x => { const i = f.querySelector('[name="' + x[0] + '"]'); if (i && !i.value && x[1]) { i.value = x[1]; if (i.value === String(x[1])) { i.style.outline = '2px solid var(--teal)'; n++; } } });
+  if (n) toast(T1('Đã điền ' + n + ' ô từ booking ' + b.so_booking, '已从订舱填写 ' + n + ' 项'));
+}
+function bkDiff(l, b) { const d = []; if ((l.ten_tau || '') !== (b.ten_tau || '')) d.push(T('vessel')); if ((l.etd || '') !== (b.etd || '')) d.push('ETD'); if ((l.cang_den || '') !== (b.cang_den || '')) d.push(T('pod')); if ((l.hang_tau || '') !== (b.hang_tau || '')) d.push(T('shipLine')); return d.join(', '); }
+function bkBlock(l) {
+  const b = bkOf(l);
+  if (!b) return l.booking ? '<div class="msg" style="font-size:12px" data-bk-cu>' + esc(T1('Booking ' + l.booking + ' chưa có trong danh sách booking (dữ liệu cũ hoặc chưa cài bảng booking).', '订舱不在列表中')) + '</div>' : '';
+  const others = bkLots(b).filter(x => x.lo !== l.lo), diff = bkDiff(l, b);
+  return '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px" data-bk-block><h3>' + esc(T('bkCua')) + ' · <button type="button" class="lk mono" style="font-weight:700" data-act="open-booking" data-bk="' + esc(b.so_booking) + '">' + esc(b.so_booking) + '</button></h3><div class="kv" style="font-size:13px">' +
+    '<span>' + esc(T('line')) + '</span><span>' + esc([b.hang_tau, b.ten_tau, b.chuyen].filter(Boolean).join(' · ') || '—') + '</span>' +
+    '<span>' + esc(T('etd') + ' / ' + T('eta')) + '</span><span>' + fDate(b.etd) + ' / ' + fDate(b.eta) + '</span>' +
+    '<span>' + esc(T('bkTong')) + '</span><span>' + (b.so_luong_cont == null ? '—' : b.so_luong_cont) + ' · ' + bkPill(b) + '</span>' +
+    '<span>' + esc(T('loCung')) + '</span><span>' + (others.length ? others.map(x => '<button type="button" class="lk" style="font-weight:600" data-act="open-lo" data-lo="' + esc(x.lo) + '">' + esc(x.lo) + '</button>' + (x.khach_hang ? ' <span class="muted">(' + esc(x.khach_hang) + ')</span>' : '')).join(', ') : '<span class="muted">—</span>') + '</span></div>' +
+    (diff ? '<p class="muted" style="margin:6px 0 0;font-size:11px">' + esc(T1('Lô đang giữ bản sao khác booking: ' + diff + '. Booking đổi không tự sửa lô — sửa tay nếu cần.', '批次副本与订舱不同：' + diff)) + '</p>' : '') + '</div>';
+}
 function eportCang(l) { return !l || !l.eport_cang ? '' : l.eport_cang === 'SPITC' ? 'SPITC' : T1('Cát Lái', '吉莱'); }
 function cangHa(l) { return l.cang_ha || (l.eport_cang ? eportCang(l) + ' ' + T1('(theo ePort)', '(按ePort)') : T1('theo booking', '按订舱')); }
 function clsDetail(l) { if (!l) return ''; const a = []; if (l.closing_mail) a.push('Mail ' + fTs(l.closing_mail)); if (l.closing_eport) a.push('ePort ' + (l.eport_cang === 'SPITC' ? 'SPITC ' : '') + fTs(l.closing_eport)); return a.length ? '<span class="muted" style="font-size:11px;display:block">' + esc(a.join(' · ')) + '</span>' : ''; }
@@ -1367,12 +1441,36 @@ function loOrder(a, b) {
 }
 function vBoard() {
   const n = counts(), seg = S.boardSeg || '1';
-  const chips = '<div class="chips">' + ['1', '2', '3', '4'].map(k => '<button class="chip" data-act="board-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Lọc container theo trạng thái', '按柜状态筛选')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>';
+  const chips = '<div class="chips">' + ['1', '2', '3', '4'].map(k => '<button class="chip" data-act="board-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Lọc container theo trạng thái', '按柜状态筛选')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-don">' + ico('plus', 16) + esc(T('donHang')) + '</button>' : '') + '</div>';
   const body = seg === '4' ? baiBody() : taiKhoBody(seg);
   return '<div class="stack" style="gap:16px">' + chips + body + '</div>';
 }
+// Bộ lọc màn Chờ cắt rỗng (anh Hi 24/09: lọc theo kho đóng hàng, khách, cảng, lô)
+function ccFilterBar(list) {
+  const u = a => Array.from(new Set(a.filter(Boolean))).sort((x, y) => String(x).localeCompare(String(y), 'vi', { numeric:true })), f = S.ccF || {};
+  const sel = (k, label, vals, fmt) => '<label class="chk" style="gap:6px">' + esc(label) + '<select data-on="cc-f" data-k="' + k + '" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff;max-width:240px"><option value="">' + esc(T1('Tất cả', '全部')) + '</option>' + vals.map(v => '<option value="' + esc(v) + '"' + (v === f[k] ? ' selected' : '') + '>' + esc(fmt ? fmt(v) : v) + '</option>').join('') + '</select></label>';
+  const nDon = new Set(list.map(c => maDonGoc(c.ma_don) || c.id)).size, nChua = list.filter(c => !c.lo).length;
+  return '<div class="chips" data-cc-loc>' + sel('kho', T('kho'), u(list.map(c => c.kho))) + sel('kh', T('kh'), u(list.map(c => c.khach_hang))) + sel('cang', T('pod'), u(list.map(c => c.cang_den_yc || (lotOf(c) || {}).cang_den))) + sel('lo', T('loCol'), ['__chua'].concat(u(list.map(c => c.lo))), v => v === '__chua' ? T('chuaLo') : v) +
+    (Object.keys(f).some(k => f[k]) ? '<button class="btn btn-sm" data-act="cc-clear">' + esc(T1('Bỏ lọc', '清除筛选')) + '</button>' : '') + '<span class="muted" style="font-size:12px">' + esc(nDon + ' ' + T1('đơn', '单') + ' · ' + nChua + ' cont ' + T1('chưa có lô', '未分批')) + '</span></div>';
+}
+function ccApply(list) { const f = S.ccF || {}; return list.filter(c => (!f.kho || c.kho === f.kho) && (!f.kh || c.khach_hang === f.kh) && (!f.cang || (c.cang_den_yc || (lotOf(c) || {}).cang_den) === f.cang) && (!f.lo || (f.lo === '__chua' ? !c.lo : c.lo === f.lo))); }
+function ycTauTxt(c) { return [c.cang_den_yc, c.ngay_tau_yc ? fDate(c.ngay_tau_yc) : '', c.hang_tau_yc].filter(Boolean).join(' · '); }
+function choCatRongBody(all) {
+  const list = ccApply(all), g = {}; list.forEach(c => { (g[c.kho || '—'] = g[c.kho || '—'] || []).push(c); });
+  const cols = '--cols:140px 104px 110px 130px 96px 140px 84px 36px minmax(170px,1fr) 124px;--minw:1180px';
+  const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('madon')) + '</span><span>' + esc(T('kh')) + '</span><span>' + esc(T('loCol') + ' · ' + T('booking')) + '</span><span>' + esc(T('can')) + '</span><span>' + esc(T('ycTau')) + '</span><span>' + esc(T('carrier')) + '</span><span>' + esc(T('kdShort')) + '</span><span>' + esc(T('clsUse') + ' · ' + T('clsMail') + ' / ' + T('clsEport')) + '</span><span></span></div>';
+  const donSort = (a, b) => { if (!!a.lo !== !!b.lo) return a.lo ? 1 : -1; const r = String(maDonGoc(a.ma_don) || '~').localeCompare(String(maDonGoc(b.ma_don) || '~'), 'vi', { numeric:true }); return r || loOrder(a, b); };
+  return ccFilterBar(all) + (list.length ? Object.keys(g).sort((a, b) => g[b].length - g[a].length).map(k => { const ki = S.kho.find(x => x.ten === k) || {};
+      return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:12px">' + esc([ki.khu_vuc, ki.ten_tq].filter(Boolean).join(' · ')) + '</span><span style="flex:1"></span><span class="cnt-b">' + g[k].length + '</span></div><div class="tbl-x">' + head +
+        g[k].slice().sort(donSort).map(c => { const l = lotOf(c);
+          const loCell = c.lo ? '<span style="font-weight:600">' + esc(c.lo) + (l && l.dong_trong_ngay ? ' <span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + (suCo(c.lo) ? ' ' + pill('!', 'var(--red-bg)', 'var(--red-ink)') : '') + (l && l.booking ? '<span class="mono muted" style="display:block;font-size:11px">' + esc(l.booking) + '</span>' : '') + '</span>'
+            : '<span>' + (canWrite() ? '<button class="btn btn-sm btn-pri" data-act="tim-bk" data-id="' + esc(c.id) + '">' + esc(T('timBk')) + '</button>' : '<span class="muted">' + esc(T('chuaLo')) + '</span>') + '</span>';
+          return '<div class="tr" style="' + cols + '"' + (c.lo ? '' : ' data-chua-lo') + '>' + contCell(c) + '<span class="ell" style="font-weight:600">' + esc(c.ma_don || '—') + '</span><span class="ell">' + esc(c.khach_hang || '—') + '</span>' + loCell + '<span data-l="' + esc(T('can')) + '">' + fTs(c.ngay_can_len_kho) + '</span><span class="ell" style="font-size:12px" data-l="' + esc(T('ycTau')) + '">' + esc(ycTauTxt(c) || '—') + '</span><span data-l="' + esc(T('carrier')) + '">' + esc(c.nha_xe || (gyDuyetRong(c.id) ? gyNx(gyDuyetRong(c.id)) : '') || '—') + '</span><span>' + (c.cont_kiem_dich ? pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span>' + nextBtn(c) + '</div>' + keHoachRong(c); }).join('') + '</div></section>'; }).join('')
+    : '<div class="empty">' + esc(all.length ? T1('Không có đơn nào khớp bộ lọc.', '没有符合筛选的订单。') : T1('Không có cont nào ở bước này.', '没有柜子处于此状态。')) + '</div>');
+}
 function taiKhoBody(seg) {
   const list = S.conts.filter(c => c.trang_thai === seg);
+  if (seg === '1') return choCatRongBody(list);
   const g = {}; list.forEach(c => { (g[c.kho || '—'] = g[c.kho || '—'] || []).push(c); });
   const cols = '--cols:150px 60px 96px 88px 110px 110px 44px minmax(190px,1fr) 124px;--minw:1040px';
   const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('madon')) + '</span><span>' + esc(seg === '1' ? T('can') : T('den')) + '</span><span>' + esc(T('day')) + '</span><span>' + esc(T('carrier')) + '</span><span>' + esc(T('kdShort')) + '</span><span>' + esc(T('clsUse') + ' · ' + T('clsMail') + ' / ' + T('clsEport')) + '</span><span></span></div>';
@@ -1383,7 +1481,7 @@ function taiKhoBody(seg) {
 }
 function vTaiKho() {
   const n = counts(), seg = S.tkSeg;
-  return '<div class="stack" style="gap:16px"><div class="chips">' + ['1', '2', '3'].map(k => '<button class="chip" data-act="tk-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Mỗi kho xếp theo thứ tự lô', '各仓库按批次排序')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-cont">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') + '</div>' + taiKhoBody(seg) + '</div>';
+  return '<div class="stack" style="gap:16px"><div class="chips">' + ['1', '2', '3'].map(k => '<button class="chip" data-act="tk-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Mỗi kho xếp theo thứ tự lô', '各仓库按批次排序')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-don">' + ico('plus', 16) + esc(T('donHang')) + '</button>' : '') + '</div>' + taiKhoBody(seg) + '</div>';
 }
 
 /* ---------------- BÃI TẠM ---------------- */
@@ -1536,7 +1634,8 @@ function openXuLy(lo, huong) {
   const inp = (label, id, val, type, ph, req) => '<label class="field">' + esc(label + (req ? ' *' : '')) + '<input id="' + id + '" type="' + (type || 'text') + '" value="' + esc(val == null ? '' : val) + '" placeholder="' + esc(ph || '') + '"' + (req ? ' required' : '') + '></label>';
   let body = '<div class="msg err">' + esc(T1('Sự cố: ', '异常：') + x.loai + (x.ghi_chu ? ' — ' + x.ghi_chu : '')) + '</div>';
   if (huong === 'Đổi tàu / booking') {
-    body += '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Nhập thông tin booking mới. Thông tin cũ được lưu lại, hiện chữ nghiêng nhỏ dưới thông tin mới (chỉ Quản lý sửa được). CLS ePort của tàu cũ sẽ bị xoá để tra lại theo tàu mới.', '输入新订舱信息，旧信息以斜体保留（仅管理员可改）。')) + '</p><div class="grid2">' +
+    body += '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Nhập thông tin booking mới (hoặc chọn booking có sẵn để máy điền). Lô này tách sang booking mới, các lô khác cùng booking cũ giữ nguyên. Thông tin cũ được lưu lại, hiện chữ nghiêng nhỏ dưới thông tin mới (chỉ Quản lý sửa được). CLS ePort của tàu cũ sẽ bị xoá để tra lại theo tàu mới.', '输入新订舱信息（或选择已有订舱自动填写）。本批次转到新订舱，其他批次不变。旧信息以斜体保留（仅管理员可改）。')) + '</p>' +
+      '<label class="field">' + esc(T1('Chọn booking có sẵn (máy điền tàu / hãng / ETD)', '选择已有订舱（自动填写）')) + '<select id="xl-bk-sel" data-on="xl-bk">' + opt(bkSorted().filter(b => b.so_booking !== l.so_booking).map(b => [b.so_booking, bkLabel(b)]), '', true) + '</select></label><div class="grid2">' +
       inp(T('booking') + ' ' + T1('mới', '新'), 'xl-booking', '', 'text', T1('cũ: ', '旧：') + (l.booking || '—'), true) + inp(T('vessel') + ' / ' + T1('chuyến mới', '新航次'), 'xl-ten_tau', '', 'text', T1('cũ: ', '旧：') + (l.ten_tau || '—'), true) +
       '<label class="field">' + esc(T('shipLine')) + '<select id="xl-hang_tau">' + opt(S.hangtau.map(h => [h.ma, h.ma]), l.hang_tau, true) + '</select></label>' +
       inp(T('clsMail') + ' ' + T1('mới', '新'), 'xl-closing_mail', '', 'datetime-local', '', true) + inp(T('etd'), 'xl-etd', l.etd, 'date') + inp(T('eta'), 'xl-eta', l.eta, 'date') + '</div>';
@@ -1609,7 +1708,7 @@ async function runKdtvSync() {
 }
 
 /* ---------------- LÔ ---------------- */
-const LO_SORTS = [['closing', ['Closing gần nhất', '截关时间']], ['thu_tu', ['Thứ tự tự đặt', '自定顺序']], ['lo', ['Số lô', '批次号']], ['etd', ['ETD', 'ETD']], ['booking', ['Booking', '订舱号']], ['hang_tau', ['Hãng tàu', '船公司']], ['so_luong', ['Số lượng cont', '柜数']], ['moi', ['Mới cập nhật', '最近更新']]];
+const LO_SORTS = [['closing', ['Closing gần nhất', '截关时间']], ['thu_tu', ['Thứ tự tự đặt', '自定顺序']], ['lo', ['Số lô', '批次号']], ['etd', ['ETD', 'ETD']], ['booking', ['Booking', '订舱号']], ['khach_hang', ['Khách hàng', '客户']], ['hang_tau', ['Hãng tàu', '船公司']], ['so_luong', ['Số lượng cont', '柜数']], ['moi', ['Mới cập nhật', '最近更新']]];
 function loKey(l, k) {
   if (k === 'closing') return l.closing ? +new Date(l.closing) : null;
   if (k === 'etd') return l.etd || l.etd_kho || null;
@@ -1633,17 +1732,30 @@ function sortHead(k, label, extra) {
   const on = LO_SORT.k === k;
   return '<button class="th-sort' + (on ? ' on' : '') + '" data-act="lo-sort" data-k="' + k + '"' + (extra || '') + ' title="' + esc(T1('Bấm để sắp xếp', '点击排序')) + '">' + esc(label) + (on ? (LO_SORT.d === 1 ? ' ▲' : ' ▼') : '') + '</button>';
 }
+function loSegChips() {
+  const nLo = Object.values(S.lots).filter(l => !l.da_huy).length;
+  return '<div class="chips" style="gap:6px">' + [['lo', T('loTab'), nLo], ['booking', T('bkTab'), S.bookings.length]].map(x => '<button class="chip" data-act="lo-seg" data-v="' + x[0] + '" aria-pressed="' + (S.loSeg === x[0]) + '">' + esc(x[1] + ' · ' + x[2]) + '</button>').join('') + '</div>';
+}
+function vBookingList() {
+  const arr = bkHien();
+  const cols = '--cols:150px 90px minmax(170px,1fr) 56px 66px 66px 64px 64px 200px minmax(160px,1fr);--minw:1180px';
+  return '<div class="stack" style="gap:14px">' + loSegChips() + '<div class="chips"><label class="chk"><input type="checkbox" data-on="bk-all"' + (S.bkAll ? ' checked' : '') + '>' + esc(T1('Xem cả booking đã qua ETD', '包含已过ETD的订舱')) + '</label><span class="muted" style="font-size:13px">' + arr.length + ' booking</span><span class="muted" style="font-size:12px">' + esc(T1('Đã xếp = cont các lô đang dùng; vượt số cont hãng cấp thì phải xin thêm cont.', '已排=各批次占用柜数；超出需向船公司加柜')) + '</span><span style="flex:1"></span>' + (canWrite() ? '<button class="btn btn-pri" data-act="new-booking">' + ico('plus', 16) + esc(T('addBooking')) + '</button>' : '') + '</div>' +
+    '<section class="tbl cards"><div class="tbl-x"><div class="tr th" style="' + cols + '"><span>' + esc(T('booking')) + '</span><span>' + esc(T('shipLine')) + '</span><span>' + esc(T('vessel') + ' · ' + T('chuyen')) + '</span><span>' + esc(T('pod')) + '</span><span>' + esc(T('etd')) + '</span><span>' + esc(T('eta')) + '</span><span>' + esc(T('bkTong')) + '</span><span>' + esc(T('bkXep')) + '</span><span>' + esc(T('status')) + '</span><span>' + esc(T('bkLots')) + '</span></div>' +
+    (arr.length ? arr.map(b => '<div class="tr" style="' + cols + '" data-bk-row="' + esc(b.so_booking) + '"><button class="lk mono" style="font-weight:700" data-act="open-booking" data-bk="' + esc(b.so_booking) + '">' + esc(b.so_booking) + '</button><span>' + esc(b.hang_tau || '—') + '</span><span class="ell">' + esc((b.ten_tau || '—') + (b.chuyen ? ' · ' + b.chuyen : '')) + '</span><span>' + esc(b.cang_den || '—') + '</span><span>' + fDate(b.etd) + '</span><span>' + fDate(b.eta) + '</span><span class="num">' + (b.so_luong_cont == null ? '—' : b.so_luong_cont) + '</span><span class="num">' + (b.cont_da_xep || 0) + '</span><span>' + bkPill(b) + '</span><span class="ell" style="font-size:12px">' + (b.so_lo > 0 || bkLots(b).length ? bkLotsHtml(b) : '<span class="muted">' + esc(T('bkNoLots')) + '</span>') + '</span></div>').join('') : '<div class="muted" style="padding:20px">' + esc(T1('Chưa có booking nào.', '暂无订舱。')) + '</div>') +
+    '</div></section></div>';
+}
 function vLo() {
+  if (S.loSeg === 'booking') return vBookingList();
   const arr = sortLots(Object.values(S.lots).filter(l => S.loHuy ? l.da_huy : (!l.da_huy && (!S.loOpen || l.so_cont_dang_chay > 0 || !l.so_cont))));
   const nHuy = Object.values(S.lots).filter(l => l.da_huy).length;
-  const cols = '--cols:84px 150px minmax(160px,1fr) 54px 64px 150px 110px 86px 44px 52px 60px 70px;--minw:1150px';
+  const cols = '--cols:84px 150px 110px minmax(160px,1fr) 54px 64px 150px 110px 86px 44px 52px 60px 70px;--minw:1260px';
   const sortSel = '<label class="chk" style="gap:6px">' + esc(T1('Sắp xếp', '排序')) + '<select data-on="lo-sortk" style="height:34px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;background:#fff">' + LO_SORTS.map(o => '<option value="' + o[0] + '"' + (LO_SORT.k === o[0] ? ' selected' : '') + '>' + esc(tr(o[1])) + '</option>').join('') + '</select></label>' +
     '<button class="btn btn-sm" data-act="lo-dir" title="' + esc(T1('Đảo chiều', '反向')) + '">' + (LO_SORT.d === 1 ? esc(T1('Tăng dần ▲', '升序 ▲')) : esc(T1('Giảm dần ▼', '降序 ▼'))) + '</button>';
   const cntCell = l => { const plan = l.so_luong_cont, have = l.so_cont || 0, thieu = plan != null && have < plan;
     return '<span class="num" data-l="' + esc(T('conts')) + '">' + (l.so_cont_dang_chay || 0) + ' / ' + have + (plan != null ? '<span style="display:block;font-size:11px;' + (thieu ? 'color:#8A5A00;font-weight:600' : 'color:var(--muted)') + '">' + esc(T1('KH', '计划') + ' ' + plan + (thieu ? ' · ' + T1('thiếu', '缺') + ' ' + (plan - have) : '')) + '</span>' : '') + '</span>'; };
-  return '<div class="stack" style="gap:14px"><div class="chips"><label class="chk"><input type="checkbox" data-on="lo-open"' + (S.loOpen ? ' checked' : '') + '>' + esc(T('onlyOpen')) + '</label><label class="chk"><input type="checkbox" data-on="lo-huy"' + (S.loHuy ? ' checked' : '') + '>' + esc(T1('Xem lô đã hủy', '查看已取消批次')) + (nHuy ? ' (' + nHuy + ')' : '') + '</label><span class="muted" style="font-size:13px">' + arr.length + ' ' + esc(S.loHuy ? T1('lô đã hủy', '批已取消') : T('lotsOpen')) + '</span>' + sortSel + '<span style="flex:1"></span>' + (canWrite() ? kdtvBtn() : '') + (canWrite() ? eportBtn() : '') + (canWrite() ? '<button class="btn btn-pri" data-act="new-lo">' + ico('plus', 16) + esc(T('addLo')) + '</button>' : '') + '</div>' +
-    '<section class="tbl cards"><div class="tbl-x"><div class="tr th" style="' + cols + '">' + sortHead('lo', T('loCol')) + sortHead('booking', T('booking')) + sortHead('hang_tau', T('line')) + '<span>' + esc(T('pod')) + '</span>' + sortHead('etd', T('etd')) + sortHead('closing', T('closing')) + '<span>' + esc(T('left')) + '</span>' + sortHead('so_luong', T('conts')) + '<span style="text-align:center">' + esc(T('kdShort')) + '</span><span style="text-align:center">' + esc(T('eport')) + '</span><span style="text-align:center">' + esc(T('tl')) + '</span><span style="text-align:center">' + esc(T('allowPort')) + '</span></div>' +
-    (arr.length ? arr.map(l => '<div class="tr" style="' + cols + '"><span style="display:flex;align-items:center;gap:6px">' + (l.thu_tu != null ? '<span class="cnt-b" title="' + esc(T1('Thứ tự', '顺序')) + '">' + esc(l.thu_tu) + '</span>' : '') + '<button class="lk" style="font-weight:700' + (l.da_huy ? ';text-decoration:line-through;color:var(--red-ink)' : '') + '" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button>' + (l.dong_trong_ngay ? '<span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + '</span><span class="mono ell" style="font-size:12px">' + esc(l.booking || '—') + '</span><span class="ell">' + esc((l.hang_tau || '—') + (l.ten_tau ? ' · ' + l.ten_tau : '')) + '</span><span>' + esc(l.cang_den || '—') + '</span><span>' + fDate(l.etd || l.etd_kho) + '</span><span class="num">' + fTs(l.closing) + clsDetail(l) + (l.eport_ghi_chu ? '<span style="font-size:11px;color:var(--red-ink);display:block">' + esc(l.eport_ghi_chu) + '</span>' : '') + (nPortNoKd(l) ? '<span style="font-size:11px;font-weight:700;color:var(--red-ink);display:block">⚠ ' + esc(T1(nPortNoKd(l) + ' cont ở cảng khi chưa KD', '未检疫已回港')) + '</span>' : '') + '</span><span>' + clChip(l.closing) + '</span>' + cntCell(l) + '<span style="text-align:center">' + tick(l.da_kiem_dich) + '</span><span style="text-align:center">' + tick(l.da_khai_eport) + '</span><span style="text-align:center">' + tick(l.thanh_ly) + '</span><span style="text-align:center">' + tick(l.cho_keo_ha_cang) + '</span></div>').join('') : '<div class="muted" style="padding:20px">' + esc(T1('Chưa có lô nào.', '暂无批次。')) + '</div>') +
+  return '<div class="stack" style="gap:14px">' + loSegChips() + '<div class="chips"><label class="chk"><input type="checkbox" data-on="lo-open"' + (S.loOpen ? ' checked' : '') + '>' + esc(T('onlyOpen')) + '</label><label class="chk"><input type="checkbox" data-on="lo-huy"' + (S.loHuy ? ' checked' : '') + '>' + esc(T1('Xem lô đã hủy', '查看已取消批次')) + (nHuy ? ' (' + nHuy + ')' : '') + '</label><span class="muted" style="font-size:13px">' + arr.length + ' ' + esc(S.loHuy ? T1('lô đã hủy', '批已取消') : T('lotsOpen')) + '</span>' + sortSel + '<span style="flex:1"></span>' + (canWrite() ? kdtvBtn() : '') + (canWrite() ? eportBtn() : '') + (canWrite() ? '<button class="btn btn-pri" data-act="new-lo">' + ico('plus', 16) + esc(T('addLo')) + '</button>' : '') + '</div>' +
+    '<section class="tbl cards"><div class="tbl-x"><div class="tr th" style="' + cols + '">' + sortHead('lo', T('loCol')) + sortHead('booking', T('booking')) + sortHead('khach_hang', T('kh')) + sortHead('hang_tau', T('line')) + '<span>' + esc(T('pod')) + '</span>' + sortHead('etd', T('etd')) + sortHead('closing', T('closing')) + '<span>' + esc(T('left')) + '</span>' + sortHead('so_luong', T('conts')) + '<span style="text-align:center">' + esc(T('kdShort')) + '</span><span style="text-align:center">' + esc(T('eport')) + '</span><span style="text-align:center">' + esc(T('tl')) + '</span><span style="text-align:center">' + esc(T('allowPort')) + '</span></div>' +
+    (arr.length ? arr.map(l => '<div class="tr" style="' + cols + '"><span style="display:flex;align-items:center;gap:6px">' + (l.thu_tu != null ? '<span class="cnt-b" title="' + esc(T1('Thứ tự', '顺序')) + '">' + esc(l.thu_tu) + '</span>' : '') + '<button class="lk" style="font-weight:700' + (l.da_huy ? ';text-decoration:line-through;color:var(--red-ink)' : '') + '" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button>' + (l.dong_trong_ngay ? '<span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + '</span><span class="mono ell" style="font-size:12px">' + esc(l.booking || '—') + (bkOf(l) && bkTinh(bkOf(l)).k === 'vuot' ? '<span style="display:block;font-size:11px;color:var(--red-ink);font-weight:600">' + esc(T('bkVuot') + ' ' + bkTinh(bkOf(l)).n) + '</span>' : '') + '</span><span class="ell">' + esc(l.khach_hang || '—') + '</span><span class="ell">' + esc((l.hang_tau || '—') + (l.ten_tau ? ' · ' + l.ten_tau : '')) + '</span><span>' + esc(l.cang_den || '—') + '</span><span>' + fDate(l.etd || l.etd_kho) + '</span><span class="num">' + fTs(l.closing) + clsDetail(l) + (l.eport_ghi_chu ? '<span style="font-size:11px;color:var(--red-ink);display:block">' + esc(l.eport_ghi_chu) + '</span>' : '') + (nPortNoKd(l) ? '<span style="font-size:11px;font-weight:700;color:var(--red-ink);display:block">⚠ ' + esc(T1(nPortNoKd(l) + ' cont ở cảng khi chưa KD', '未检疫已回港')) + '</span>' : '') + '</span><span>' + clChip(l.closing) + '</span>' + cntCell(l) + '<span style="text-align:center">' + tick(l.da_kiem_dich) + '</span><span style="text-align:center">' + tick(l.da_khai_eport) + '</span><span style="text-align:center">' + tick(l.thanh_ly) + '</span><span style="text-align:center">' + tick(l.cho_keo_ha_cang) + '</span></div>').join('') : '<div class="muted" style="padding:20px">' + esc(T1('Chưa có lô nào.', '暂无批次。')) + '</div>') +
     '</div></section></div>';
 }
 
@@ -1854,8 +1966,8 @@ function tinNhanBlock() {
     '<div id="tn-sl"></div></div>';
 }
 function tnDien() {
-  const form = document.getElementById('f-cont'), box = document.getElementById('tn-in'); if (!form || !box) return;
-  const r = parseTinNhan(box.value), F = r.F, done = [], miss = [];
+  const form = document.getElementById('f-don') || document.getElementById('f-cont'), box = document.getElementById('tn-in'); if (!form || !box) return;
+  const r = parseTinNhan(box.value), F = r.F, done = [], miss = [], isDon = form.id === 'f-don';
   const setV = (name, v, label) => { const el = form.querySelector('[name="' + name + '"]'); if (!el || v == null || v === '') return false;
     if (el.tagName === 'SELECT' && !Array.from(el.options).some(o => o.value === v)) return false;
     el.value = v; el.style.outline = '2px solid var(--teal)'; el.style.outlineOffset = '1px'; done.push(label); return true; };
@@ -1865,11 +1977,173 @@ function tnDien() {
   if (!setV('kho', r.kho, T('kho')) && (F.kho || F.chuHang)) miss.push(T('kho') + ' "' + (F.kho || F.chuHang) + '"');
   if (!setV('ngay_can_len_kho', r.can, T('can')) && F.lenCont) miss.push(T('can') + ' "' + F.lenCont + '"');
   setV('gio_len_kho_ghi_chu', r.gioTxt, T('gioGhiChu'));
+  if (isDon) {   // form Đơn hàng: yêu cầu tàu vào đúng ô
+    if (!setV('cang_den_yc', r.cang, T('cangYc')) && F.noiDen) miss.push(T('cangYc') + ' "' + F.noiDen + '"');
+    setV('ngay_tau_yc', tnNgay(F.tau), T('tauYc'));
+    const hg = F.hang ? (S.hangtau.find(h => khongDau(h.ma).replace(/\s/g, '') === khongDau(F.hang).replace(/\s/g, '')) || {}).ma : null;
+    if (!setV('hang_tau_yc', hg, T('hangYc')) && F.hang) miss.push(T('hangYc') + ' "' + F.hang + '"');
+    setV('ngay_dat_hang', tnNgay(F.ngayDat), T('ngayDat'));
+    if (r.n > 1) setV('so_luong', String(r.n), T('conts'));
+    const khEl = form.querySelector('[name="khach_hang"]'); if (khEl && khEl.value) { const md = form.querySelector('[name="ma_don"]'); if (md && !md.value) dienMaDon(khEl.value); }
+  }
   const info = [F.noiDen && T1('Nơi đến', '目的港') + ': ' + F.noiDen, (F.tau || F.hang) && T1('Tàu', '船') + ': ' + [F.tau, F.hang].filter(Boolean).join(' '), F.soLuong && T1('SL', '数量') + ': ' + F.soLuong, F.ngayDat && T1('Đặt', '下单') + ': ' + F.ngayDat].filter(Boolean).join(' · ');
   const gc = form.querySelector('[name="ghi_chu"]');
   if (gc && info && gc.value.indexOf(info) < 0) { gc.value = (gc.value ? gc.value + '\n' : '') + T1('Tin khách', '客户消息') + ': ' + info; gc.style.outline = '2px solid var(--teal)'; done.push(T('note')); }
-  document.getElementById('tn-sl').innerHTML = r.n > 1 ? '<label class="field" style="margin-top:8px;max-width:260px">' + esc(T1('Số đơn tạo cùng lúc (tin ghi ' + F.soLuong + ')', '同时建单数量')) + '<input id="tn-n" type="number" min="1" max="50" step="1" value="' + r.n + '"></label>' : '';
+  document.getElementById('tn-sl').innerHTML = r.n > 1 && !isDon ? '<label class="field" style="margin-top:8px;max-width:260px">' + esc(T1('Số đơn tạo cùng lúc (tin ghi ' + F.soLuong + ')', '同时建单数量')) + '<input id="tn-n" type="number" min="1" max="50" step="1" value="' + r.n + '"></label>' : '';
   document.getElementById('tn-kq').innerHTML = esc(T1('Đã điền: ', '已填写：') + (done.join(', ') || '—')) + (miss.length ? '<br><span style="color:var(--amb-ink)">' + esc(T1('Chưa khớp danh mục — chọn tay: ', '未匹配，请手选：') + miss.join('; ')) + '</span>' : '') + (r.nBlocks > 1 ? '<br><span style="color:var(--amb-ink)">' + esc(T1('Tin có ' + r.nBlocks + ' đơn — mới điền đơn đầu, lưu xong dán đơn tiếp.', '含多个订单，仅填写第一个。')) + '</span>' : '');
+}
+/* ---------------- NGĂN KÉO: BOOKING ---------------- */
+function openBooking(b) {
+  b = b || {};
+  const isNew = !b.so_booking, ls = isNew ? [] : bkLots(b), t = bkTinh(b);
+  const title = '<b style="font-size:20px;color:var(--pri-ink)">' + esc(isNew ? T('newBooking') : 'Booking ' + b.so_booking) + '</b>';
+  const sub = isNew ? '' : '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + bkPill(b) + '<span class="muted" style="font-size:13px">' + esc((b.so_lo || 0) + ' ' + T1('lô', '批') + ' · ' + (b.cont_da_xep || 0) + ' cont') + '</span></div>';
+  const body = '<div class="grid2">' + fIn(T('booking') + ' *', 'so_booking', b.so_booking, 'text', ' required autocapitalize="characters" style="font-family:var(--mono)"' + (isNew ? '' : ' readonly')) +
+      fSel(T('shipLine'), 'hang_tau', opt(S.hangtau.map(x => [x.ma, x.ma]), b.hang_tau, true)) + fIn(T('vessel'), 'ten_tau', b.ten_tau) + fIn(T('chuyen'), 'chuyen', b.chuyen) +
+      fSel(T('pod'), 'cang_den', opt(S.cangden.map(x => [x.ma, x.ma + ' · ' + (x.ten_vn || '') + (x.ten_tq ? ' ' + x.ten_tq : '')]), b.cang_den, true)) +
+      fIn(T('etd'), 'etd', b.etd, 'date') + fIn(T('eta'), 'eta', b.eta, 'date') + fIn(T('bkTong'), 'so_luong_cont', b.so_luong_cont, 'number', ' min="0" max="500" step="1"') + '</div>' +
+    '<label class="field">' + esc(T('note')) + '<textarea name="ghi_chu"' + (canWrite() ? '' : ' disabled') + '>' + esc(b.ghi_chu || '') + '</textarea></label>' +
+    (isNew ? '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Booking dùng chung cho nhiều lô (mỗi lô 1 khách). Thêm lô rồi chọn booking này, máy chép tàu / ETD / ETA / cảng sang lô.', '一个订舱可分给多个批次（每批一个客户）。')) + '</p>' :
+      '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px" data-bk-lots><h3>' + esc(T('bkLots')) + '</h3>' +
+      (t && t.k === 'vuot' ? '<p style="margin:0 0 6px;font-size:12px;color:var(--red-ink);font-weight:600">⚠ ' + esc(T1('Các lô cần ' + t.xep + ' cont, booking chỉ có ' + t.tong + ' — xin thêm ' + t.n + ' cont với hãng tàu hoặc bớt cont ở lô.', '批次需要 ' + t.xep + ' 柜，订舱仅 ' + t.tong + ' 柜')) + '</p>' : t && t.k === 'con' ? '<p class="muted" style="margin:0 0 6px;font-size:12px">' + esc(T1('Còn ' + t.n + ' cont chưa xếp lô.', '还有 ' + t.n + ' 柜未分批')) + '</p>' : '') +
+      (ls.length ? '<div class="tbl">' + ls.map(l => '<div class="tr" style="--cols:90px minmax(0,1fr) 80px 110px"><button type="button" class="lk" style="font-weight:700" data-act="open-lo" data-lo="' + esc(l.lo) + '">' + esc(l.lo) + '</button><span class="ell">' + esc(l.khach_hang || '—') + '</span><span class="num">' + esc(String(l.so_luong_cont != null ? l.so_luong_cont : (l.so_cont || 0))) + ' cont</span><span>' + clChip(l.closing) + '</span></div>').join('') + '</div>' : '<div class="muted" style="font-size:13px">' + esc(b.cac_lo || T('bkNoLots')) + '</div>') +
+      (canWrite() ? '<div style="margin-top:8px"><button type="button" class="btn btn-sm" data-act="new-lo" data-bk="' + esc(b.so_booking) + '">' + ico('plus', 14) + esc(T1('Thêm lô cho booking này', '为此订舱新增批次')) + '</button></div>' : '') + '</div>' +
+      '<div class="faint" style="font-size:11px">' + esc((b.nguon ? b.nguon + ' · ' : '') + (b.cap_nhat_luc ? T1('Cập nhật', '更新') + ' ' + fTs(b.cap_nhat_luc, true) : '') + (b.nguoi_cap_nhat ? ' · ' + b.nguoi_cap_nhat : '')) + '</div>' +
+      (isAdmin() && !(b.so_lo > 0) ? '<div><button type="button" class="btn btn-danger" data-act="del-booking" data-bk="' + esc(b.so_booking) + '">' + esc(T1('Xoá booking này', '删除此订舱')) + '</button></div>' : ''));
+  S.drawer = { kind:'booking', id:b.so_booking || null };
+  document.getElementById('drawer').innerHTML = drawerFrame(title, sub, body, 'f-booking');
+}
+async function saveBooking(form) {
+  const o = formObj(form), id = S.drawer && S.drawer.id;
+  if (o.so_booking) o.so_booking = o.so_booking.toUpperCase().replace(/\s+/g, ' ').trim();
+  if (!id && !o.so_booking) { toast(T('required') + ': ' + T('booking'), true); return; }
+  const btn = document.getElementById('save-btn'); if (btn) { btn.disabled = true; btn.textContent = T('saving'); }
+  try {
+    if (id) { delete o.so_booking; await q(sb.from('booking').update(o).eq('so_booking', id)); }
+    else { o.nguon = 'web'; await q(sb.from('booking').insert(o)); }
+    closeDrawer(); await loadData(); S.loSeg = 'booking'; renderMain(); renderNavCounts(); toast(T('saved'));
+    if (!id && S.bkMap[o.so_booking]) openBooking(S.bkMap[o.so_booking]);
+  } catch (e) { toast(errMsg(e), true); if (btn) { btn.disabled = false; btn.textContent = T('save'); } }
+}
+
+/* ---------------- ĐƠN HÀNG = cont "Chờ cắt rỗng" (anh Hi chốt 24/09) ---------------- */
+function maDonGoc(m) { return String(m || '').replace(/-\d+$/, '').trim(); }
+function maDonPrefix(kh) { const w = khongDau(kh || '').toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean); return w.length >= 2 ? w[0][0] + w[1][0] : (w[0] || '').slice(0, 2); }
+// Mã đơn gợi ý: chữ tắt khách + tháng + số thứ tự đơn trong tháng (VD HX 09190) — anh Hi chốt 24/09
+async function goiYMaDon(kh) {
+  const p = maDonPrefix(kh); if (!p) return '';
+  const mm = todayVN().slice(5, 7), re = new RegExp('^' + p + '\\s?' + mm + '(\\d{2,4})');
+  let rows = [];
+  try { const r = await q(sb.from('cont').select('ma_don').ilike('ma_don', p + '%' + mm + '%').order('ma_don', { ascending:false }).limit(300)); rows = r.data || []; }
+  catch (e) { rows = S.conts.map(c => ({ ma_don:c.ma_don })); }
+  let mx = 0; rows.forEach(r => { const m = re.exec(String(r.ma_don || '').toUpperCase().trim()); if (m) mx = Math.max(mx, +m[1]); });
+  return p + ' ' + mm + String(mx + 1).padStart(3, '0');
+}
+async function dienMaDon(kh) {
+  const f = document.getElementById('f-don'); if (!f) return;
+  const el = f.querySelector('[name="ma_don"]'); if (!el || (el.value && !el.dataset.auto)) return;
+  const v = await goiYMaDon(kh);
+  if (v && el.isConnected && (!el.value || el.dataset.auto)) { el.value = v; el.dataset.auto = '1'; }
+}
+function openDonHang(pre) {
+  pre = pre || {};
+  const title = '<b style="font-size:20px;color:var(--pri-ink)">' + esc(T('donHang')) + '</b>';
+  const sub = '<span class="muted" style="font-size:13px">' + esc(T1('Đơn = cont "Chờ cắt rỗng". Có booking rồi thì vào Container → Chờ cắt rỗng → "Tìm booking" để tạo lô.', '订单 = 待提空柜。有订舱后到“待提空”→“找订舱”建批次。')) + '</span>';
+  const body = (canWrite() ? tinNhanBlock() : '') +
+    '<div class="grid2">' + fIn(T('madon') + ' *', 'ma_don', pre.ma_don || '', 'text', ' required autocapitalize="characters" placeholder="VD: HX 09190"') + fIn(T('ngayDat'), 'ngay_dat_hang', pre.ngay_dat_hang || todayVN(), 'date') +
+      fSel(T('kh') + ' *', 'khach_hang', opt(S.khachhang.map(x => [x.ten, x.ten]), pre.khach_hang, true), ' required data-on="don-kh"') + fSel(T('kho') + ' *', 'kho', opt(khoActive(pre.kho).map(x => [x.ten, x.ten]), pre.kho, true), ' required') +
+      fIn(T('ngayLen'), 'ngay_can_len_kho', tsToInput(pre.ngay_can_len_kho), 'datetime-local') + fIn(T('gioGhiChu'), 'gio_len_kho_ghi_chu', pre.gio_len_kho_ghi_chu) +
+      fIn(T1('Số cont', '柜数') + ' *', 'so_luong', pre.so_luong || 1, 'number', ' min="1" max="50" step="1" required') + fIn(T('cskh'), 'cskh', pre.cskh || (S.me && S.me.vai_tro === 'CSKH' ? (S.me.ho_ten || '') : '')) + '</div>' +
+    '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px"><h3>' + esc(T('ycTau') + ' (' + T1('để tìm booking', '用于找订舱') + ')') + '</h3><div class="grid3">' +
+      fSel(T('cangYc'), 'cang_den_yc', opt(S.cangden.map(x => [x.ma, x.ma + ' · ' + (x.ten_vn || '')]), pre.cang_den_yc, true)) + fIn(T('tauYc'), 'ngay_tau_yc', pre.ngay_tau_yc, 'date') + fSel(T('hangYc'), 'hang_tau_yc', opt(S.hangtau.map(x => [x.ma, x.ma]), pre.hang_tau_yc, true)) + '</div></div>' +
+    '<label class="field">' + esc(T('note')) + '<textarea name="ghi_chu"' + (canWrite() ? '' : ' disabled') + '>' + esc(pre.ghi_chu || '') + '</textarea></label>' +
+    '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Mã đơn máy gợi ý khi chọn khách: chữ tắt khách + tháng + số thứ tự đơn trong tháng (VD HX 09190). Nhiều cont → mỗi cont thêm -1, -2…', '选择客户后系统建议订单号：客户缩写+月份+序号；多柜加 -1、-2…')) + '</p>';
+  S.drawer = { kind:'don' };
+  document.getElementById('drawer').innerHTML = drawerFrame(title, sub, body, 'f-don');
+  if (pre.khach_hang && !pre.ma_don) dienMaDon(pre.khach_hang);
+}
+async function saveDonHang(form) {
+  const o = formObj(form), n = Math.max(1, Math.min(50, o.so_luong || 1)); delete o.so_luong;
+  if (!o.ma_don || !o.khach_hang || !o.kho) { toast(T('required') + ': ' + [!o.ma_don && T('madon'), !o.khach_hang && T('kh'), !o.kho && T('kho')].filter(Boolean).join(', '), true); return; }
+  o.ma_don = o.ma_don.toUpperCase().replace(/\s+/g, ' ').trim();
+  const btn = document.getElementById('save-btn'); if (btn) { btn.disabled = true; btn.textContent = T('saving'); }
+  try {
+    const rows = []; for (let i = 0; i < n; i++) rows.push(Object.assign({}, o, { ma_don: n > 1 ? o.ma_don + '-' + (i + 1) : o.ma_don, trang_thai:'1', lo:null, ngay_goi_cont: o.ngay_dat_hang || todayVN(), nguon:'web' }));
+    await q(sb.from('cont').insert(rows));
+    closeDrawer(); await loadData(); S.tab = 'board'; S.boardSeg = '1'; S.ccF = { kho:o.kho }; renderShell(); renderNavCounts();
+    toast(T1('Đã tạo ' + n + ' đơn ' + o.ma_don + ' — bấm “Tìm booking” ở dòng đơn để xếp lô.', '已建 ' + n + ' 单 ' + o.ma_don));
+  } catch (e) { toast(errMsg(e), true); if (btn) { btn.disabled = false; btn.textContent = T('save'); } }
+}
+
+/* ---------------- TÌM BOOKING cho đơn → tạo lô & gán cont ---------------- */
+function donCua(c) { const g = maDonGoc(c.ma_don); return S.conts.filter(x => x.trang_thai === '1' && !x.lo && (g ? maDonGoc(x.ma_don) === g : x.id === c.id) && (x.khach_hang || '') === (c.khach_hang || '')); }
+// Mã lô gợi ý: booking đã có lô → cùng số + chữ kế tiếp (604A → 604B); chưa có → số lớn nhất + 1
+function goiYMaLo(bk) {
+  const all = Object.values(S.lots).filter(l => !l.da_huy);
+  const num = x => { const m = /^(\d+)([A-Z]?)$/i.exec(String(x || '').trim()); return m ? [+m[1], m[2].toUpperCase()] : null; };
+  if (bk) {
+    const ls = all.filter(l => l.so_booking === bk || l.booking === bk).map(l => num(l.lo)).filter(Boolean);
+    if (ls.length) { const base = Math.max.apply(null, ls.map(x => x[0])); let mx = 'A'; ls.filter(x => x[0] === base).forEach(x => { const ch = x[1] || 'A'; if (ch > mx) mx = ch; }); return base + (mx === 'Z' ? 'Z2' : String.fromCharCode(mx.charCodeAt(0) + 1)); }
+  }
+  let mx = 0; all.forEach(l => { const x = num(l.lo); if (x) mx = Math.max(mx, x[0]); });
+  return mx ? String(mx + 1) : '';
+}
+async function openTimBooking(id) {
+  const c = S.conts.find(x => x.id === id); if (!c) return;
+  const ds = donCua(c);
+  S.tbk = { id, ids:ds.map(x => x.id), sel:null, moi:'', goiy:null, lo:'', loCo:'', loading:true };
+  S.drawer = { kind:'timbk', id };
+  renderTimBk();
+  try { const r = await q(sb.rpc('goi_y_booking', { p_cang_den:c.cang_den_yc || null, p_ngay_tau:c.ngay_tau_yc || null, p_hang_tau:c.hang_tau_yc || null, p_so_cont:ds.length || 1 })); S.tbk.goiy = r.data || []; }
+  catch (e) { S.tbk.goiy = []; toast(errMsg(e), true); }
+  if (!S.tbk || S.tbk.id !== id) return;
+  S.tbk.loading = false;
+  if (S.tbk.goiy.length && S.tbk.goiy[0].diem >= 60) S.tbk.sel = S.tbk.goiy[0].so_booking;   // tự chọn khi máy khá chắc (đúng cảng + còn chỗ…)
+  S.tbk.lo = goiYMaLo(S.tbk.sel);
+  renderTimBk();
+}
+function renderTimBk() {
+  const t = S.tbk; if (!t) return;
+  const c = S.conts.find(x => x.id === t.id) || {}, all = donCua(c);
+  const title = '<b style="font-size:20px;color:var(--pri-ink)">' + esc(T('timBk') + ' · ' + T('madon') + ' ' + (maDonGoc(c.ma_don) || '—')) + '</b>';
+  const sub = '<span class="muted" style="font-size:13px">' + esc([c.khach_hang, c.kho].filter(Boolean).join(' · ')) + '</span>';
+  const yc = '<div class="kv" style="font-size:13px" data-tbk-yc><span>' + esc(T('cangYc')) + '</span><span>' + esc(c.cang_den_yc || '—') + '</span><span>' + esc(T('tauYc')) + '</span><span>' + fDate(c.ngay_tau_yc) + '</span><span>' + esc(T('hangYc')) + '</span><span>' + esc(c.hang_tau_yc || '—') + '</span><span>' + esc(T('ngayLen')) + '</span><span>' + fTs(c.ngay_can_len_kho) + '</span></div>';
+  const contList = '<div class="sec"><h3>' + esc(T1('Cont của đơn (bỏ tích cont chưa đưa vào lô)', '订单柜（取消勾选不放入批次的柜）')) + '</h3>' + all.map(x => '<label class="chk" style="display:flex;gap:8px;padding:4px 0"><input type="checkbox" data-on="tbk-ct" value="' + esc(x.id) + '"' + (t.ids.indexOf(x.id) > -1 ? ' checked' : '') + '><span class="mono">' + esc(x.so_cont || x.ma_don || x.id) + '</span><span class="muted" style="font-size:12px">' + esc(x.kho || '') + (x.ngay_can_len_kho ? ' · ' + fTs(x.ngay_can_len_kho) : '') + '</span></label>').join('') + '</div>';
+  const gy = t.loading ? '<div class="muted" data-tbk-loading>' + esc(T1('Đang tìm booking phù hợp…', '正在匹配订舱…')) + '</div>' :
+    (t.goiy && t.goiy.length ? '<div class="tbl" data-tbk-goiy>' + t.goiy.map(g => '<label class="tr" style="--cols:24px 150px minmax(0,1fr) 56px;cursor:pointer"><input type="radio" name="tbk-bk" data-on="tbk-sel" value="' + esc(g.so_booking) + '"' + (t.sel === g.so_booking ? ' checked' : '') + '><span class="mono" style="font-weight:700">' + esc(g.so_booking) + '</span><span style="font-size:12px"><b>' + esc([g.hang_tau, g.ten_tau].filter(Boolean).join(' ') || '—') + '</b>' + (g.cang_den ? ' → ' + esc(g.cang_den) : '') + (g.etd ? ' · ETD ' + fDate(g.etd) : '') + '<span class="muted" style="display:block">' + esc(g.ly_do || '') + '</span></span><span class="num" title="' + esc(T1('điểm phù hợp', '匹配分')) + '">' + esc(String(g.diem)) + '</span></label>').join('') + '</div>'
+      : '<div class="muted" style="font-size:13px" data-tbk-none>' + esc(T1('Máy chưa thấy booking phù hợp (đúng cảng, còn chỗ, ETD sắp tới). Chọn tay bên dưới hoặc nhập booking mới.', '未找到合适订舱，请手选或新建。')) + '</div>');
+  const trongGy = t.goiy && t.goiy.some(g => g.so_booking === t.sel);
+  const khac = '<div class="grid2"><label class="field">' + esc(T1('Hoặc chọn booking khác', '或选择其他订舱')) + '<select data-on="tbk-sel2">' + opt(bkSorted().map(b => [b.so_booking, bkLabel(b)]), trongGy ? '' : (t.sel || ''), true) + '</select></label>' +
+    '<label class="field">' + esc(T('bkMoi')) + '<input data-on="tbk-moi" type="text" autocapitalize="characters" style="font-family:var(--mono)" value="' + esc(t.moi) + '"></label></div>';
+  const chosen = t.moi ? t.moi.toUpperCase().replace(/\s+/g, ' ').trim() : t.sel, b = chosen ? S.bkMap[chosen] : null;
+  const lots = b ? bkLots(b).filter(l => (l.khach_hang || '') === (c.khach_hang || '')) : [];
+  const gan = '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px" data-tbk-gan><h3>' + esc(T('taoLo')) + '</h3>' +
+    (chosen ? '<div class="kv" style="font-size:13px"><span>' + esc(T('booking')) + '</span><span class="mono"><b>' + esc(chosen) + '</b> ' + (b ? bkPill(b) : t.moi ? '<span class="muted">(' + esc(T1('mới — máy sẽ tạo booking', '新建订舱')) + ')</span>' : '') + '</span></div>' : '<div class="muted" style="font-size:13px">' + esc(T1('Chưa chọn booking.', '未选订舱。')) + '</div>') +
+    '<div class="grid2" style="margin-top:8px"><label class="field">' + esc(T('loCol') + ' ' + T1('mới', '新') + ' *') + '<input data-on="tbk-lo" type="text" value="' + esc(t.lo) + '" style="font-weight:700"' + (t.loCo ? ' disabled' : '') + '></label>' +
+    (lots.length ? '<label class="field">' + esc(T1('Hoặc gán vào lô có sẵn (cùng khách)', '或加入已有批次（同客户）')) + '<select data-on="tbk-lo-co"><option value="">—</option>' + lots.map(l => '<option value="' + esc(l.lo) + '"' + (t.loCo === l.lo ? ' selected' : '') + '>' + esc(l.lo + ' · ' + (l.so_cont || 0) + ' cont') + '</option>').join('') + '</select></label>' : '') + '</div>' +
+    '<div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="btn btn-pri" data-act="tbk-go"' + (chosen && (t.lo.trim() || t.loCo) && t.ids.length ? '' : ' disabled') + '>' + esc(t.loCo ? T1('Gán ' + t.ids.length + ' cont vào lô ' + t.loCo, '分配 ' + t.ids.length + ' 柜到批次 ' + t.loCo) : T1('Tạo lô ' + (t.lo.trim() || '?') + ' & gán ' + t.ids.length + ' cont', '建批次 ' + (t.lo.trim() || '?') + ' 并分配 ' + t.ids.length + ' 柜')) + '</button><span class="muted" style="font-size:12px">' + esc(T1('Lô mới chép tàu / ETD / ETA / cảng từ booking; khách = khách của đơn.', '新批次从订舱复制船期；客户=订单客户')) + '</span></div></div>';
+  const body = yc + contList + '<div class="sec"><h3>' + esc(T1('Máy gợi ý booking', '系统建议订舱')) + '</h3>' + gy + '</div>' + khac + gan;
+  document.getElementById('drawer').innerHTML = drawerFrame(title, sub, body, 'f-timbk', true);
+}
+async function taoLoGan(el) {
+  const t = S.tbk; if (!t) return;
+  const c = S.conts.find(x => x.id === t.id) || {};
+  const chosen = t.moi ? t.moi.toUpperCase().replace(/\s+/g, ' ').trim() : t.sel;
+  if (!chosen || !t.ids.length) return;
+  el.disabled = true;
+  try {
+    let lo = t.loCo;
+    if (!lo) {
+      lo = t.lo.trim(); if (!lo) throw new Error(T('required') + ': ' + T('loCol'));
+      const b = S.bkMap[chosen], o = { lo, khach_hang:c.khach_hang || null, so_luong_cont:t.ids.length, cskh:c.cskh || null };
+      if (b) { o.so_booking = chosen; ['hang_tau', 'ten_tau', 'cang_den', 'etd', 'eta'].forEach(k => { if (b[k] != null) o[k] = b[k]; }); }
+      else { o.booking = chosen; if (c.cang_den_yc) o.cang_den = c.cang_den_yc; if (c.ngay_tau_yc) o.etd = c.ngay_tau_yc; if (c.hang_tau_yc) o.hang_tau = c.hang_tau_yc; }
+      await q(sb.from('lo').insert(o));
+    }
+    for (const id of t.ids) await q(sb.from('cont').update({ lo }).eq('id', id));
+    toast(t.loCo ? T1('Đã gán ' + t.ids.length + ' cont vào lô ' + lo, '已分配 ' + t.ids.length + ' 柜到 ' + lo) : T1('Đã tạo lô ' + lo + ' (booking ' + chosen + ') và gán ' + t.ids.length + ' cont', '已建批次 ' + lo + ' 并分配 ' + t.ids.length + ' 柜'));
+    S.tbk = null; closeDrawer(); await loadData(); renderMain(); renderNavCounts(); if (S.lots[lo]) openLo(S.lots[lo]);
+  } catch (e) { el.disabled = false; toast(errMsg(e), true); }
 }
 /* ---------------- NGĂN KÉO: CONT ---------------- */
 function opt(list, val, blank) { return (blank ? '<option value="">—</option>' : '') + list.map(o => '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(val == null ? '' : val) ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join(''); }
@@ -1877,10 +2151,10 @@ function fIn(label, name, val, type, extra) { return '<label class="field">' + e
 function fSel(label, name, opts, extra) { return '<label class="field">' + esc(label) + '<select name="' + name + '"' + (extra || '') + (canWrite() ? '' : ' disabled') + '>' + opts + '</select></label>'; }
 function fChk(label, name, val) { return '<label class="field chkf"><input type="checkbox" name="' + name + '"' + (val ? ' checked' : '') + (canWrite() ? '' : ' disabled') + '>' + esc(label) + '</label>'; }
 function drawerIn() { const d = document.getElementById('drawer'); return d && d.firstChild ? '' : ' in'; }  /* chỉ trượt vào khi mở mới, không lặp khi vẽ lại */
-function drawerFrame(title, sub, body, formId) {
+function drawerFrame(title, sub, body, formId, noFoot) {
   return '<div class="drawer-wrap' + drawerIn() + '"><button class="close-area" data-act="close-drawer" aria-label="' + esc(T('close')) + '"></button><aside class="drawer" role="dialog" aria-label="' + esc(title) + '"><div class="drawer-h"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">' + title + sub + '</div><button class="x-btn" data-act="close-drawer" aria-label="' + esc(T('close')) + '">' + ico('x', 16) + '</button></div>' +
     '<form class="drawer-b" id="' + formId + '" data-form="' + formId + '">' + body + '</form>' +
-    (canWrite() ? '<div class="drawer-f"><button class="btn" data-act="close-drawer">' + esc(T('cancel')) + '</button><button class="btn btn-pri" type="submit" form="' + formId + '" id="save-btn">' + esc(T('save')) + '</button></div>' : '') + '</aside></div>';
+    (canWrite() && !noFoot ? '<div class="drawer-f"><button class="btn" data-act="close-drawer">' + esc(T('cancel')) + '</button><button class="btn btn-pri" type="submit" form="' + formId + '" id="save-btn">' + esc(T('save')) + '</button></div>' : '') + '</aside></div>';
 }
 const CP_LOAI = ['PTI', 'Đổi seal', 'Sửa chữa', 'Lưu bãi', 'Lưu cont', 'Khác'];
 function chiPhiBlock(c) {
@@ -1893,6 +2167,7 @@ function chiPhiBlock(c) {
 }
 function openCont(c) {
   const isNew = !c.id, l = lotOf(c) || {};
+  if (isNew && l.khach_hang && !c.khach_hang) c.khach_hang = l.khach_hang;   // cont thêm vào lô → khách của lô
   const st = c.trang_thai || '1', order = ['1', '2', '3', '4', '5', '6'], idx = order.indexOf(st), nx = NEXT[st];
   const title = isNew ? '<b style="font-size:20px;color:var(--pri-ink)">' + esc(T('newCont')) + '</b>' : '<span class="mono" style="font-size:22px">' + esc(c.so_cont || T('noCont')) + '</span>';
   const sub = isNew ? '' : '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + stPill(st) + '<span class="muted" style="font-size:13px">' + esc(c.kho || '') + '</span></div>';
@@ -1937,12 +2212,14 @@ async function openContById(id) {
 }
 function openLo(l) {
   const isNew = !l.lo, mine = isNew ? [] : S.conts.filter(c => c.lo === l.lo);
+  if (isNew && l.so_booking && S.bkMap[l.so_booking]) { const b = S.bkMap[l.so_booking]; ['hang_tau', 'ten_tau', 'cang_den', 'etd', 'eta'].forEach(k => { if (l[k] == null) l[k] = b[k]; }); }
   const title = '<b style="font-size:20px;color:var(--pri-ink)">' + esc(isNew ? T('newLo') : T('loCol') + ' ' + l.lo) + '</b>';
   const sub = isNew ? '' : '<div style="display:flex;gap:8px;align-items:center">' + clChip(l.closing) + '<span class="muted" style="font-size:13px">' + esc((l.so_cont_dang_chay || 0) + ' / ' + (l.so_cont || 0) + ' cont') + '</span></div>';
   const huyBanner = l.da_huy ? '<div class="msg err" style="display:flex;flex-direction:column;gap:8px"><b>' + esc(T1('Lô đã hủy', '批次已取消')) + '</b><span>' + esc(T1('Lý do', '原因') + ': ' + (l.ly_do_huy || '—')) + '</span><span style="font-size:12px">' + esc((l.huy_boi || '') + ' · ') + fTs(l.huy_luc, true) + '</span>' + (canPlan() ? '<div><button type="button" class="btn btn-sm" data-act="khoi-phuc-lo" data-lo="' + esc(l.lo) + '">' + esc(T1('Khôi phục lô', '恢复批次')) + '</button></div>' : '') + '</div>' : '';
   const body = huyBanner +
     (isNew ? '' : suCoBlock(l)) +
-    '<div class="grid2">' + (isNew ? fIn(T('loCol') + ' *', 'lo', '', 'text', ' required') : '') + withCu(fIn(T('booking'), 'booking', l.booking), isNew ? [] : ttCu('lo', l.lo, 'booking')) +
+    '<div class="grid2">' + (isNew ? fIn(T('loCol') + ' *', 'lo', '', 'text', ' required') : '') + withCu(fSel(T('booking'), 'so_booking', bkOpts(l), ' data-on="lo-bk"'), isNew ? [] : ttCu('lo', l.lo, 'booking')) +
+      fIn(T('bkMoi'), 'booking_moi', '', 'text', ' autocapitalize="characters" style="font-family:var(--mono)"') + fSel(T('kh'), 'khach_hang', opt(S.khachhang.map(x => [x.ten, x.ten]), l.khach_hang, true)) +
       withCu(fSel(T('shipLine'), 'hang_tau', opt(S.hangtau.map(x => [x.ma, x.ma]), l.hang_tau, true)), isNew ? [] : ttCu('lo', l.lo, 'hang_tau')) + withCu(fIn(T('vessel'), 'ten_tau', l.ten_tau), isNew ? [] : ttCu('lo', l.lo, 'ten_tau')) +
       fSel(T('pod'), 'cang_den', opt(S.cangden.map(x => [x.ma, x.ma + ' · ' + (x.ten_vn || '') + (x.ten_tq ? ' ' + x.ten_tq : '')]), l.cang_den, true)) + fSel(T('portDrop'), 'cang_ha', opt(S.cangha.map(x => [x.ten, x.ten]), l.cang_ha, true)) +
       fIn(T('etdKho'), 'etd_kho', l.etd_kho, 'date') + withCu(fIn(T('etd'), 'etd', l.etd, 'date'), isNew ? [] : ttCu('lo', l.lo, 'etd')) + withCu(fIn(T('eta'), 'eta', l.eta, 'date'), isNew ? [] : ttCu('lo', l.lo, 'eta')) +
@@ -1950,7 +2227,7 @@ function openLo(l) {
       fIn(T('kdtv'), 'ma_don_kdtv', l.ma_don_kdtv) + fIn(T('tokhai'), 'so_to_khai', l.so_to_khai) + fIn(T('cskh'), 'cskh', l.cskh) +
       fIn(T1('Số lượng cont', '柜数') + (isNew ? '' : ' (' + T1('đã có', '已有') + ' ' + (l.so_cont || 0) + ')'), 'so_luong_cont', l.so_luong_cont, 'number', ' min="0" max="200" step="1"') +
       fIn(T1('Thứ tự (số nhỏ xếp trước)', '顺序（小的排前）'), 'thu_tu', l.thu_tu, 'number', ' step="1"') +
-    '</div>' +
+    '</div>' + (isNew ? '' : bkBlock(l)) +
     (isNew && canWrite() ? '<div class="sec" style="background:var(--soft);border-radius:10px;padding:14px"><h3>' + esc(T1('Tạo sẵn đơn cont (chờ cắt rỗng)', '预建订单（待提空）')) + '</h3>' +
       '<p class="muted" style="margin:0 0 4px;font-size:12px">' + esc(T1('Chọn Kho thì máy tạo sẵn đúng “Số lượng cont” dòng ở Tại kho → Chờ cắt rỗng, để gợi ý kế hoạch tính luôn. Để trống Kho nếu chưa biết — thêm sau cũng được.', '选择仓库后，系统按“柜数”自动建好待提空订单，计划建议会直接计算。未确定仓库可留空，之后再加。')) + '</p><div class="grid2">' +
       fSel(T('kho'), 'd_kho', opt(khoActive().map(x => [x.ten, x.ten]), '', true)) + fSel(T('kh'), 'd_khach_hang', opt(S.khachhang.map(x => [x.ten, x.ten]), '', true)) +
@@ -1960,7 +2237,7 @@ function openLo(l) {
     '<div class="grid2">' + fChk('Eport', 'da_khai_eport', l.da_khai_eport) + fChk(T('tl'), 'thanh_ly', l.thanh_ly) + '</div>' + (isNew ? '' : kdBlock(l)) +
     '<label class="field">' + esc(T('note')) + '<textarea name="ghi_chu"' + (canWrite() ? '' : ' disabled') + '>' + esc(l.ghi_chu || '') + '</textarea></label>' +
     (mine.length ? '<div class="sec"><h3>' + esc(T('contsOfLo')) + '</h3><div class="tbl">' + mine.map(c => '<div class="tr" style="--cols:140px minmax(0,1fr) 140px">' + contCell(c) + '<span class="ell">' + esc(c.kho || '—') + '</span><span>' + stPill(c.trang_thai) + '</span></div>').join('') + '</div></div>' : '') +
-    (canWrite() && !isNew && !l.da_huy ? '<button type="button" class="btn" data-act="new-cont" data-lo="' + esc(l.lo) + '">' + ico('plus', 16) + esc(T('addCont')) + '</button>' : '') +
+    (canWrite() && !isNew && !l.da_huy ? '<button type="button" class="btn" data-act="new-cont" data-lo="' + esc(l.lo) + '">' + ico('plus', 16) + esc(T('addContLo')) + '</button>' : '') +
     (!isNew ? historyBlock('lo', l.lo) : '') +
     (canDm() && !isNew ? '<div class="sec" style="border-top:1px solid var(--line);padding-top:14px"><h3>' + esc(T1('Đổi mã lô (Quản lý, Điều độ)', '修改批次号（管理员、调度）')) + '</h3><p class="muted" style="margin:0;font-size:12px">' + esc(T1('Dùng khi nhập sai mã lô. Mọi cont của lô đổi theo, tích kiểm dịch và lịch sử giữ nguyên.', '批次号录错时使用。所有柜子随之更改，检疫勾选和历史保留。')) + '</p>' +
       '<label class="field">' + esc(T1('Mã lô mới', '新批次号')) + '<input id="doi-ma-lo" type="text" maxlength="40" autocomplete="off" placeholder="' + esc(l.lo) + '"></label><div><button type="button" class="btn" data-act="doi-ma-lo" data-lo="' + esc(l.lo) + '">' + esc(T1('Đổi mã lô', '修改批次号')) + '</button></div></div>' : '') +
@@ -2074,8 +2351,12 @@ async function saveCont(form) {
   } catch (e) { toast(errMsg(e), true); if (btn) { btn.disabled = false; btn.textContent = T('save'); } }
 }
 async function saveLo(form) {
-  const o = formObj(form), id = S.drawer && S.drawer.id;
-  const d = { kho:o.d_kho, khach_hang:o.d_khach_hang, ma_don:o.d_ma_don, ngay_can_len_kho:o.d_can };
+  const o = formObj(form), id = S.drawer && S.drawer.id, cur = (id && S.lots[id]) || {};
+  // Booking: nhập mã mới → gửi chữ (DB tự tạo booking + gắn); chọn trong danh sách → gửi khoá; không đổi → không gửi
+  const moi = o.booking_moi ? String(o.booking_moi).toUpperCase().replace(/\s+/g, ' ').trim() : ''; delete o.booking_moi;
+  if (moi) { o.booking = moi; delete o.so_booking; }
+  else if (id && (o.so_booking || null) === (cur.so_booking || null)) delete o.so_booking;
+  const d = { kho:o.d_kho, khach_hang:o.d_khach_hang || o.khach_hang, ma_don:o.d_ma_don, ngay_can_len_kho:o.d_can };
   ['d_kho', 'd_khach_hang', 'd_ma_don', 'd_can'].forEach(k => { delete o[k]; });
   let nDon = 0;
   const btn = document.getElementById('save-btn'); if (btn) { btn.disabled = true; btn.textContent = T('saving'); }
@@ -2214,7 +2495,7 @@ const ACT = {
   'tab': d => { S.tab = d.tab; if (d.seg) { S.tkSeg = d.seg; S.boardSeg = d.seg; } S.navOpen = false; closeDrawer(); renderShell(); const m = document.getElementById('main'); if (m) { m.classList.add('swap'); m.parentElement.scrollTop = 0; } window.scrollTo(0, 0); },
   'nav-open': () => { S.navOpen = true; document.getElementById('app').classList.add('nav-open'); },
   'nav-close': () => { S.navOpen = false; document.getElementById('app').classList.remove('nav-open'); },
-  'lang': d => { LANG = d.lang; try { localStorage.setItem('dd_lang', LANG); } catch (e) {} renderShell(); if (S.drawer) { const dr = S.drawer; if (dr.kind === 'cont') { if (dr.id) openContById(dr.id); } else if (dr.kind === 'lo' && dr.id) openLo(S.lots[dr.id]); } },
+  'lang': d => { LANG = d.lang; try { localStorage.setItem('dd_lang', LANG); } catch (e) {} renderShell(); if (S.drawer) { const dr = S.drawer; if (dr.kind === 'cont') { if (dr.id) openContById(dr.id); } else if (dr.kind === 'lo' && dr.id) openLo(S.lots[dr.id]); else if (dr.kind === 'booking') openBooking(dr.id ? S.bkMap[dr.id] : {}); else if (dr.kind === 'don') openDonHang({}); else if (dr.kind === 'timbk') renderTimBk(); } },
   'signout': async () => { await sb.auth.signOut(); location.reload(); },
   'pw-open': () => openPw(),
   'del-lo': async (d, el) => {
@@ -2334,7 +2615,21 @@ const ACT = {
   'open-cont': d => openContById(d.id),
   'open-lo': async d => { let l = S.lots[d.lo]; if (!l) { try { const r = await q(sb.from('lo_tong_hop').select('*').eq('lo', d.lo)); l = r.data[0]; if (l) S.lots[l.lo] = l; } catch (e) { toast(errMsg(e), true); return; } } if (l) openLo(l); },
   'new-cont': d => openCont({ trang_thai:'1', lo: d.lo || null }),
-  'new-lo': () => openLo({}),
+  'new-lo': d => openLo(d.bk && S.bkMap[d.bk] ? { so_booking:d.bk } : {}),
+  'new-don': d => openDonHang(d.kho ? { kho:d.kho } : {}),
+  'lo-seg': d => { S.loSeg = d.v; renderMain(); },
+  'new-booking': () => openBooking({}),
+  'open-booking': async d => { let b = S.bkMap[d.bk]; if (!b) { try { const r = await q(sb.from('booking_tong_hop').select('*').eq('so_booking', d.bk)); b = r.data[0]; if (b) S.bkMap[b.so_booking] = b; } catch (e) { toast(errMsg(e), true); return; } } if (b) openBooking(b); else toast(T1('Không thấy booking ' + d.bk, '未找到订舱 ' + d.bk), true); },
+  'del-booking': async (d, el) => {
+    const k = 'bk-' + d.bk;
+    if (S.confirmDel !== k) { S.confirmDel = k; el.textContent = T1('Bấm lần nữa để xoá booking ' + d.bk, '再点一次确认删除 ' + d.bk); setTimeout(() => { if (S.confirmDel === k) { S.confirmDel = null; if (el.isConnected) el.textContent = T1('Xoá booking này', '删除此订舱'); } }, 5000); return; }
+    S.confirmDel = null; el.disabled = true;
+    try { await q(sb.from('booking').delete().eq('so_booking', d.bk)); closeDrawer(); toast(T1('Đã xoá booking ' + d.bk, '已删除订舱 ' + d.bk)); await loadData(); renderMain(); }
+    catch (e) { el.disabled = false; toast(errMsg(e), true); }
+  },
+  'tim-bk': d => openTimBooking(d.id),
+  'tbk-go': (d, el) => taoLoGan(el),
+  'cc-clear': () => { S.ccF = {}; renderMain(); },
   'open-kd-wizard': d => KD_WIZARD.open(d.lo),
   'close-wizard': () => KD_WIZARD.close(),
   'kd-wizard-sel': d => KD_WIZARD.selectCont(d.id),
@@ -2361,6 +2656,16 @@ document.addEventListener('change', e => {
   else if (el.dataset.on === 'don-all') { document.querySelectorAll('.don-cb').forEach(x => { x.checked = el.checked; }); }
   else if (el.dataset.on === 'nk-bang') { S.nkBang = el.value; loadNhatKy(); }
   else if (el.dataset.on === 'lo-sortk') setLoSort(el.value, el.value === 'moi' ? -1 : 1);
+  else if (el.dataset.on === 'bk-all') { S.bkAll = el.checked; renderMain(); }
+  else if (el.dataset.on === 'cc-f') { S.ccF = Object.assign({}, S.ccF, { [el.dataset.k]: el.value }); renderMain(); }
+  else if (el.dataset.on === 'lo-bk') loBkFill(el);
+  else if (el.dataset.on === 'don-kh') dienMaDon(el.value);
+  else if (el.dataset.on === 'xl-bk') { const b = S.bkMap[el.value]; if (b) { const set = (id, v) => { const x = document.getElementById(id); if (x && v != null) x.value = v; }; set('xl-booking', b.so_booking); set('xl-ten_tau', [b.ten_tau, b.chuyen].filter(Boolean).join(' ')); set('xl-hang_tau', b.hang_tau); set('xl-etd', b.etd); set('xl-eta', b.eta); } }
+  else if (el.dataset.on === 'tbk-ct') { const t = S.tbk; if (t) { t.ids = el.checked ? t.ids.concat([el.value]) : t.ids.filter(x => x !== el.value); renderTimBk(); } }
+  else if (el.dataset.on === 'tbk-sel' || el.dataset.on === 'tbk-sel2') { if (S.tbk) { S.tbk.sel = el.value || null; S.tbk.moi = ''; S.tbk.loCo = ''; S.tbk.lo = goiYMaLo(S.tbk.sel); renderTimBk(); } }
+  else if (el.dataset.on === 'tbk-moi') { if (S.tbk) { S.tbk.moi = el.value; if (el.value) { S.tbk.sel = null; S.tbk.loCo = ''; S.tbk.lo = goiYMaLo(el.value.toUpperCase().trim()); } renderTimBk(); } }
+  else if (el.dataset.on === 'tbk-lo') { if (S.tbk) { S.tbk.lo = el.value; renderTimBk(); } }
+  else if (el.dataset.on === 'tbk-lo-co') { if (S.tbk) { S.tbk.loCo = el.value; renderTimBk(); } }
   else if (el.dataset.on === 'gy-pick') { S.pick[el.dataset.id] = el.value; const g = S.goiy.find(x => x.id === el.dataset.id); if (g && g.duyet) { sb.from('goi_y').update({ nha_xe_chon: el.value || null }).eq('id', g.id).then(r => { if (r.error) toast(errMsg(r.error), true); else g.nha_xe_chon = el.value || null; }); } renderMain(); }
 });
 document.addEventListener('input', e => {
@@ -2377,6 +2682,9 @@ document.addEventListener('submit', e => {
   if (f.dataset.form === 'f-cont') saveCont(f);
   else if (f.dataset.form === 'f-lo') saveLo(f);
   else if (f.dataset.form === 'f-xuly') saveXuLy(f);
+  else if (f.dataset.form === 'f-booking') saveBooking(f);
+  else if (f.dataset.form === 'f-don') saveDonHang(f);
+  else if (f.dataset.form === 'f-timbk') return;
   else if (['nhaxe', 'kho', 'nv', 'bai', 'gia', 'cangden', 'cangha'].indexOf(f.dataset.form) > -1) saveDm(f);
   else if (f.dataset.form === 'nv-new') createNhanVien(f);
   else if (f.dataset.form === 'setpw') setNhanVienPassword(f);

@@ -24,3 +24,6 @@ tests/test_*.py
 # Ảnh chụp màn hình (có số cont thật), file nháp
 Claude outputs/
 _to_delete/
+
+# Yêu cầu gốc anh Hi gửi (có booking / số cont thật)
+yeu-cau/
