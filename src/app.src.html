@@ -2372,9 +2372,7 @@ function renderChatMsgs() {
     if (m.role === 'user') return '<div class="ai-msg user">' + esc(m.text) + '</div>';
     const canAct = m.action && S.me && S.me.ai_duoc_luu;
     // Render **bold** và xuống dòng an toàn (esc trước, rồi chỉ unescape ** pattern)
-    const html = esc(m.text).replace(/\*\*([^*
-]{1,80})\*\*/g, '<strong>$1</strong>').replace(/
-/g, '<br>');
+    const html = esc(m.text).replace(/\*\*([^*\n]{1,80})\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
     return '<div class="ai-msg bot">' + html +
       (canAct ? '<div class="ai-action"><button class="btn btn-sm btn-pri" data-act="ai-confirm" data-idx="' + i + '">' + T1('✔ Xác nhận', '✔ 确认') + '</button></div>' : '') +
       '</div>';
