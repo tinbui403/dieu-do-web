@@ -2386,7 +2386,8 @@ const AI_TOOLS = [{ function_declarations: [
   { name:'loc_cont', description:'LỌC CHÍNH XÁC danh sách container theo nhiều điều kiện kết hợp: kho, trạng thái, lô, khách hàng, nhà xe. DÙNG CÔNG CỤ NÀY cho câu hỏi có điều kiện lọc như "kho X có cont nào trạng thái Đầy chờ kéo", "lô Y còn cont nào ở bãi tạm", "khách Z có bao nhiêu cont chờ cắt rỗng". Trả về đầy đủ, không cắt bớt.', parameters:{ type:'object', properties:{ kho:{ type:'string', description:'tên kho (khớp một phần được)' }, trang_thai:{ type:'string', description:'số 1-6/9 hoặc tên: Chờ cắt rỗng, Đang đóng hàng, Đầy chờ kéo, Ở bãi tạm, Đã hạ cảng, Đã lên tàu, Hủy/đổi cont' }, lo:{ type:'string' }, khach_hang:{ type:'string' }, nha_xe:{ type:'string' } } } },
   { name:'tra_booking', description:'Tra booking theo số booking, gồm các lô thuộc booking', parameters:{ type:'object', properties:{ so_booking:{ type:'string' } }, required:['so_booking'] } },
   { name:'dem_cont_theo_trang_thai', description:'Đếm tổng số container theo từng trạng thái trên toàn hệ thống (dùng cho câu hỏi thống kê tổng)', parameters:{ type:'object', properties:{} } },
-  { name:'lo_toi_han_cls', description:'Danh sách lô sắp tới hạn CLS (cut-off) trong N ngày tới', parameters:{ type:'object', properties:{ so_ngay:{ type:'integer', description:'số ngày tới, mặc định 3' } } } },
+  { name:'lo_toi_han_cls', description:'Danh sách lô GẦN hoặc ĐÃ QUÁ hạn CLS (cut-off): gồm cả lô đã quá hạn (gấp nhất) và lô sắp hạn trong N ngày tới, xếp gấp trước.', parameters:{ type:'object', properties:{ so_ngay:{ type:'integer', description:'số ngày tới, mặc định 3' } } } },
+  { name:'cont_gap_can_keo', description:'Danh sách container ĐẦY CHỜ KÉO cần kéo về cảng, kèm khu vực kho + CLS + số giờ còn lại (ÂM = đã quá hạn = gấp nhất). Đã xếp gấp trước. DÙNG cho câu hỏi kéo cont: "khu vực X có cont nào gấp cần kéo", "gợi ý cont kéo chung chuyến", "kho gần nhau có cont gấp không". Lọc được theo khu_vuc / kho / nha_xe. LƯU Ý nghiệp vụ: kéo cont gộp theo KHU VỰC, KHÔNG cần cùng khách hàng.', parameters:{ type:'object', properties:{ khu_vuc:{ type:'string' }, kho:{ type:'string' }, nha_xe:{ type:'string' } } } },
   { name:'booking_thieu_cont', description:'Danh sách booking chưa đủ cont so với số hãng cấp (cần xin thêm cont)', parameters:{ type:'object', properties:{} } },
   { name:'goi_y_booking', description:'Gợi ý booking phù hợp cho một đơn hàng theo cảng đến / ngày tàu / hãng / số cont', parameters:{ type:'object', properties:{ cang_den:{ type:'string' }, ngay_tau:{ type:'string', description:'ngày tàu dạng YYYY-MM-DD' }, hang_tau:{ type:'string' }, so_cont:{ type:'integer' } }, required:['cang_den'] } }
 ]}];
@@ -2446,10 +2447,49 @@ async function aiExecTool(name, args) {
     }
     if (name === 'lo_toi_han_cls') {
       const n = parseInt(args.so_ngay, 10) || 3;
-      const today = new Date().toISOString().slice(0, 10);
-      const den = new Date(Date.now() + n * 86400000).toISOString().slice(0, 10);
-      const r = await sb.from('lo_tong_hop').select('lo,khach_hang,so_booking,cls,etd,trang_thai').gte('cls', today).lte('cls', den + 'T23:59:59').order('cls');
-      return { so_ngay: n, tu_ngay: today, den_ngay: den, so_lo: (r.data || []).length, lots: r.data || [] };
+      const now = Date.now();
+      const truoc = new Date(now - 10 * 86400000).toISOString().slice(0, 10); // gồm quá hạn 10 ngày gần đây
+      const den = new Date(now + n * 86400000).toISOString().slice(0, 10);
+      const r = await sb.from('lo_tong_hop').select('lo,khach_hang,so_booking,cls,etd,trang_thai').gte('cls', truoc).lte('cls', den + 'T23:59:59').order('cls');
+      const lots = (r.data || []).map(l => {
+        const gio = l.cls ? Math.round((new Date(l.cls).getTime() - now) / 3600000) : null;
+        return Object.assign({}, l, { gio_con_lai: gio, da_qua_han: gio != null && gio < 0 });
+      });
+      return { so_ngay: n, ghi_chu: 'gio_con_lai am = da qua han CLS (gap nhat)', so_lo: lots.length, lots };
+    }
+    if (name === 'cont_gap_can_keo') {
+      let cq = sb.from('cont').select('id,so_cont,lo,kho,nha_xe,khach_hang,ma_don').eq('trang_thai', '3');
+      if (args.kho) cq = cq.ilike('kho', '%' + String(args.kho).trim() + '%');
+      if (args.nha_xe) cq = cq.ilike('nha_xe', '%' + String(args.nha_xe).trim() + '%');
+      const cr = await cq.limit(500);
+      let conts = cr.data || [];
+      // CLS lấy theo lô
+      const los = Array.from(new Set(conts.map(c => c.lo).filter(Boolean)));
+      const clsMap = {};
+      if (los.length) {
+        const lr = await sb.from('lo_tong_hop').select('lo,cls').in('lo', los);
+        (lr.data || []).forEach(l => { clsMap[l.lo] = l.cls; });
+      }
+      // khu vực lấy theo kho (danh mục đã load)
+      const khoKV = {};
+      (S.kho || []).forEach(k => { khoKV[k.ten] = k.khu_vuc || null; });
+      const now = Date.now();
+      conts = conts.map(c => {
+        const cls = clsMap[c.lo] || null;
+        const gio = cls ? Math.round((new Date(cls).getTime() - now) / 3600000) : null;
+        return { so_cont: c.so_cont, lo: c.lo, ma_don: c.ma_don, kho: c.kho, khu_vuc: khoKV[c.kho] || null, nha_xe: c.nha_xe, khach_hang: c.khach_hang, cls, gio_con_lai: gio, da_qua_han: gio != null && gio < 0 };
+      });
+      if (args.khu_vuc) {
+        const kv = String(args.khu_vuc).trim().toLowerCase();
+        conts = conts.filter(c => (c.khu_vuc || '').toLowerCase().includes(kv));
+      }
+      conts.sort((a, b) => {
+        if (a.gio_con_lai == null && b.gio_con_lai == null) return 0;
+        if (a.gio_con_lai == null) return 1;
+        if (b.gio_con_lai == null) return -1;
+        return a.gio_con_lai - b.gio_con_lai;
+      });
+      return { so_ket_qua: conts.length, ghi_chu: 'Xep gap truoc; gio_con_lai am = da qua han CLS. Keo cont gop theo khu_vuc, khong can cung khach.', conts: conts.slice(0, 100) };
     }
     if (name === 'booking_thieu_cont') {
       const r = await sb.from('booking_tong_hop').select('so_booking,hang_tau,ten_tau,etd,cang_den,so_luong_cont,cont_da_xep,cac_lo').limit(3000);
