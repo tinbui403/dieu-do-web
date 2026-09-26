@@ -1246,7 +1246,7 @@ function renderShell() {
     '<div class="app' + (S.navOpen ? ' nav-open' : '') + (first ? ' app-in' : '') + '" id="app">' +
     '<button class="scrim" data-act="nav-close" aria-label="' + esc(T('close')) + '"></button>' +
     '<nav class="side" aria-label="Menu">' +
-      '<div class="brand"><div class="brand-logo">' + ico('truck', 22, '#fff') + '</div><div><div class="brand-name">Điều độ 调度</div><div class="brand-sub">Đại Cát Lâm · cont chuối</div></div></div>' +
+      '<div class="brand"><div class="brand-logo">' + ico('truck', 22, '#fff') + '</div><div><div class="brand-name">Quản lý điều phối</div><div class="brand-sub">Phát triển bởi Bùi Công Tín</div></div></div>' +
       NAV_GROUPS.map(g => '<div class="nav-g"><div class="nav-h">' + esc(T(g[0])) + '</div>' + g[1].map(k => '<button class="nav-i" data-act="tab" data-tab="' + k + '" aria-current="' + (S.tab === k ? 'page' : 'false') + '">' + ico(k) + '<span>' + esc(T(k)) + '</span><span class="cnt" data-cnt="' + k + '"></span></button>').join('') + '</div>').join('') +
       '<div style="flex:1"></div>' +
       '<div class="nav-g"><div class="nav-h">Ngôn ngữ 语言</div><div class="langs" role="group">' +
@@ -2618,7 +2618,8 @@ function renderChatMsgs() {
 const ST_NHAN = {'1':'Chờ cắt rỗng','2':'Đang đóng hàng','3':'Đầy chờ kéo','4':'Ở bãi tạm','5':'Đã hạ cảng','6':'Đã lên tàu','9':'Hủy/đổi cont'};
 const AI_TOOLS = [{ function_declarations: [
   { name:'tra_lo', description:'Tra thông tin 1 lô hàng theo mã lô, gồm các container thuộc lô', parameters:{ type:'object', properties:{ ma_lo:{ type:'string', description:'mã lô, ví dụ 612, 604A' } }, required:['ma_lo'] } },
-  { name:'tra_cont', description:'Tìm container theo số cont, mã đơn, kho hoặc khách hàng', parameters:{ type:'object', properties:{ tu_khoa:{ type:'string', description:'từ khóa tìm: số cont / mã đơn / tên kho / tên khách' } }, required:['tu_khoa'] } },
+  { name:'tra_cont', description:'Tìm container theo MỘT từ khóa cụ thể (số cont, mã đơn). Nếu cần LỌC theo điều kiện (kho + trạng thái, lô + trạng thái…) thì dùng loc_cont thay vì tra_cont.', parameters:{ type:'object', properties:{ tu_khoa:{ type:'string', description:'từ khóa tìm: số cont / mã đơn / tên kho / tên khách' } }, required:['tu_khoa'] } },
+  { name:'loc_cont', description:'LỌC CHÍNH XÁC danh sách container theo nhiều điều kiện kết hợp: kho, trạng thái, lô, khách hàng, nhà xe. DÙNG CÔNG CỤ NÀY cho câu hỏi có điều kiện lọc như "kho X có cont nào trạng thái Đầy chờ kéo", "lô Y còn cont nào ở bãi tạm", "khách Z có bao nhiêu cont chờ cắt rỗng". Trả về đầy đủ, không cắt bớt.', parameters:{ type:'object', properties:{ kho:{ type:'string', description:'tên kho (khớp một phần được)' }, trang_thai:{ type:'string', description:'số 1-6/9 hoặc tên: Chờ cắt rỗng, Đang đóng hàng, Đầy chờ kéo, Ở bãi tạm, Đã hạ cảng, Đã lên tàu, Hủy/đổi cont' }, lo:{ type:'string' }, khach_hang:{ type:'string' }, nha_xe:{ type:'string' } } } },
   { name:'tra_booking', description:'Tra booking theo số booking, gồm các lô thuộc booking', parameters:{ type:'object', properties:{ so_booking:{ type:'string' } }, required:['so_booking'] } },
   { name:'dem_cont_theo_trang_thai', description:'Đếm tổng số container theo từng trạng thái trên toàn hệ thống (dùng cho câu hỏi thống kê tổng)', parameters:{ type:'object', properties:{} } },
   { name:'lo_toi_han_cls', description:'Danh sách lô sắp tới hạn CLS (cut-off) trong N ngày tới', parameters:{ type:'object', properties:{ so_ngay:{ type:'integer', description:'số ngày tới, mặc định 3' } } } },
@@ -2643,9 +2644,25 @@ async function aiExecTool(name, args) {
       if (!kw) return { error: 'thiếu từ khóa' };
       const pat = '%' + kw + '%';
       const r = await sb.from('cont').select('id,so_cont,ma_don,lo,khach_hang,kho,trang_thai,nha_xe,bai_tam,ngay_den_kho')
-        .or(['so_cont', 'ma_don', 'lo', 'kho', 'khach_hang'].map(f => f + '.ilike.' + pat).join(',')).limit(40);
+        .or(['so_cont', 'ma_don', 'lo', 'kho', 'khach_hang'].map(f => f + '.ilike.' + pat).join(',')).limit(100);
       const conts = (r.data || []).map(c => Object.assign({}, c, { trang_thai_ten: ST_NHAN[c.trang_thai] || c.trang_thai }));
       return { so_ket_qua: conts.length, conts };
+    }
+    if (name === 'loc_cont') {
+      let query = sb.from('cont').select('id,so_cont,ma_don,lo,khach_hang,kho,trang_thai,nha_xe,bai_tam,ngay_den_kho');
+      if (args.kho) query = query.ilike('kho', '%' + String(args.kho).trim() + '%');
+      if (args.lo) query = query.eq('lo', String(args.lo).trim());
+      if (args.khach_hang) query = query.ilike('khach_hang', '%' + String(args.khach_hang).trim() + '%');
+      if (args.nha_xe) query = query.ilike('nha_xe', '%' + String(args.nha_xe).trim() + '%');
+      if (args.trang_thai != null && String(args.trang_thai).trim() !== '') {
+        const raw = String(args.trang_thai).trim().toLowerCase();
+        const stMap = { 'chờ cắt rỗng':'1', 'đang đóng hàng':'2', 'đầy chờ kéo':'3', 'ở bãi tạm':'4', 'đã hạ cảng':'5', 'đã lên tàu':'6', 'hủy':'9', 'đổi cont':'9', 'hủy/đổi cont':'9' };
+        const tt = stMap[raw] || String(args.trang_thai).trim();
+        query = query.eq('trang_thai', tt);
+      }
+      const r = await query.limit(300);
+      const conts = (r.data || []).map(c => Object.assign({}, c, { trang_thai_ten: ST_NHAN[c.trang_thai] || c.trang_thai }));
+      return { so_ket_qua: conts.length, dieu_kien: args, conts };
     }
     if (name === 'tra_booking') {
       const bk = String(args.so_booking || '').trim();

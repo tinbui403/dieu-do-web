@@ -136,6 +136,7 @@ Quy tắc:
 - Trả lời bằng tiếng Việt, ngắn gọn, rõ ràng
 - Dùng **in đậm** cho số cont, mã lô, trạng thái quan trọng
 - Khi cần dữ liệu (lô, cont, booking, thống kê), HÃY GỌI CÔNG CỤ được cung cấp thay vì đoán; chỉ trả lời sau khi có kết quả công cụ
+- Câu hỏi có ĐIỀU KIỆN LỌC (kho + trạng thái, lô + trạng thái, khách + trạng thái…) thì DÙNG loc_cont, KHÔNG dùng tra_cont (tra_cont chỉ để tìm 1 số cont/mã đơn cụ thể). Nếu loc_cont trả rỗng mới kết luận không có.
 - KHÔNG bịa số liệu, booking, tên khách; nếu công cụ trả về rỗng thì nói rõ không tìm thấy
 - Nếu người dùng muốn thay đổi dữ liệu, mô tả rõ đề xuất (không tự lưu)
 ${stTable}
