@@ -1265,7 +1265,7 @@ function renderShell() {
       '<button data-act="nav-open">' + ico('menu', 20) + '<span>' + esc(T('menu')) + '</span></button>' +
     '</nav>' +
     /* ---- Nút AI nổi góc phải ---- */
-    '<button id="ai-fab" class="ai-fab" data-act="ai-open" title="Trợ lý AI 智能助手" aria-label="Trợ lý AI">' + ico('bulb', 22, '#fff') + '<span class="ai-fab-dot" id="ai-dot" style="display:none"></span></button>' +
+    ((S.me && S.me.ai_hoi_dap) ? '<button id="ai-fab" class="ai-fab" data-act="ai-open" title="Trợ lý AI 智能助手" aria-label="Trợ lý AI">' + ico('bulb', 22, '#fff') + '<span class="ai-fab-dot" id="ai-dot" style="display:none"></span></button>' : '') +
     '<div id="ai-panel" class="ai-panel' + (S.chatOpen ? ' open' : '') + '" role="dialog" aria-label="Trợ lý AI">' +
       '<div class="ai-head"><span>🤖 Trợ lý AI</span><button class="ai-close" data-act="ai-close" aria-label="Đóng">✕</button></div>' +
       '<div class="ai-body" id="ai-body">' + renderChatMsgs() + '</div>' +
@@ -1999,9 +1999,16 @@ function vDanhMuc() {
     const me = (S.me && S.me.email || '').toLowerCase();
     const roleOpts = [['Quản lý', 'Quản lý'], ['Điều độ', 'Điều độ'], ['CSKH', 'CSKH'], ['Nhà xe', 'Nhà xe'], ['Chỉ xem', 'Chỉ xem']];
     const isQL = S.me && S.me.vai_tro === 'Quản lý';
-    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('email')) + '</span><span>' + esc(T('name')) + '</span><span>' + esc(T('role')) + '</span><span>' + esc(T('langCol')) + '</span><span>' + esc(T('carrier')) + '</span><span style="text-align:center">' + esc(T('active')) + '</span><span style="text-align:center" title="Quyền xác nhận AI">AI</span><span></span><span></span></div>' +
+    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('email')) + '</span><span>' + esc(T('name')) + '</span><span>' + esc(T('role')) + '</span><span>' + esc(T('langCol')) + '</span><span>' + esc(T('carrier')) + '</span><span style="text-align:center">' + esc(T('active')) + '</span><span style="text-align:center" title="Quyền chatbot: Hỏi đáp / Thao tác">Chatbot</span><span></span><span></span></div>' +
       S.nhanvien.map(v => '<form class="tr" style="' + cols + '" data-form="nv" data-key="' + esc(v.email) + '"><b class="ell">' + esc(v.email) + '</b>' + dmInp('ho_ten', v.ho_ten) + sel('vai_tro', v.vai_tro, roleOpts) + sel('ngon_ngu', v.ngon_ngu, [['vi', 'Tiếng Việt'], ['zh', '中文'], ['both', 'VI + 中']]) + sel('nha_xe', v.nha_xe, [['', '—']].concat(nxActive(v.nha_xe).map(n => [n.ma, n.ma]))) + dmChk('hoat_dong', v.hoat_dong) +
-        (isQL ? '<span style="text-align:center"><button type="button" class="btn btn-sm' + (v.ai_duoc_luu ? ' btn-pri' : ' btn-line') + '" data-act="ai-toggle" data-email="' + esc(v.email) + '" data-bat="' + (v.ai_duoc_luu ? 'false' : 'true') + '" title="' + (v.ai_duoc_luu ? T1('Tắt quyền AI', '关闭AI') : T1('Bật quyền AI', '开启AI')) + '" style="padding:0 8px">' + (v.ai_duoc_luu ? '🤖' : '—') + '</button></span>' : '<span style="text-align:center;font-size:13px">' + (v.ai_duoc_luu ? '🤖' : '—') + '</span>') +
+        (function(){
+          var hd = (v.ai_hoi_dap != null) ? v.ai_hoi_dap : (['Quản lý','Điều độ','CSKH'].indexOf(v.vai_tro) > -1);
+          if (!isQL) return '<span style="text-align:center;font-size:12px">' + (hd ? '💬' : '—') + (v.ai_duoc_luu ? '🤖' : '') + '</span>';
+          return '<span style="text-align:center;display:flex;gap:3px;justify-content:center">' +
+            '<button type="button" class="btn btn-sm' + (hd ? ' btn-pri' : ' btn-line') + '" data-act="ai-toggle-hd" data-email="' + esc(v.email) + '" data-bat="' + (hd ? 'false' : 'true') + '" title="' + (hd ? T1('Tắt quyền Hỏi đáp', '关闭问答') : T1('Bật quyền Hỏi đáp', '开启问答')) + '" style="padding:0 6px">' + (hd ? '💬' : '—') + '</button>' +
+            '<button type="button" class="btn btn-sm' + (v.ai_duoc_luu ? ' btn-pri' : ' btn-line') + '" data-act="ai-toggle" data-email="' + esc(v.email) + '" data-bat="' + (v.ai_duoc_luu ? 'false' : 'true') + '" title="' + (v.ai_duoc_luu ? T1('Tắt quyền Thao tác', '关闭操作') : T1('Bật quyền Thao tác (chỉ QL/ĐĐ có tác dụng)', '开启操作')) + '" style="padding:0 6px">' + (v.ai_duoc_luu ? '🤖' : '—') + '</button>' +
+          '</span>';
+        })() +
         '<button class="btn btn-sm" type="submit">' + esc(T('save')) + '</button>' + (v.email !== me ? dmDel('nv', v.email) : '<span></span>') + '</form>' +
         (v.email !== me ? '<form class="tr" style="' + colsPw + ';opacity:.85" data-form="setpw" data-key="' + esc(v.email) + '"><span class="muted" style="font-size:12px;align-self:center">' + esc(T1('Đặt lại mật khẩu', '重置密码')) + '</span><input name="password" type="password" minlength="6" required placeholder="' + esc(T1('Mật khẩu mới ≥6 ký tự', '新密码≥6位')) + '" style="height:32px;padding:0 8px;border-radius:8px;border:1px solid #D8D2EE;width:100%"><button class="btn btn-sm" type="submit">' + esc(T1('Đặt', '设置')) + '</button><span></span></form>' : '')
       ).join('') +
@@ -2021,7 +2028,7 @@ async function loadDon() {
       (S.donList.length ? '<div class="chips"><label class="chk"><input type="checkbox" data-on="don-all" checked>' + esc(T1('Chọn tất cả', '全选')) + '</label><span class="muted" style="font-size:13px">' + S.donList.length + ' ' + esc(T1('lô · ', '批 · ')) + S.donList.reduce((a, x) => a + (+x.so_cont || 0), 0) + ' cont</span><span style="flex:1"></span><button class="btn btn-danger" data-act="don-run">' + esc(T1('Xoá các lô đã chọn khỏi Supabase', '从Supabase删除所选批次')) + '</button></div>' +
         '<section class="tbl"><div class="tbl-x">' + '<div class="tr th" style="--cols:40px 80px 160px minmax(160px,1fr) 90px 60px 200px;--minw:860px"><span></span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('booking')) + '</span><span>' + esc(T('vessel')) + '</span><span>ETD</span><span>Cont</span><span>' + esc(T1('Sao lưu', '备份')) + '</span></div>' +
         S.donList.map(x => '<label class="tr" style="--cols:40px 80px 160px minmax(160px,1fr) 90px 60px 200px;--minw:860px"><input type="checkbox" class="don-cb" value="' + esc(x.lo) + '" checked><b>' + esc(x.lo) + '</b><span class="mono ell" style="font-size:12px">' + esc(x.booking || '—') + '</span><span class="ell">' + esc(x.ten_tau || '—') + '</span><span>' + fDate(x.etd, true) + '</span><span class="num">' + x.so_cont + '</span><span class="muted ell" style="font-size:12px">' + esc(x.ban_sao_luu || '') + '</span></label>').join('') + '</div></section>'
-      : '<div class="empty">' + esc(T1('Chưa có lô nào đủ điều kiện dọn.', '暂无可清理批次。')) + '</div>') + '</div>';
+      : '<div class="empty">' + esc(T1('Chưa có lô nào đủ điều kiện dọn.', '暂无可清理批次。')) + '</div>') + '<section class="card stack" style="gap:10px;margin-top:8px"><h3 style="margin:0;font-size:15px">' + esc(T1('Dọn nhật ký thay đổi', '清理变更日志')) + '</h3>' + '<div class="msg">' + esc(T1('Xoá các bản ghi nhật ký cũ hơn 30 ngày để CSDL gọn hơn. KHÔNG ảnh hưởng cont / lô / booking.', '删除超过30天的日志以精简数据库，不影响柜/批/订舱。')) + '</div>' + '<div class="chips"><span style="flex:1"></span><button class="btn btn-danger" data-act="don-nk-run">' + esc(T1('Dọn nhật ký cũ hơn 30 ngày', '清理30天前的日志')) + '</button></div></section>' + '</div>';
   } catch (e) { box.innerHTML = '<div class="msg err">' + esc(errMsg(e)) + '</div>'; }
 }
 
@@ -2655,8 +2662,18 @@ function renderChatMsgs() {
     const canAct = m.action && S.me && S.me.ai_duoc_luu;
     // Render **bold** và xuống dòng an toàn (esc trước, rồi chỉ unescape ** pattern)
     const html = esc(m.text).replace(/\*\*([^*\n]{1,80})\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    const cf = m.confirm;
+    const cfHtml = cf ? ('<div style="margin-top:8px;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:10px;background:rgba(255,255,255,.06)">' +
+      '<div style="font-weight:700;font-size:13px;margin-bottom:6px">' + esc(cf.tieu_de) + '</div>' +
+      cf.mo_ta.map(r => '<div style="font-size:12px;display:flex;gap:6px;margin:2px 0"><span style="opacity:.7;min-width:130px">' + esc(r.nhan) + '</span><span style="font-weight:600">' + esc(r.gia_tri) + '</span></div>').join('') +
+      (cf.done ? '<div style="color:#34d399;font-weight:700;font-size:12px;margin-top:8px">✅ ' + esc(T1('Đã lưu', '已保存')) + '</div>'
+        : cf.huy ? '<div style="opacity:.6;font-size:12px;margin-top:8px">' + esc(T1('Đã huỷ', '已取消')) + '</div>'
+        : ((S.me && S.me.ai_thao_tac) ? '<div class="ai-action" style="margin-top:8px;display:flex;gap:6px"><button class="btn btn-sm btn-pri" data-act="ai-do" data-idx="' + i + '">' + T1('✔ Đồng ý lưu', '✔ 确认保存') + '</button><button class="btn btn-sm btn-line" data-act="ai-huy" data-idx="' + i + '">' + T1('Huỷ', '取消') + '</button></div>'
+          : '<div style="opacity:.6;font-size:12px;margin-top:8px">' + esc(T1('Bạn không có quyền thao tác.', '无操作权限。')) + '</div>')) +
+      '</div>') : '';
     return '<div class="ai-msg bot">' + html +
       (canAct ? '<div class="ai-action"><button class="btn btn-sm btn-pri" data-act="ai-confirm" data-idx="' + i + '">' + T1('✔ Xác nhận', '✔ 确认') + '</button></div>' : '') +
+      cfHtml +
       '</div>';
   }).join('');
 }
@@ -2668,11 +2685,21 @@ const AI_TOOLS = [{ function_declarations: [
   { name:'loc_cont', description:'LỌC CHÍNH XÁC danh sách container theo nhiều điều kiện kết hợp: kho, trạng thái, lô, khách hàng, nhà xe. DÙNG CÔNG CỤ NÀY cho câu hỏi có điều kiện lọc như "kho X có cont nào trạng thái Đầy chờ kéo", "lô Y còn cont nào ở bãi tạm", "khách Z có bao nhiêu cont chờ cắt rỗng". Trả về đầy đủ, không cắt bớt.', parameters:{ type:'object', properties:{ kho:{ type:'string', description:'tên kho (khớp một phần được)' }, trang_thai:{ type:'string', description:'số 1-6/9 hoặc tên: Đơn chờ lên, Đang đóng hàng, Đầy chờ kéo, Ở bãi tạm, Đã hạ cảng, Đã lên tàu, Hủy/đổi cont' }, lo:{ type:'string' }, khach_hang:{ type:'string' }, nha_xe:{ type:'string' } } } },
   { name:'tra_booking', description:'Tra booking theo số booking, gồm các lô thuộc booking', parameters:{ type:'object', properties:{ so_booking:{ type:'string' } }, required:['so_booking'] } },
   { name:'dem_cont_theo_trang_thai', description:'Đếm tổng số container theo từng trạng thái trên toàn hệ thống (dùng cho câu hỏi thống kê tổng)', parameters:{ type:'object', properties:{} } },
-  { name:'lo_toi_han_cls', description:'Danh sách lô GẦN hoặc ĐÃ QUÁ hạn CLS (cut-off): gồm cả lô đã quá hạn (gấp nhất) và lô sắp hạn trong N ngày tới, xếp gấp trước.', parameters:{ type:'object', properties:{ so_ngay:{ type:'integer', description:'số ngày tới, mặc định 3' } } } },
+  { name:'lo_toi_han_cls', description:'Danh sách lô GẦN hoặc ĐÃ QUÁ hạn CLS (cut-off / cắt máng / closing). Dùng cho mọi câu hỏi: lô nào quá hạn, quá cắt máng, quá cut-off, trễ closing, sắp tới hạn, có bao nhiêu lô quá ngày cắt máng. Trả về so_lo_qua_han (số lô đã quá hạn) + danh sách kèm gio_con_lai (âm = đã quá hạn = gấp nhất), đã xếp quá hạn trước.', parameters:{ type:'object', properties:{ so_ngay:{ type:'integer', description:'số ngày tới, mặc định 3' } } } },
   { name:'cont_gap_can_keo', description:'Danh sách container ĐẦY CHỜ KÉO cần kéo về cảng, kèm khu vực kho + CLS + số giờ còn lại (ÂM = đã quá hạn = gấp nhất). Đã xếp gấp trước. DÙNG cho câu hỏi kéo cont: "khu vực X có cont nào gấp cần kéo", "gợi ý cont kéo chung chuyến", "kho gần nhau có cont gấp không". Lọc được theo khu_vuc / kho / nha_xe. LƯU Ý nghiệp vụ: kéo cont gộp theo KHU VỰC, KHÔNG cần cùng khách hàng.', parameters:{ type:'object', properties:{ khu_vuc:{ type:'string' }, kho:{ type:'string' }, nha_xe:{ type:'string' } } } },
   { name:'booking_thieu_cont', description:'Danh sách booking chưa đủ cont so với số hãng cấp (cần xin thêm cont)', parameters:{ type:'object', properties:{} } },
   { name:'goi_y_booking', description:'Gợi ý booking phù hợp cho một đơn hàng theo cảng đến / ngày tàu / hãng / số cont', parameters:{ type:'object', properties:{ cang_den:{ type:'string' }, ngay_tau:{ type:'string', description:'ngày tàu dạng YYYY-MM-DD' }, hang_tau:{ type:'string' }, so_cont:{ type:'integer' } }, required:['cang_den'] } }
 ]}];
+
+// ===== Bộ công cụ GHI (chỉ nạp khi user có quyền thao tác). Mọi lệnh ghi PHẢI qua bảng xác nhận. =====
+const AI_WRITE_TOOLS = { function_declarations: [
+  { name:'ghi_booking', description:'Tạo mới hoặc cập nhật một booking. Nếu số booking đã có thì cập nhật, chưa có thì tạo mới. Sau khi gọi, hệ thống hiện bảng xác nhận cho người dùng bấm Đồng ý — KHÔNG coi là đã lưu.', parameters:{ type:'object', properties:{ so_booking:{type:'string'}, hang_tau:{type:'string'}, ten_tau:{type:'string'}, cang_den:{type:'string'}, etd:{type:'string',description:'YYYY-MM-DD'}, closing:{type:'string',description:'giờ cắt máng YYYY-MM-DD HH:MM'} }, required:['so_booking'] } },
+  { name:'ghi_lo', description:'Tạo một lô mới thuộc một booking cho một khách hàng. Hệ thống hiện bảng xác nhận trước khi lưu.', parameters:{ type:'object', properties:{ lo:{type:'string',description:'mã lô muốn tạo'}, booking:{type:'string'}, khach_hang:{type:'string'} }, required:['lo','booking'] } },
+  { name:'ghi_them_cont', description:'Thêm N đơn/container trống (Đơn chờ lên) vào một lô đã có. Hệ thống hiện bảng xác nhận trước khi lưu.', parameters:{ type:'object', properties:{ lo:{type:'string'}, so_luong:{type:'integer'} }, required:['lo','so_luong'] } },
+  { name:'ghi_trang_thai_cont', description:'Đổi trạng thái một container. trang_thai nhận số 1-6/9 hoặc tên (Đơn chờ lên, Đang đóng hàng, Đầy chờ kéo, Ở bãi tạm, Đã hạ cảng, Đã lên tàu, Hủy/đổi cont). Hệ thống hiện bảng xác nhận trước khi lưu.', parameters:{ type:'object', properties:{ so_cont:{type:'string',description:'số cont hoặc mã đơn'}, trang_thai:{type:'string'} }, required:['so_cont','trang_thai'] } },
+  { name:'ghi_keo_cont', description:'Điều xe kéo các container ĐẦY CHỜ KÉO về cảng: gán nhà xe; nếu ha_cang=true thì chuyển sang Đã hạ cảng. Hệ thống hiện bảng xác nhận trước khi lưu.', parameters:{ type:'object', properties:{ danh_sach_so_cont:{type:'array',items:{type:'string'},description:'danh sách số cont cần kéo'}, nha_xe:{type:'string'}, ha_cang:{type:'boolean'} }, required:['danh_sach_so_cont','nha_xe'] } }
+]};
+function aiTools() { return (S.me && S.me.ai_thao_tac) ? [AI_TOOLS[0], AI_WRITE_TOOLS] : AI_TOOLS; }
 
 async function aiExecTool(name, args) {
   args = args || {};
@@ -2730,14 +2757,19 @@ async function aiExecTool(name, args) {
     if (name === 'lo_toi_han_cls') {
       const n = parseInt(args.so_ngay, 10) || 3;
       const now = Date.now();
-      const truoc = new Date(now - 10 * 86400000).toISOString().slice(0, 10); // gồm quá hạn 10 ngày gần đây
+      const truoc = new Date(now - 15 * 86400000).toISOString().slice(0, 10); // include overdue last 15 days
       const den = new Date(now + n * 86400000).toISOString().slice(0, 10);
-      const r = await sb.from('lo_tong_hop').select('lo,khach_hang,so_booking,cls,etd,trang_thai').gte('cls', truoc).lte('cls', den + 'T23:59:59').order('cls');
+      // fetch wide by cls OR etd so we never miss lots that only have ETD (no CLS entered yet)
+      const r = await sb.from('lo_tong_hop').select('lo,khach_hang,so_booking,ten_tau,hang_tau,cang_den,cls,closing,etd,etd_kho').or('cls.gte.' + truoc + ',etd.gte.' + truoc + ',etd_kho.gte.' + truoc);
       const lots = (r.data || []).map(l => {
-        const gio = l.cls ? Math.round((new Date(l.cls).getTime() - now) / 3600000) : null;
-        return Object.assign({}, l, { gio_con_lai: gio, da_qua_han: gio != null && gio < 0 });
-      });
-      return { so_ngay: n, ghi_chu: 'gio_con_lai am = da qua han CLS (gap nhat)', so_lo: lots.length, lots };
+        let eff = l.cls || l.closing;
+        if (!eff) { const e0 = l.etd || l.etd_kho; if (e0) { const dt = new Date(e0 + 'T00:00:00'); dt.setDate(dt.getDate() - 1); eff = dt.toISOString(); } }
+        const gio = eff ? Math.round((new Date(eff).getTime() - now) / 3600000) : null;
+        return { lo: l.lo, khach_hang: l.khach_hang, so_booking: l.so_booking, ten_tau: l.ten_tau, hang_tau: l.hang_tau, cang_den: l.cang_den, cls: eff, ngay_cls: eff ? String(eff).slice(0, 10) : null, gio_con_lai: gio, da_qua_han: gio != null && gio < 0, nguon_cls: l.cls ? 'cls' : (l.closing ? 'closing_tay' : 'etd-1') };
+      }).filter(l => l.ngay_cls && l.ngay_cls >= truoc && l.ngay_cls <= den)
+        .sort((a, b) => (a.gio_con_lai == null ? 1e9 : a.gio_con_lai) - (b.gio_con_lai == null ? 1e9 : b.gio_con_lai));
+      const qua = lots.filter(l => l.da_qua_han).length;
+      return { so_ngay: n, ghi_chu: 'closing hieu luc = cls -> closing tay -> (etd - 1 ngay); gio_con_lai AM = DA QUA HAN cat mang (gap nhat), da xep qua han truoc. so_lo_qua_han > 0 nghia la CO lo qua han, PHAI liet ke ten lo va so gio/ngay qua han.', so_lo: lots.length, so_lo_qua_han: qua, lots };
     }
     if (name === 'cont_gap_can_keo') {
       let cq = sb.from('cont').select('id,so_cont,lo,kho,nha_xe,khach_hang,ma_don').eq('trang_thai', '3');
@@ -2749,8 +2781,8 @@ async function aiExecTool(name, args) {
       const los = Array.from(new Set(conts.map(c => c.lo).filter(Boolean)));
       const clsMap = {};
       if (los.length) {
-        const lr = await sb.from('lo_tong_hop').select('lo,cls').in('lo', los);
-        (lr.data || []).forEach(l => { clsMap[l.lo] = l.cls; });
+        const lr = await sb.from('lo_tong_hop').select('lo,cls,closing,etd,etd_kho').in('lo', los);
+        (lr.data || []).forEach(l => { let e = l.cls || l.closing; if (!e) { const e0 = l.etd || l.etd_kho; if (e0) { const dt = new Date(e0 + 'T00:00:00'); dt.setDate(dt.getDate() - 1); e = dt.toISOString(); } } clsMap[l.lo] = e || null; });
       }
       // khu vực lấy theo kho (danh mục đã load)
       const khoKV = {};
@@ -2789,10 +2821,157 @@ async function aiExecTool(name, args) {
       if (r.error) return { error: r.error.message || String(r.error) };
       return { goi_y: r.data || [] };
     }
+    // ===== CÔNG CỤ GHI: chuẩn bị bảng xác nhận, KHÔNG ghi ngay =====
+    if (name && name.indexOf('ghi_') === 0) {
+      if (!(S.me && S.me.ai_thao_tac)) return { error: 'Ban khong co quyen thao tac (ghi du lieu) qua chatbot. Nho Quan ly cap quyen.' };
+      const pend = await aiChuanBiGhi(name, args);
+      if (pend.error) return { error: pend.error };
+      S.aiPending = pend;
+      return { trang_thai: 'san_sang_xac_nhan', tom_tat: pend.mo_ta_text, ghi_chu: 'Da hien bang xac nhan cho nguoi dung. Hay bao ho kiem tra va bam Dong y de luu. TUYET DOI KHONG noi la da luu/da xong.' };
+    }
     return { error: 'Không có công cụ tên ' + name };
   } catch (e) {
     return { error: errMsg(e) };
   }
+}
+
+// ===== Chuẩn bị lệnh ghi: validate + dựng bảng xác nhận (KHÔNG ghi) =====
+const AI_ST_MAP = { 'đơn chờ lên':'1','chờ cắt rỗng':'1','đang đóng hàng':'2','đầy chờ kéo':'3','ở bãi tạm':'4','đã hạ cảng':'5','đã lên tàu':'6','hủy':'9','đổi cont':'9','hủy/đổi cont':'9' };
+function aiChuanTt(v) { const raw = String(v == null ? '' : v).trim().toLowerCase(); const m = AI_ST_MAP[raw] || String(v).trim(); return ['1','2','3','4','5','6','9'].indexOf(m) > -1 ? m : null; }
+function aiMoTaText(rows) { return rows.map(r => '• ' + r.nhan + ': ' + r.gia_tri).join('\n'); }
+
+// Khớp giá trị người dùng nói (tên/mã) về MÃ trong danh mục (cang_den, hang_tau...) để không vướng khóa ngoại
+function aiKhopDm(list, v) {
+  if (v == null || String(v).trim() === '') return null;
+  const s = String(v).trim().toLowerCase();
+  list = list || [];
+  let m = list.find(x => (x.ma || '').toLowerCase() === s);
+  if (!m) m = list.find(x => (x.ten_vn || x.ten || '').toLowerCase() === s || (x.ten_tq || '').toLowerCase() === s);
+  if (!m) m = list.find(x => { const ma = (x.ma || '').toLowerCase(), tn = (x.ten_vn || x.ten || '').toLowerCase(); return (ma && (s.includes(ma) || ma.includes(s))) || (tn && (tn.includes(s) || s.includes(tn))); });
+  return m ? m.ma : null;
+}
+
+async function aiChuanBiGhi(name, args) {
+  args = args || {};
+  if (name === 'ghi_booking') {
+    const bk = String(args.so_booking || '').toUpperCase().replace(/\s+/g, ' ').trim();
+    if (!bk) return { error: 'Thiếu số booking' };
+    const ex = await sb.from('booking').select('so_booking').eq('so_booking', bk).maybeSingle();
+    const sua = !!(ex.data);
+    const du = {};
+    ['ten_tau','etd','closing'].forEach(k => { if (args[k] != null && String(args[k]).trim() !== '') du[k] = String(args[k]).trim(); });
+    const rows = [{ nhan:'Số booking', gia_tri: bk }];
+    // Hãng tàu + Cảng đến là khóa ngoại -> phải là MÃ trong danh mục
+    const canhBao = [];
+    if (args.hang_tau != null && String(args.hang_tau).trim() !== '') {
+      const h = aiKhopDm(S.hangtau, args.hang_tau);
+      if (h) { du.hang_tau = h; rows.push({ nhan:'Hãng tàu', gia_tri: h + (h.toLowerCase() !== String(args.hang_tau).trim().toLowerCase() ? ' (từ "' + String(args.hang_tau).trim() + '")' : '') }); }
+      else canhBao.push('Hãng tàu "' + String(args.hang_tau).trim() + '" chưa có trong danh mục — sẽ để trống, thêm sau.');
+    }
+    if (args.cang_den != null && String(args.cang_den).trim() !== '') {
+      const c = aiKhopDm(S.cangden, args.cang_den);
+      if (c) { du.cang_den = c; rows.push({ nhan:'Cảng đến', gia_tri: c + (c.toLowerCase() !== String(args.cang_den).trim().toLowerCase() ? ' (từ "' + String(args.cang_den).trim() + '")' : '') }); }
+      else canhBao.push('Cảng "' + String(args.cang_den).trim() + '" chưa có trong danh mục — sẽ để trống, thêm sau.');
+    }
+    if (du.ten_tau) rows.push({ nhan:'Tàu', gia_tri: du.ten_tau });
+    if (du.etd) rows.push({ nhan:'ETD', gia_tri: du.etd });
+    if (du.closing) rows.push({ nhan:'Cắt máng (CLS)', gia_tri: du.closing });
+    canhBao.forEach(w => rows.push({ nhan:'⚠ Lưu ý', gia_tri: w }));
+    return { loai:'ghi_booking', tieu_de: (sua ? 'Cập nhật booking ' : 'Tạo booking mới ') + bk, mo_ta: rows, mo_ta_text: aiMoTaText(rows), du_lieu: { so_booking: bk, sua, du } };
+  }
+  if (name === 'ghi_lo') {
+    const lo = String(args.lo || '').trim();
+    const bk = String(args.booking || '').toUpperCase().replace(/\s+/g, ' ').trim();
+    if (!lo) return { error: 'Thiếu mã lô' };
+    if (!bk) return { error: 'Thiếu số booking cho lô' };
+    const ex = await sb.from('lo').select('lo').eq('lo', lo).maybeSingle();
+    if (ex.data) return { error: 'Lô ' + lo + ' đã tồn tại — không tạo trùng.' };
+    const kh = args.khach_hang != null ? String(args.khach_hang).trim() : '';
+    const rows = [{ nhan:'Mã lô', gia_tri: lo }, { nhan:'Booking', gia_tri: bk }];
+    if (kh) rows.push({ nhan:'Khách hàng', gia_tri: kh });
+    return { loai:'ghi_lo', tieu_de: 'Tạo lô mới ' + lo, mo_ta: rows, mo_ta_text: aiMoTaText(rows), du_lieu: { lo, booking: bk, khach_hang: kh || null } };
+  }
+  if (name === 'ghi_them_cont') {
+    const lo = String(args.lo || '').trim();
+    const sl = parseInt(args.so_luong, 10);
+    if (!lo) return { error: 'Thiếu mã lô' };
+    if (!(sl >= 1 && sl <= 50)) return { error: 'Số lượng phải từ 1 đến 50' };
+    const lr = await sb.from('lo').select('lo,khach_hang').eq('lo', lo).maybeSingle();
+    if (!lr.data) return { error: 'Không tìm thấy lô ' + lo };
+    const rows = [{ nhan:'Lô', gia_tri: lo }, { nhan:'Số đơn/cont thêm', gia_tri: String(sl) }, { nhan:'Trạng thái ban đầu', gia_tri: 'Đơn chờ lên' }];
+    if (lr.data.khach_hang) rows.push({ nhan:'Khách hàng (theo lô)', gia_tri: lr.data.khach_hang });
+    return { loai:'ghi_them_cont', tieu_de: 'Thêm ' + sl + ' đơn vào lô ' + lo, mo_ta: rows, mo_ta_text: aiMoTaText(rows), du_lieu: { lo, so_luong: sl, khach_hang: lr.data.khach_hang || null } };
+  }
+  if (name === 'ghi_trang_thai_cont') {
+    const kw = String(args.so_cont || '').trim();
+    if (!kw) return { error: 'Thiếu số cont / mã đơn' };
+    const to = aiChuanTt(args.trang_thai);
+    if (!to) return { error: 'Trạng thái không hợp lệ: ' + args.trang_thai };
+    const r = await sb.from('cont').select('id,so_cont,ma_don,lo,trang_thai,kho,khach_hang').or('so_cont.eq.' + kw + ',ma_don.eq.' + kw).limit(6);
+    const list = r.data || [];
+    if (!list.length) return { error: 'Không tìm thấy container/đơn: ' + kw };
+    if (list.length > 1) return { error: 'Có ' + list.length + ' cont khớp "' + kw + '" — hãy nêu số cont chính xác.' };
+    const c = list[0];
+    const rows = [{ nhan:'Container', gia_tri: (c.so_cont || c.ma_don || c.id) }, { nhan:'Lô', gia_tri: c.lo || '—' }, { nhan:'Từ trạng thái', gia_tri: ST_NHAN[c.trang_thai] || c.trang_thai }, { nhan:'Sang trạng thái', gia_tri: ST_NHAN[to] }];
+    return { loai:'ghi_trang_thai_cont', tieu_de: 'Đổi trạng thái ' + (c.so_cont || c.ma_don || c.id), mo_ta: rows, mo_ta_text: aiMoTaText(rows), du_lieu: { id: c.id, so_cont: c.so_cont || c.ma_don || c.id, tu: c.trang_thai, to } };
+  }
+  if (name === 'ghi_keo_cont') {
+    const ds = Array.isArray(args.danh_sach_so_cont) ? args.danh_sach_so_cont.map(x => String(x).trim()).filter(Boolean) : [];
+    const nx = String(args.nha_xe || '').trim();
+    const haCang = !!args.ha_cang;
+    if (!ds.length) return { error: 'Chưa có số cont nào để kéo' };
+    if (!nx) return { error: 'Thiếu nhà xe' };
+    const r = await sb.from('cont').select('id,so_cont,lo,trang_thai,kho,khach_hang').in('so_cont', ds);
+    const found = r.data || [];
+    const keo = found.filter(c => c.trang_thai === '3'); // chỉ kéo cont Đầy chờ kéo
+    const boQua = found.filter(c => c.trang_thai !== '3').map(c => c.so_cont + ' (' + (ST_NHAN[c.trang_thai] || c.trang_thai) + ')');
+    const khongThay = ds.filter(x => !found.some(c => c.so_cont === x));
+    if (!keo.length) return { error: 'Không có cont nào ở trạng thái "Đầy chờ kéo" trong danh sách. ' + (boQua.length ? 'Bỏ qua: ' + boQua.join(', ') : '') + (khongThay.length ? ' Không tìm thấy: ' + khongThay.join(', ') : '') };
+    const rows = [{ nhan:'Nhà xe', gia_tri: nx }, { nhan:'Số cont sẽ kéo', gia_tri: String(keo.length) }, { nhan:'Danh sách', gia_tri: keo.map(c => c.so_cont).join(', ') }, { nhan:'Sau khi kéo', gia_tri: haCang ? 'Đã hạ cảng' : 'Giữ trạng thái, chỉ gán nhà xe' }];
+    if (boQua.length) rows.push({ nhan:'Bỏ qua (không phải Đầy chờ kéo)', gia_tri: boQua.join(', ') });
+    if (khongThay.length) rows.push({ nhan:'Không tìm thấy', gia_tri: khongThay.join(', ') });
+    return { loai:'ghi_keo_cont', tieu_de: 'Kéo ' + keo.length + ' cont — xe ' + nx, mo_ta: rows, mo_ta_text: aiMoTaText(rows), du_lieu: { ids: keo.map(c => c.id), nha_xe: nx, ha_cang: haCang } };
+  }
+  return { error: 'Chưa hỗ trợ thao tác ghi: ' + name };
+}
+
+// ===== Thực thi lệnh ghi khi người dùng bấm Đồng ý =====
+async function aiThucThiGhi(p) {
+  const d = p.du_lieu;
+  if (p.loai === 'ghi_booking') {
+    if (d.sua) await q(sb.from('booking').update(d.du).eq('so_booking', d.so_booking));
+    else await q(sb.from('booking').insert(Object.assign({ so_booking: d.so_booking, nguon: 'web' }, d.du)));
+    return (d.sua ? 'Đã cập nhật booking ' : 'Đã tạo booking ') + d.so_booking;
+  }
+  if (p.loai === 'ghi_lo') {
+    const o = { lo: d.lo, booking: d.booking }; if (d.khach_hang) o.khach_hang = d.khach_hang;
+    await q(sb.from('lo').insert(o));
+    return 'Đã tạo lô ' + d.lo + ' (booking ' + d.booking + ')';
+  }
+  if (p.loai === 'ghi_them_cont') {
+    const rows = []; for (let i = 0; i < d.so_luong; i++) rows.push({ lo: d.lo, khach_hang: d.khach_hang, trang_thai: '1', ngay_goi_cont: todayVN(), nguon: 'web' });
+    await q(sb.from('cont').insert(rows));
+    return 'Đã thêm ' + d.so_luong + ' đơn vào lô ' + d.lo;
+  }
+  if (p.loai === 'ghi_trang_thai_cont') {
+    const now = new Date().toISOString(), patch = { trang_thai: d.to };
+    if (d.to === '2') patch.ngay_den_kho = patch.ngay_den_kho || todayVN();
+    if (d.to === '3') patch.du_kien_day = now;
+    if (d.to === '4') { patch.gio_vao_bai = now; patch.bai_tam = S.cauhinh['Bãi tạm mặc định'] || 'HLS'; }
+    if (d.to === '5' && d.tu === '4') patch.gio_ra_bai = now;
+    await q(sb.from('cont').update(patch).eq('id', d.id));
+    return 'Đã đổi ' + d.so_cont + ' → ' + (ST_NHAN[d.to] || d.to);
+  }
+  if (p.loai === 'ghi_keo_cont') {
+    const now = new Date().toISOString();
+    for (const id of d.ids) {
+      const patch = { nha_xe: d.nha_xe };
+      if (d.ha_cang) { patch.trang_thai = '5'; patch.gio_ra_bai = now; }
+      await q(sb.from('cont').update(patch).eq('id', id));
+    }
+    return 'Đã kéo ' + d.ids.length + ' cont (xe ' + d.nha_xe + ')' + (d.ha_cang ? ' → Đã hạ cảng' : '');
+  }
+  throw new Error('Loại thao tác không hỗ trợ: ' + p.loai);
 }
 
 function aiCtx() {
@@ -2820,7 +2999,7 @@ async function aiSend(text) {
     const contents = S.chatMsgs.map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.text }] }));
     let finalText = '';
     for (let step = 0; step < 6; step++) {
-      const r = await callEdgeFn('doc-booking-pdf', 'chat', { contents, tools: AI_TOOLS, context: aiCtx() });
+      const r = await callEdgeFn('doc-booking-pdf', 'chat', { contents, tools: aiTools(), context: aiCtx() });
       if (r.functionCall) {
         // AI yêu cầu gọi công cụ → web tự truy vấn Supabase rồi gửi kết quả lại
         const fc = r.functionCall;
@@ -2839,6 +3018,7 @@ async function aiSend(text) {
       const m = finalText.match(/\{"propose":\s*(\{[\s\S]*?\})\}/);
       if (m) { const p = JSON.parse('{"propose":' + m[1] + '}'); if (p.propose && p.propose.action) botMsg.action = p.propose; }
     } catch (_) {}
+    if (S.aiPending) { botMsg.confirm = S.aiPending; S.aiPending = null; }
     S.chatMsgs.push(botMsg);
   } catch (e) {
     S.chatMsgs.push({ role:'model', text: '⚠ ' + errMsg(e) });
@@ -2861,6 +3041,13 @@ async function toggleAiDuocLuu(email, bat) {
   try {
     await q(sb.rpc('bat_tat_ai_duoc_luu', { p_email: email, p_bat: bat }));
     toast(T1('Đã ' + (bat ? 'bật' : 'tắt') + ' quyền AI cho ' + email, (bat ? '已开启' : '已关闭') + ' AI · ' + email));
+    await loadCatalogs(); renderMain();
+  } catch (e) { toast(errMsg(e), true); }
+}
+async function toggleAiHoiDap(email, bat) {
+  try {
+    await q(sb.rpc('bat_tat_ai_hoi_dap', { p_email: email, p_bat: bat }));
+    toast(T1('Đã ' + (bat ? 'bật' : 'tắt') + ' quyền Hỏi đáp AI cho ' + email, (bat ? '已开启' : '已关闭') + ' 问答 · ' + email));
     await loadCatalogs(); renderMain();
   } catch (e) { toast(errMsg(e), true); }
 }
@@ -2904,7 +3091,26 @@ const ACT = {
   'nav-close': () => { S.navOpen = false; document.getElementById('app').classList.remove('nav-open'); },
   'ai-open': () => { S.chatOpen = true; renderShell(); setTimeout(() => { const bd = document.getElementById('ai-body'); if (bd) bd.scrollTop = bd.scrollHeight; const inp = document.getElementById('ai-inp'); if (inp) inp.focus(); }, 60); },
   'ai-close': () => { S.chatOpen = false; renderShell(); },
+  'ai-do': async (d, el) => {
+    const i = +d.idx, m = S.chatMsgs[i]; if (!m || !m.confirm || m.confirm.done || m.confirm.huy) return;
+    if (!(S.me && S.me.ai_thao_tac)) { toast(T1('Bạn không có quyền thao tác.', '无操作权限。'), true); return; }
+    if (el) el.disabled = true;
+    try {
+      const kq = await aiThucThiGhi(m.confirm);
+      m.confirm.done = true;
+      S.chatMsgs.push({ role:'model', text: '✅ ' + kq });
+      await loadData(); renderMain(); renderNavCounts();
+      const body = document.getElementById('ai-body'); if (body) { body.innerHTML = renderChatMsgs(); body.scrollTop = body.scrollHeight; }
+      toast(kq);
+    } catch (e) { if (el) el.disabled = false; toast(errMsg(e), true); }
+  },
+  'ai-huy': d => {
+    const i = +d.idx, m = S.chatMsgs[i]; if (!m || !m.confirm) return;
+    m.confirm.huy = true;
+    const body = document.getElementById('ai-body'); if (body) body.innerHTML = renderChatMsgs();
+  },
   'ai-confirm': d => { if (!S.me || !S.me.ai_duoc_luu) { toast(T1('Quản lý chưa cấp quyền AI cho bạn.', '管理员未授权AI操作。'), true); return; } aiAction(+d.idx); },
+  'ai-toggle-hd': async d => { if (!S.me || S.me.vai_tro !== 'Quản lý') { toast(T1('Chỉ Quản lý được bật/tắt quyền AI.', '仅管理员可操作。'), true); return; } await toggleAiHoiDap(d.email, d.bat === 'true'); },
   'ai-toggle': async d => { if (!S.me || S.me.vai_tro !== 'Quản lý') { toast(T1('Chỉ Quản lý được bật/tắt quyền AI.', '仅管理员可操作。'), true); return; } await toggleAiDuocLuu(d.email, d.bat === 'true'); },
   'lang': d => { LANG = d.lang; try { localStorage.setItem('dd_lang', LANG); } catch (e) {} renderShell(); if (S.drawer) { const dr = S.drawer; if (dr.kind === 'cont') { if (dr.id) openContById(dr.id); } else if (dr.kind === 'lo' && dr.id) openLo(S.lots[dr.id]); else if (dr.kind === 'booking') openBooking(dr.id ? S.bkMap[dr.id] : {}); else if (dr.kind === 'don') openDonHang({}); else if (dr.kind === 'timbk') renderTimBk(); } },
   'signout': async () => { await sb.auth.signOut(); location.reload(); },
@@ -2956,6 +3162,24 @@ const ACT = {
     S.confirmDel = null; el.disabled = true;
     try { const r = await q(sb.rpc('don_du_lieu', { p_ds:ds })); toast(T1('Đã dọn ' + r.data + ' lô khỏi Supabase', '已清理 ' + r.data + ' 批')); loadDon(); }
     catch (e) { el.disabled = false; toast(errMsg(e), true); }
+  },
+  'don-nk-run': async (d, el) => {
+    if (S.confirmDel !== 'donnk') {
+      el.disabled = true;
+      try {
+        const c = await q(sb.rpc('dem_nhat_ky_cu', { p_ngay: 30 })); const n = c.data || 0;
+        el.disabled = false;
+        if (!n) { toast(T1('Không có nhật ký cũ hơn 30 ngày để dọn.', '没有超过30天的日志可清理。')); return; }
+        S.confirmDel = 'donnk';
+        el.textContent = T1('Bấm lần nữa để xoá ' + n + ' dòng nhật ký', '再点一次删除 ' + n + ' 条日志');
+        setTimeout(() => { if (S.confirmDel === 'donnk') { S.confirmDel = null; if (el.isConnected) el.textContent = T1('Dọn nhật ký cũ hơn 30 ngày', '清理30天前的日志'); } }, 5000);
+      } catch (e) { el.disabled = false; toast(errMsg(e), true); }
+      return;
+    }
+    S.confirmDel = null; el.disabled = true;
+    try { const r = await q(sb.rpc('don_nhat_ky_cu', { p_ngay: 30 })); toast(T1('Đã dọn ' + r.data + ' dòng nhật ký', '已清理 ' + r.data + ' 条日志')); }
+    catch (e) { toast(errMsg(e), true); }
+    finally { el.disabled = false; el.textContent = T1('Dọn nhật ký cũ hơn 30 ngày', '清理30天前的日志'); }
   },
   'huy-lo': async (d, el) => {
     const inp = document.getElementById('huy-ly-do'), why = inp ? inp.value.trim() : '';
@@ -3182,6 +3406,10 @@ async function afterLogin(session) {
     const r = await sb.rpc('toi_la_ai'); if (r.error) throw r.error;
     S.me = r.data && r.data[0];
     if (!S.me) { renderNoAccess(session.user.email); return; }
+    // Nạp quyền chatbot 2 mức (hỏi đáp / thao tác). Fallback theo vai trò nếu hàm chưa deploy.
+    try { const qc = await sb.rpc('quyen_chatbot'); if (!qc.error && qc.data && qc.data[0]) { S.me.ai_hoi_dap = qc.data[0].ai_hoi_dap; S.me.ai_thao_tac = qc.data[0].ai_thao_tac; } } catch (e) {}
+    if (S.me.ai_hoi_dap == null) S.me.ai_hoi_dap = ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1;
+    if (S.me.ai_thao_tac == null) S.me.ai_thao_tac = !!S.me.ai_duoc_luu && ['Quản lý', 'Điều độ'].indexOf(S.me.vai_tro) > -1;
     try { if (!localStorage.getItem('dd_lang') && S.me.ngon_ngu) LANG = S.me.ngon_ngu; } catch (e) { LANG = S.me.ngon_ngu || 'vi'; }
     await loadCatalogs(); renderShell(); await loadData(); renderMain(); renderNavCounts(); startRealtime();
     toast('Chào mừng ' + S.me.ho_ten + '!', false);
