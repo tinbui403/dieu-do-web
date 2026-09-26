@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#5B47E0">
-<title>Điều độ · Đại Cát Lâm</title>
+<title>Quản lý điều phối · Zadam</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235B47E0'/%3E%3Cpath d='M4 15h9V8H4zM13 10.5h3l2.5 2.5v2H13z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='7' cy='17' r='1.6' fill='white'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -806,7 +806,7 @@ const KD_WIZARD = {
 'use strict';
 try { if ((navigator.hardwareConcurrency || 4) <= 2 || (navigator.deviceMemory || 4) <= 2) document.documentElement.classList.add('lite'); } catch (e) {}
 /* =========================================================
-   Web điều độ cont chuối — Đại Cát Lâm
+   Web quản lý điều phối — Zadam
    Dữ liệu: Supabase (dự án dieu-do). Khoá dưới đây là khoá công khai
    (publishable) — an toàn để nằm trong trang; quyền đọc/ghi do bảng
    nhan_vien + chính sách RLS trong cơ sở dữ liệu quyết định.
@@ -3117,7 +3117,7 @@ function pwField(label, name, auto) {
 }
 function renderLogin(msg, isErr) {
   document.getElementById('root').innerHTML = '<div class="login"><form class="login-card" id="login-form">' +
-    '<div class="brand" style="padding:0"><div class="brand-logo" style="background:var(--side)">' + ico('truck', 22, '#fff') + '</div><div><div class="brand-name" style="color:var(--pri-ink)">Điều độ 调度</div><div class="muted" style="font-size:12px">Đại Cát Lâm · cont chuối</div></div></div>' +
+    '<div class="brand" style="padding:0"><div class="brand-logo" style="background:var(--side)">' + ico('truck', 22, '#fff') + '</div><div><div class="brand-name" style="color:var(--pri-ink)">Quản lý điều phối</div><div class="muted" style="font-size:12px">Phát triển bởi Bùi Công Tín</div></div></div>' +
     '<label class="field">Email 邮箱<input name="email" type="email" autocomplete="email" required value="' + esc(LOGIN_EMAIL) + '"></label>' +
     pwField('Mật khẩu 密码', 'password', 'current-password') +
     '<div style="text-align:right;margin-top:-6px"><button type="button" data-act="login-forgot" style="background:none;border:0;padding:0;color:var(--pri-ink);font-size:12px;cursor:pointer;text-decoration:underline">Quên mật khẩu? 忘记密码？</button></div>' +

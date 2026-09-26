@@ -131,7 +131,7 @@ Deno.serve(async (req: Request) => {
       const stTable = `Bảng trạng thái cont (trang_thai):
 1=Đơn chờ lên (chờ cắt rỗng)  2=Đang đóng hàng  3=Đầy chờ kéo
 4=Ở bãi tạm     5=Đã hạ cảng       6=Đã lên tàu   9=Hủy/đổi cont`;
-      const sys = `Bạn là trợ lý điều độ container của công ty Đại Cát Lâm. Hỗ trợ người dùng tra cứu thông tin vận chuyển.
+      const sys = `Bạn là trợ lý điều độ container của Zadam. Hỗ trợ người dùng tra cứu thông tin vận chuyển.
 Quy tắc:
 - Trả lời bằng tiếng Việt, ngắn gọn, rõ ràng
 - Dùng **in đậm** cho số cont, mã lô, trạng thái quan trọng
