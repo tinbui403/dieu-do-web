@@ -129,7 +129,7 @@ Deno.serve(async (req: Request) => {
       }
       const tools = Array.isArray(body.tools) ? body.tools : null;
       const stTable = `Bảng trạng thái cont (trang_thai):
-1=Chờ cắt rỗng  2=Đang đóng hàng  3=Đầy chờ kéo
+1=Đơn chờ lên (chờ cắt rỗng)  2=Đang đóng hàng  3=Đầy chờ kéo
 4=Ở bãi tạm     5=Đã hạ cảng       6=Đã lên tàu   9=Hủy/đổi cont`;
       const sys = `Bạn là trợ lý điều độ container của công ty Đại Cát Lâm. Hỗ trợ người dùng tra cứu thông tin vận chuyển.
 Quy tắc:
