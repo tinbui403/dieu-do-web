@@ -485,6 +485,40 @@ html.lite .bg3d *{animation:none!important}  /* máy yếu (≤2 nhân / ≤2GB)
   .g4{grid-template-columns:minmax(0,1fr)}
   .grid2,.grid3{grid-template-columns:minmax(0,1fr)}
 }
+/* ===== AI Chatbot ===== */
+.ai-fab{position:fixed;right:20px;bottom:80px;z-index:1200;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(109,90,230,.9),rgba(79,63,207,.85));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.22);box-shadow:0 4px 22px rgba(109,90,230,.55),inset 0 1px 0 rgba(255,255,255,.18);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s}
+.ai-fab:hover{transform:scale(1.09);box-shadow:0 8px 30px rgba(109,90,230,.7),inset 0 1px 0 rgba(255,255,255,.18)}
+.ai-fab-dot{position:absolute;top:3px;right:3px;width:10px;height:10px;border-radius:50%;background:#ef4444;border:2px solid rgba(14,10,32,.8)}
+@media(max-width:900px){.ai-fab{bottom:72px;right:14px}}
+.ai-panel{position:fixed;right:20px;bottom:140px;z-index:1201;width:380px;max-width:calc(100vw - 32px);max-height:65vh;background:rgba(12,8,28,.78);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border-radius:20px;border:1px solid rgba(109,90,230,.32);box-shadow:0 16px 56px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.07);display:flex;flex-direction:column;transform:translateY(16px) scale(.96);opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.34,1.56,.64,1)}
+.ai-panel.open{transform:none;opacity:1;pointer-events:auto}
+@media(max-width:900px){.ai-panel{right:8px;bottom:130px;width:calc(100vw - 16px)}}
+@media(prefers-color-scheme:light){.ai-panel{background:rgba(238,234,255,.9);border:1px solid rgba(109,90,230,.25);box-shadow:0 12px 40px rgba(109,90,230,.18),inset 0 1px 0 rgba(255,255,255,.6)}}
+.ai-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px 11px;border-bottom:1px solid rgba(109,90,230,.22);background:linear-gradient(135deg,rgba(109,90,230,.28),rgba(79,63,207,.18));border-radius:20px 20px 0 0;font-weight:700;font-size:14px;color:rgba(196,186,255,.95)}
+@media(prefers-color-scheme:light){.ai-head{color:var(--pri-ink,#4F3FCF);background:linear-gradient(135deg,rgba(109,90,230,.1),rgba(79,63,207,.06))}}
+.ai-close{background:none;border:0;cursor:pointer;font-size:18px;color:rgba(196,186,255,.55);line-height:1;padding:2px 6px;border-radius:6px;transition:color .15s}
+.ai-close:hover{color:rgba(196,186,255,.9)}
+@media(prefers-color-scheme:light){.ai-close{color:rgba(79,63,207,.45)}.ai-close:hover{color:var(--pri-ink,#4F3FCF)}}
+.ai-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:100px;scrollbar-width:thin;scrollbar-color:rgba(109,90,230,.3) transparent}
+.ai-msg{max-width:91%;padding:9px 13px;border-radius:16px;font-size:13.5px;line-height:1.65;word-break:break-word}
+.ai-msg.user{align-self:flex-end;background:linear-gradient(135deg,rgba(109,90,230,.92),rgba(79,63,207,.87));color:#fff;border:1px solid rgba(109,90,230,.45);border-bottom-right-radius:4px;box-shadow:0 2px 12px rgba(109,90,230,.35)}
+.ai-msg.bot{align-self:flex-start;background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.11);border-bottom-left-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+@media(prefers-color-scheme:light){.ai-msg.bot{background:rgba(109,90,230,.07);color:#1A162C;border:1px solid rgba(109,90,230,.14)}}
+.ai-msg.bot strong{color:#c4baff;font-weight:700}
+@media(prefers-color-scheme:light){.ai-msg.bot strong{color:var(--pri,#6D5AE6)}}
+.ai-msg.bot .ai-action{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.ai-msg.bot .ai-action button{font-size:12px;padding:5px 12px;border-radius:8px;background:linear-gradient(135deg,rgba(109,90,230,.88),rgba(79,63,207,.8));color:#fff;border:1px solid rgba(109,90,230,.4);cursor:pointer;transition:opacity .15s}
+.ai-msg.bot .ai-action button:hover{opacity:.82}
+.ai-typing{display:flex;gap:5px;padding:6px 2px;align-items:center}.ai-typing span{width:7px;height:7px;border-radius:50%;background:rgba(196,186,255,.6);animation:at .9s infinite alternate}.ai-typing span:nth-child(2){animation-delay:.22s}.ai-typing span:nth-child(3){animation-delay:.44s}
+@keyframes at{to{opacity:.2;transform:scale(.65)}}
+.ai-foot{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.15);border-radius:0 0 20px 20px}
+@media(prefers-color-scheme:light){.ai-foot{background:rgba(109,90,230,.04);border-top:1px solid rgba(109,90,230,.11)}}
+.ai-foot input{flex:1;border-radius:10px;border:1px solid rgba(109,90,230,.3);background:rgba(255,255,255,.06);color:rgba(255,255,255,.9);padding:7px 11px;font-size:13px;outline:none;transition:border-color .15s,background .15s}
+.ai-foot input::placeholder{color:rgba(255,255,255,.3)}
+.ai-foot input:focus{border-color:rgba(109,90,230,.65);background:rgba(255,255,255,.1)}
+@media(prefers-color-scheme:light){.ai-foot input{background:rgba(255,255,255,.65);color:#1A162C;border-color:rgba(109,90,230,.22)}.ai-foot input::placeholder{color:rgba(109,90,230,.38)}.ai-foot input:focus{background:#fff;border-color:rgba(109,90,230,.6)}}
+.ai-foot .btn-sm{height:36px;width:40px;padding:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(109,90,230,.88),rgba(79,63,207,.8));border:1px solid rgba(109,90,230,.4);border-radius:10px;cursor:pointer;transition:opacity .15s;color:#fff}
+.ai-foot .btn-sm:hover{opacity:.85}
 </style>
 </head>
 <body>
@@ -910,7 +944,9 @@ const ICON = {
   kd:'M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6zM9 12l2 2 4-4',
   lo:'M3 17l2 3h14l2-3M5 17v-6h14v6M8 11V7h8v4M12 4v3', tim:'M11 4a7 7 0 1 0 0 14a7 7 0 0 0 0-14zM20 20l-4-4',
   danhmuc:'M4 5h16M4 12h16M4 19h10', truck:'M2 16h13V7H2zM15 10h4l3 3v3h-7zM6 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4zM18 19a2 2 0 1 0 0-4a2 2 0 0 0 0 4z',
-  hacang:'M3 18h18M5 18l1-5h12l1 5M8 13V8h8v5M12 8V4', suco:'M12 3l10 18H2L12 3zM12 10v4M12 17.5v.5', menu:'M4 7h16M4 12h16M4 17h16', x:'M6 6l12 12M18 6L6 18', refresh:'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7', plus:'M12 5v14M5 12h14'
+  hacang:'M3 18h18M5 18l1-5h12l1 5M8 13V8h8v5M12 8V4', suco:'M12 3l10 18H2L12 3zM12 10v4M12 17.5v.5', menu:'M4 7h16M4 12h16M4 17h16', x:'M6 6l12 12M18 6L6 18', refresh:'M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7', plus:'M12 5v14M5 12h14',
+  bulb:'M9 18h6M10 22h4M12 2a7 7 0 0 1 5 11.9c-.7.7-1 1.4-1 2.1H8c0-.7-.3-1.4-1-2.1A7 7 0 0 1 12 2z',
+  send:'M22 2L11 13M22 2L15 22 11 13 2 9l20-7z'
 };
 function ico(k, size, color) { return '<svg width="' + (size || 18) + '" height="' + (size || 18) + '" viewBox="0 0 24 24" fill="none" stroke="' + (color || 'currentColor') + '" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + ICON[k] + '"/></svg>'; }
 let _tt;
@@ -930,7 +966,8 @@ const S = {
   tkSeg: '2', loOpen: true, q: '', results: null, searching: false, dmTab: 'nhaxe', navOpen: false,
   chiphi: {}, giacuoc: [], saoluu: null, baiSort: 'vao', hcAll: false, hcF: {}, suco: [], ttcu: [], eportRunning: false,
   kdWiz: null, boardSeg: '1',
-  bookings: [], bkMap: {}, loSeg: 'lo', bkAll: false, ccF: {}, tbk: null
+  bookings: [], bkMap: {}, loSeg: 'lo', bkAll: false, ccF: {}, tbk: null,
+  chatOpen: false, chatMsgs: [], chatLoading: false
 };
 function canWrite() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
 function canCat() { return S.me && ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1; }
@@ -1226,7 +1263,18 @@ function renderShell() {
     '<nav class="bottom-nav" aria-label="Menu">' +
       [['goiy', 'suggest'], ['homnay', 'today'], ['board', 'board'], ['tim', 'search']].map(x => '<button data-act="tab" data-tab="' + x[0] + '" aria-current="' + (S.tab === x[0] ? 'page' : 'false') + '">' + ico(x[0], 20) + '<span>' + esc(T(x[1])) + '</span></button>').join('') +
       '<button data-act="nav-open">' + ico('menu', 20) + '<span>' + esc(T('menu')) + '</span></button>' +
-    '</nav></div>';
+    '</nav>' +
+    /* ---- Nút AI nổi góc phải ---- */
+    '<button id="ai-fab" class="ai-fab" data-act="ai-open" title="Trợ lý AI 智能助手" aria-label="Trợ lý AI">' + ico('bulb', 22, '#fff') + '<span class="ai-fab-dot" id="ai-dot" style="display:none"></span></button>' +
+    '<div id="ai-panel" class="ai-panel' + (S.chatOpen ? ' open' : '') + '" role="dialog" aria-label="Trợ lý AI">' +
+      '<div class="ai-head"><span>🤖 Trợ lý AI</span><button class="ai-close" data-act="ai-close" aria-label="Đóng">✕</button></div>' +
+      '<div class="ai-body" id="ai-body">' + renderChatMsgs() + '</div>' +
+      '<form class="ai-foot" id="ai-form" data-form="ai-form">' +
+        '<input id="ai-inp" name="msg" type="text" placeholder="Hỏi về lô, cont, booking…" autocomplete="off" aria-label="Câu hỏi">' +
+        '<button class="btn btn-pri btn-sm" type="submit" id="ai-send">' + (S.chatLoading ? '…' : ico('send', 16)) + '</button>' +
+      '</form>' +
+    '</div>' +
+    '</div>';
   renderNavCounts();
   renderMain();
 }
@@ -1897,15 +1945,18 @@ function vDanhMuc() {
     body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('portDrop')) + '</span><span>' + esc(T('note')) + '</span><span></span><span></span></div>' +
       S.cangha.concat(ro ? [] : [{ _new:true }]).map(c => '<form class="tr" style="' + cols + '" data-form="cangha" data-key="' + esc(c.ten || '') + '">' + (c._new ? dmInp('ten', '', T('add') + '…') : '<b>' + esc(c.ten) + '</b>') + dmInp('ghi_chu', c.ghi_chu, '', ro) + (ro ? '<span></span>' : '<button class="btn btn-sm" type="submit">' + esc(c._new ? T('add') : T('save')) + '</button>') + (!ro && !c._new ? dmDel('cangha', c.ten) : '<span></span>') + '</form>').join('');
   } else if (S.dmTab === 'nv') {
-    const cols = '--cols:minmax(200px,1.3fr) 150px 130px 110px 120px 70px 80px 40px;--minw:1000px';
+    const cols = '--cols:minmax(200px,1.3fr) 150px 130px 110px 120px 70px 64px 80px 40px;--minw:1060px';
     const colsNew = '--cols:minmax(160px,1.2fr) minmax(130px,1fr) 130px 120px 110px 110px 60px 120px;--minw:1050px';
     const colsPw = '--cols:minmax(200px,1.3fr) minmax(160px,1fr) 90px 40px;--minw:540px';
     const sel = (name, val, opts) => '<select name="' + name + '" style="height:36px;border-radius:8px;border:1px solid #D8D2EE;padding:0 6px;width:100%">' + opts.map(o => '<option value="' + esc(o[0]) + '"' + (o[0] === (val || '') ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select>';
     note = T1('Quản lý tạo tài khoản đăng nhập cho nhân viên mới ngay ở dòng dưới cùng (email + mật khẩu tạm + vai trò) — không mở đăng ký tự do trên trang đăng nhập nữa. Quên mật khẩu: dùng ô “Đặt lại mật khẩu” ở mỗi dòng. Nhân viên nghỉ: bấm ✕ để xoá hẳn email và tài khoản đăng nhập.', '管理员直接在最下面一行为新员工建号（邮箱+临时密码+角色）——登录页不再开放自助注册。忘记密码：用每行的“重置密码”。离职：点 ✕ 删除邮箱和账号。');
     const me = (S.me && S.me.email || '').toLowerCase();
     const roleOpts = [['Quản lý', 'Quản lý'], ['Điều độ', 'Điều độ'], ['CSKH', 'CSKH'], ['Nhà xe', 'Nhà xe'], ['Chỉ xem', 'Chỉ xem']];
-    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('email')) + '</span><span>' + esc(T('name')) + '</span><span>' + esc(T('role')) + '</span><span>' + esc(T('langCol')) + '</span><span>' + esc(T('carrier')) + '</span><span style="text-align:center">' + esc(T('active')) + '</span><span></span><span></span></div>' +
-      S.nhanvien.map(v => '<form class="tr" style="' + cols + '" data-form="nv" data-key="' + esc(v.email) + '"><b class="ell">' + esc(v.email) + '</b>' + dmInp('ho_ten', v.ho_ten) + sel('vai_tro', v.vai_tro, roleOpts) + sel('ngon_ngu', v.ngon_ngu, [['vi', 'Tiếng Việt'], ['zh', '中文'], ['both', 'VI + 中']]) + sel('nha_xe', v.nha_xe, [['', '—']].concat(nxActive(v.nha_xe).map(n => [n.ma, n.ma]))) + dmChk('hoat_dong', v.hoat_dong) + '<button class="btn btn-sm" type="submit">' + esc(T('save')) + '</button>' + (v.email !== me ? dmDel('nv', v.email) : '<span></span>') + '</form>' +
+    const isQL = S.me && S.me.vai_tro === 'Quản lý';
+    body = '<div class="tr th" style="' + cols + '"><span>' + esc(T('email')) + '</span><span>' + esc(T('name')) + '</span><span>' + esc(T('role')) + '</span><span>' + esc(T('langCol')) + '</span><span>' + esc(T('carrier')) + '</span><span style="text-align:center">' + esc(T('active')) + '</span><span style="text-align:center" title="Quyền xác nhận AI">AI</span><span></span><span></span></div>' +
+      S.nhanvien.map(v => '<form class="tr" style="' + cols + '" data-form="nv" data-key="' + esc(v.email) + '"><b class="ell">' + esc(v.email) + '</b>' + dmInp('ho_ten', v.ho_ten) + sel('vai_tro', v.vai_tro, roleOpts) + sel('ngon_ngu', v.ngon_ngu, [['vi', 'Tiếng Việt'], ['zh', '中文'], ['both', 'VI + 中']]) + sel('nha_xe', v.nha_xe, [['', '—']].concat(nxActive(v.nha_xe).map(n => [n.ma, n.ma]))) + dmChk('hoat_dong', v.hoat_dong) +
+        (isQL ? '<span style="text-align:center"><button type="button" class="btn btn-sm' + (v.ai_duoc_luu ? ' btn-pri' : ' btn-line') + '" data-act="ai-toggle" data-email="' + esc(v.email) + '" data-bat="' + (v.ai_duoc_luu ? 'false' : 'true') + '" title="' + (v.ai_duoc_luu ? T1('Tắt quyền AI', '关闭AI') : T1('Bật quyền AI', '开启AI')) + '" style="padding:0 8px">' + (v.ai_duoc_luu ? '🤖' : '—') + '</button></span>' : '<span style="text-align:center;font-size:13px">' + (v.ai_duoc_luu ? '🤖' : '—') + '</span>') +
+        '<button class="btn btn-sm" type="submit">' + esc(T('save')) + '</button>' + (v.email !== me ? dmDel('nv', v.email) : '<span></span>') + '</form>' +
         (v.email !== me ? '<form class="tr" style="' + colsPw + ';opacity:.85" data-form="setpw" data-key="' + esc(v.email) + '"><span class="muted" style="font-size:12px;align-self:center">' + esc(T1('Đặt lại mật khẩu', '重置密码')) + '</span><input name="password" type="password" minlength="6" required placeholder="' + esc(T1('Mật khẩu mới ≥6 ký tự', '新密码≥6位')) + '" style="height:32px;padding:0 8px;border-radius:8px;border:1px solid #D8D2EE;width:100%"><button class="btn btn-sm" type="submit">' + esc(T1('Đặt', '设置')) + '</button><span></span></form>' : '')
       ).join('') +
       '<form class="tr" style="' + colsNew + '" data-form="nv-new"><input name="email" type="email" required placeholder="ten@gmail.com" style="height:36px;padding:0 8px;border-radius:8px;border:1px solid #D8D2EE;width:100%"><input name="password" type="password" minlength="6" required placeholder="' + esc(T1('Mật khẩu tạm ≥6 ký tự', '临时密码≥6位')) + '" style="height:36px;padding:0 8px;border-radius:8px;border:1px solid #D8D2EE;width:100%">' + dmInp('ho_ten', '', T('name')) + sel('vai_tro', 'Điều độ', roleOpts) + sel('ngon_ngu', 'vi', [['vi', 'Tiếng Việt'], ['zh', '中文'], ['both', 'VI + 中']]) + sel('nha_xe', '', [['', '—']].concat(nxActive().map(n => [n.ma, n.ma]))) + dmChk('hoat_dong', true) + '<button class="btn btn-sm btn-pri" type="submit">' + esc(T1('Tạo tài khoản', '建号')) + '</button></form>';
@@ -2548,6 +2599,95 @@ async function callEdgeFn(fn, action, payload) {
   if (!r.ok || !j.ok) throw new Error(j.error || ('Lỗi (' + r.status + ')'));
   return j;
 }
+/* ════════════════════════════════════════════
+   Chatbot AI — Phase IV
+   ════════════════════════════════════════════ */
+function renderChatMsgs() {
+  if (!S.chatMsgs.length) return '<div style="font-size:13px;text-align:center;padding:24px 8px;color:rgba(196,186,255,.45)">🤖 Hỏi về lô, cont, booking…<br><span style="font-size:11px;opacity:.7;margin-top:4px;display:inline-block">Tiếng Việt hoặc 中文</span></div>';
+  return S.chatMsgs.map((m, i) => {
+    if (m.role === 'user') return '<div class="ai-msg user">' + esc(m.text) + '</div>';
+    const canAct = m.action && S.me && S.me.ai_duoc_luu;
+    // Render **bold** và xuống dòng an toàn (esc trước, rồi chỉ unescape ** pattern)
+    const html = esc(m.text).replace(/\*\*([^*
+]{1,80})\*\*/g, '<strong>$1</strong>').replace(/
+/g, '<br>');
+    return '<div class="ai-msg bot">' + html +
+      (canAct ? '<div class="ai-action"><button class="btn btn-sm btn-pri" data-act="ai-confirm" data-idx="' + i + '">' + T1('✔ Xác nhận', '✔ 确认') + '</button></div>' : '') +
+      '</div>';
+  }).join('');
+}
+function aiCtx() {
+  try {
+    const stName = {'1':'Chờ cắt rỗng','2':'Đang đóng hàng','3':'Đầy chờ kéo','4':'Ở bãi tạm','5':'Đã hạ cảng','6':'Đã lên tàu','9':'Hủy/đổi cont'};
+    const me = S.me ? { ho_ten:S.me.ho_ten, vai_tro:S.me.vai_tro, ai_duoc_luu:!!S.me.ai_duoc_luu } : null;
+    const lots = Object.values(S.lots || {}).slice(0, 40).map(l => ({
+      lo:l.lo, khach_hang:l.khach_hang||null, so_booking:l.so_booking||l.booking||null,
+      hang_tau:l.hang_tau||null, ten_tau:l.ten_tau||null,
+      etd:l.etd||null, eta:l.eta||null, cls:l.cls||null, cang_den:l.cang_den||null,
+      trang_thai_lo:l.trang_thai||null
+    }));
+    const conts = (S.conts || []).slice(0, 80).map(c => ({
+      id:c.id, lo:c.lo||null, so_cont:c.so_cont||null, ma_don:c.ma_don||null,
+      trang_thai: stName[c.trang_thai] || c.trang_thai,
+      kho:c.kho||null, nha_xe:c.nha_xe||null, bai_tam:c.bai_tam||null,
+      khach_hang:c.khach_hang||null,
+      cont_kiem_dich:c.cont_kiem_dich||null,
+      ngay_den_kho:c.ngay_den_kho||null
+    }));
+    const bks = (S.bookings || []).slice(0, 30).map(b => ({
+      so_booking:b.so_booking, hang_tau:b.hang_tau, ten_tau:b.ten_tau,
+      etd:b.etd, cang_den:b.cang_den, so_luong_cont:b.so_luong_cont
+    }));
+    const goiys = (S.goiys || []).slice(0, 20).map(g => ({
+      id:g.id, cont_day:g.cont_day, ma_don_rong:g.ma_don_rong,
+      kho:g.kho, trang_thai:g.trang_thai
+    }));
+    return JSON.stringify({ me, tab:S.tab, lots, conts, bks, goiys });
+  } catch (e) { return '{}'; }
+}
+async function aiSend(text) {
+  if (S.chatLoading) return;
+  S.chatLoading = true;
+  S.chatMsgs.push({ role:'user', text });
+  const body = document.getElementById('ai-body');
+  if (body) { body.innerHTML = renderChatMsgs() + '<div class="ai-msg bot ai-typing"><span>●</span><span>●</span><span>●</span></div>'; body.scrollTop = body.scrollHeight; }
+  const btn = document.getElementById('ai-send'); if (btn) btn.textContent = '…';
+  try {
+    const msgs = S.chatMsgs.map(m => ({ role: m.role === 'user' ? 'user' : 'model', text: m.text }));
+    const r = await callEdgeFn('doc-booking-pdf', 'chat', { messages: msgs, context: aiCtx() });
+    const txt = r.text || '';
+    let botMsg = { role:'model', text: txt };
+    try {
+      const m = txt.match(/\{"propose":\s*(\{[\s\S]*?\})\}/);
+      if (m) { const p = JSON.parse('{"propose":' + m[1] + '}'); if (p.propose && p.propose.action) botMsg.action = p.propose; }
+    } catch (_) {}
+    S.chatMsgs.push(botMsg);
+  } catch (e) {
+    S.chatMsgs.push({ role:'model', text: '⚠ ' + errMsg(e) });
+  }
+  S.chatLoading = false;
+  if (body) { body.innerHTML = renderChatMsgs(); body.scrollTop = body.scrollHeight; }
+  const btn2 = document.getElementById('ai-send'); if (btn2) btn2.innerHTML = ico('send', 16);
+}
+function aiAction(idx) {
+  const m = S.chatMsgs[idx]; if (!m || !m.action) return;
+  const act = m.action;
+  S.chatOpen = false; renderShell();
+  if (act.action === 'open_cont' && act.target) { setTimeout(() => openContById(act.target), 100); return; }
+  if (act.action === 'open_lo'   && act.target && S.lots[act.target]) { setTimeout(() => openLo(S.lots[act.target]), 100); return; }
+  if (act.action === 'open_booking' && act.target && S.bkMap && S.bkMap[act.target]) { setTimeout(() => openBooking(S.bkMap[act.target]), 100); return; }
+  if (act.action === 'open_goiy' && act.target) { S.tab = 'goiy'; renderShell(); setTimeout(() => { const el = document.querySelector('[data-gy="' + act.target + '"]'); if (el) el.scrollIntoView({ behavior:'smooth', block:'center' }); }, 300); return; }
+  toast(T1('Không hiểu đề xuất — hãy thực hiện thủ công.', '建议不明，请手动操作。'), true);
+}
+async function toggleAiDuocLuu(email, bat) {
+  try {
+    await q(sb.rpc('bat_tat_ai_duoc_luu', { p_email: email, p_bat: bat }));
+    toast(T1('Đã ' + (bat ? 'bật' : 'tắt') + ' quyền AI cho ' + email, (bat ? '已开启' : '已关闭') + ' AI · ' + email));
+    await loadCatalogs(); renderMain();
+  } catch (e) { toast(errMsg(e), true); }
+}
+/* ════════════════════════════════════════════ */
+
 async function createNhanVien(form) {
   const o = {}; form.querySelectorAll('[name]').forEach(el => { o[el.name] = el.type === 'checkbox' ? el.checked : (el.value.trim() === '' ? null : el.value.trim()); });
   if (!o.email) { toast(T('required'), true); return; }
@@ -2584,6 +2724,10 @@ const ACT = {
   'tab': d => { S.tab = d.tab; if (d.seg) { S.tkSeg = d.seg; S.boardSeg = d.seg; } S.navOpen = false; closeDrawer(); renderShell(); const m = document.getElementById('main'); if (m) { m.classList.add('swap'); m.parentElement.scrollTop = 0; } window.scrollTo(0, 0); },
   'nav-open': () => { S.navOpen = true; document.getElementById('app').classList.add('nav-open'); },
   'nav-close': () => { S.navOpen = false; document.getElementById('app').classList.remove('nav-open'); },
+  'ai-open': () => { S.chatOpen = true; renderShell(); setTimeout(() => { const bd = document.getElementById('ai-body'); if (bd) bd.scrollTop = bd.scrollHeight; const inp = document.getElementById('ai-inp'); if (inp) inp.focus(); }, 60); },
+  'ai-close': () => { S.chatOpen = false; renderShell(); },
+  'ai-confirm': d => { if (!S.me || !S.me.ai_duoc_luu) { toast(T1('Quản lý chưa cấp quyền AI cho bạn.', '管理员未授权AI操作。'), true); return; } aiAction(+d.idx); },
+  'ai-toggle': async d => { if (!S.me || S.me.vai_tro !== 'Quản lý') { toast(T1('Chỉ Quản lý được bật/tắt quyền AI.', '仅管理员可操作。'), true); return; } await toggleAiDuocLuu(d.email, d.bat === 'true'); },
   'lang': d => { LANG = d.lang; try { localStorage.setItem('dd_lang', LANG); } catch (e) {} renderShell(); if (S.drawer) { const dr = S.drawer; if (dr.kind === 'cont') { if (dr.id) openContById(dr.id); } else if (dr.kind === 'lo' && dr.id) openLo(S.lots[dr.id]); else if (dr.kind === 'booking') openBooking(dr.id ? S.bkMap[dr.id] : {}); else if (dr.kind === 'don') openDonHang({}); else if (dr.kind === 'timbk') renderTimBk(); } },
   'signout': async () => { await sb.auth.signOut(); location.reload(); },
   'pw-open': () => openPw(),
@@ -2780,6 +2924,7 @@ document.addEventListener('submit', e => {
   else if (f.dataset.form === 'setpw') setNhanVienPassword(f);
   else if (f.id === 'login-form') doLogin(f);
   else if (f.id === 'reset-form') doResetPw(f);
+  else if (f.dataset.form === 'ai-form') { const inp = f.querySelector('[name=msg]'); const msg = (inp && inp.value || '').trim(); if (msg) { if (inp) inp.value = ''; aiSend(msg); } }
   else if (f.dataset.form === 'f-pw') savePw(f);
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.drawer) closeDrawer(); });

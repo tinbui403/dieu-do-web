@@ -117,19 +117,34 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === 'chat') {
-      const msgs = Array.isArray(body.messages) ? body.messages.slice(-20) : [];
-      const ctx = String(body.context || '').slice(0, 60000);
-      const contents = msgs.map((m: { role: string; text: string }) => ({ role: m.role === 'model' ? 'model' : 'user', parts: [{ text: String(m.text || '').slice(0, 8000) }] }));
-      const sys = 'Bạn là trợ lý điều độ container của công ty Đại Cát Lâm. Trả lời ngắn gọn bằng tiếng Việt, dựa trên dữ liệu được cung cấp; không bịa số liệu. Nếu người dùng muốn thay đổi dữ liệu, hãy mô tả đề xuất rõ ràng (không tự lưu).' + (ctx ? '\n\nDỮ LIỆU HIỆN TẠI (JSON):\n' + ctx : '');
+      const msgs = Array.isArray(body.messages) ? body.messages.slice(-24) : [];
+      const ctx = String(body.context || '').slice(0, 80000);
+      const contents = msgs.map((m: { role: string; text: string }) => ({ role: m.role === 'model' ? 'model' : 'user', parts: [{ text: String(m.text || '').slice(0, 10000) }] }));
+      const stTable = `Bảng trạng thái cont (trang_thai):
+1=Chờ cắt rỗng  2=Đang đóng hàng  3=Đầy chờ kéo
+4=Ở bãi tạm     5=Đã hạ cảng       6=Đã lên tàu   9=Hủy/đổi cont`;
+      const sys = `Bạn là trợ lý điều độ container của công ty Đại Cát Lâm. Hỗ trợ người dùng tra cứu thông tin vận chuyển.
+Quy tắc:
+- Trả lời bằng tiếng Việt, ngắn gọn, rõ ràng
+- Dùng **in đậm** cho số cont, mã lô, trạng thái quan trọng
+- Chỉ dựa trên DỮ LIỆU HIỆN TẠI được cung cấp; nếu không có thì nói rõ
+- KHÔNG bịa số liệu, booking, tên khách
+- Nếu người dùng muốn thay đổi dữ liệu, mô tả rõ đề xuất (không tự lưu)
+- Khi cần thông tin thời gian thực (tỷ giá, lịch tàu, cảng…) hãy dùng Google Search
+${stTable}
+${ctx ? '\nDỮ LIỆU HIỆN TẠI (JSON):\n' + ctx : ''}`;
       let last = '';
       for (const m of MODELS) {
         try {
           const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + m + ':generateContent';
-          const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY }, body: JSON.stringify({ system_instruction: { parts: [{ text: sys }] }, contents }) });
+          const reqBody = { system_instruction: { parts: [{ text: sys }] }, contents, tools: [{ google_search: {} }] };
+          const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY }, body: JSON.stringify(reqBody) });
           const txt = await r.text();
           if (!r.ok) { last = 'Gemini ' + m + ' HTTP ' + r.status + ': ' + txt.slice(0, 300); if (/^(404|429|503)$/.test(String(r.status))) continue; throw new Error(last); }
           const d = JSON.parse(txt);
-          return json({ ok: true, model: m, text: (d.candidates?.[0]?.content?.parts || []).map((p: { text?: string }) => p.text || '').join('') });
+          const text = (d.candidates?.[0]?.content?.parts || []).filter((p: { text?: string }) => p.text).map((p: { text?: string }) => p.text || '').join('');
+          if (!text) { last = 'no text'; continue; }
+          return json({ ok: true, model: m, text });
         } catch (e) { last = String(e); }
       }
       throw new Error(last || 'Không gọi được Gemini');
