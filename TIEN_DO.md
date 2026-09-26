@@ -2,7 +2,7 @@
 
 > **Dành cho Claude (bất kỳ tài khoản / phiên nào):** đọc `README.md` trước để hiểu hệ thống, rồi đọc file này để biết đang dở ở đâu. Xong mỗi mốc thì **cập nhật lại file này** (mục "Đang làm", "Bước kế tiếp", "Nhật ký phiên") trước khi dừng.
 
-Cập nhật lần cuối: **25/09/2026 ~01:40** (giờ VN, phiên XÂY LẠI PHASE II + PHASE I — tài khoản phụ)
+Cập nhật lần cuối: **26/09/2026** (giờ VN, phiên XÂY LẠI — tài khoản phụ: Phase II.4 đọc PDF booking bằng Gemini)
 
 ## ✅ ĐẨY GITHUB 24/09 — ĐÃ PUSH XONG (team dùng bản mới)
 
@@ -33,6 +33,13 @@ Yêu cầu gốc: `yeu-cau/trao_doi_xay_lai_24-09.md` (gitignore, có dữ liệ
 **Chatbot AI (phần IV, làm CUỐI):** Gemini nhúng vào dữ liệu Supabase; làm được mọi việc ở dạng **đọc / đề xuất**; **quyền "AI được lưu" là cờ bật/tắt theo từng tài khoản do Quản lý bật** — người có cờ xác nhận thì AI mới ghi, người khác chỉ hỏi/xem.
 
 **Cách làm:** thứ tự **II → I → III → IV**; sửa trực tiếp trên master và đẩy dần (team ngưng dùng); dữ liệu thật trên Supabase phải giữ nguyên qua migration.
+
+## ✅ PHASE II.4 — Đọc PDF booking bằng Gemini (26/09, tài khoản phụ) — ĐÃ DEPLOY, chưa commit/push
+
+- Anh Hi đã cấp API key Google AI Studio → đặt làm secret **`GEMINI_API_KEY`** trong Supabase (Edge Functions → Secrets). **Key không nằm trong bất kỳ file nào** (chỉ trong Supabase secrets). Nếu cần đổi key: sửa secret đó, không cần deploy lại.
+- Edge Function **`doc-booking-pdf`** (`supabase/functions/doc-booking-pdf/index.ts`, deploy qua Dashboard → Via Editor, **tắt** "Verify JWT with legacy secret"). Người gọi phải đăng nhập, vai trò QL/ĐĐ/CSKH (gọi bằng secret key từ Dashboard thì bỏ qua bước này — dùng để test). Action: `ping` (thử key), `models` (liệt kê model), `doc_pdf` (PDF base64 → JSON booking), `chat` (chuẩn bị cho chatbot Phase IV). Model thử lần lượt `gemini-3.5-flash` → `3.1-flash-lite` → `2.5-flash` → `flash-latest`; test ping 26/09 trả "OK" bằng gemini-3.5-flash. **Không lưu file PDF** (chỉ đi qua bộ nhớ hàm).
+- Web: form Booking (mới + sửa) có khối **"Đọc PDF booking bằng AI"**: chọn PDF (≤ 8 MB) → AI trích số booking / hãng / tàu / chuyến / cảng / ETD / ETA / số cont → điền ô trống (viền xanh), hãng tàu & cảng đến khớp danh mục (SHANGHAI → SHA…; không khớp thì báo chọn tay), cut-off / loại cont / cảng đi / ghi chú AI ghi vào ô Ghi chú → **người kiểm tra rồi bấm Lưu**. Hàm gọi Edge Function dùng chung `callEdgeFn(fn, action, payload)`.
+- Chưa test với PDF thật của hãng (em chưa có file) — anh Hi thử 1–2 PDF booking thật, nếu ô nào trích sai thì báo để chỉnh prompt (`PROMPT_PDF` trong index.ts).
 
 ## ✅ PHASE I — 4 mẫu lệnh chỉ tiếng Việt (25/09, tài khoản phụ, commit riêng sau Phase II)
 
@@ -226,6 +233,7 @@ Bộ test dùng 5 lô gần nhất trong file Excel vận hành ngày 22/09 (fil
 
 | Ngày | Tài khoản / phiên | Đã làm |
 |---|---|---|
+| 26/09/2026 | Cowork (tài khoản phụ · Phase II.4) | Nhận API key Gemini → secret GEMINI_API_KEY; Edge Function doc-booking-pdf (ping/models/doc_pdf/chat) deploy + test ping OK (gemini-3.5-flash); web: khối Đọc PDF booking bằng AI trong form booking, điền form để người duyệt. Test bộ cũ giữ đạt. Chưa commit/push. |
 | 25/09/2026 (~01:30) | Cowork (tài khoản phụ · Phase I) | 4 mẫu lệnh tiếng Việt dựng trên web (`lenhText`): STT theo nhà xe/ngày, Kho đầy = vị trí hiện tại, CUT-OFF = CLS, Note = giờ lên kho đơn rỗng; bỏ dòng Nhà xe song ngữ. Test 9/9. Commit riêng. |
 | 25/09/2026 (~00:30–01:00) | Cowork (tài khoản phụ · Phase II) | Migration booking/lô/đơn hàng (bảng booking, lo.so_booking + khach_hang, cont yêu cầu tàu, trigger đồng bộ, backfill 143 booking / 235 lô, view booking_tong_hop, hàm goi_y_booking) chạy thử rồi chạy thật trên Supabase (SHA khớp). Web: tab Booking, form lô chọn booking + khách, Tạo đơn hàng (gợi ý mã đơn), Chờ cắt rỗng lọc + Tìm booking → tạo lô & gán, đổi tàu chọn booking có sẵn. Test mới 48/48, bộ cũ giữ đạt. Đồng bộ về máy, build khớp SHA. Chưa commit/push. |
 | 24/09/2026 (~01:30) | Cowork (tài khoản phụ · nạp Excel) | Nạp chồng "dư liệu hôm nay.xlsx" vào Supabase theo luật Excel-là-chuẩn (anh Hi chốt): 38 lô, 21 cont mới, 611A xoá, 613A→613 / 622→622A, 604B/607B/609E thêm, 617/624 phục hồi (rớt tàu). Sao lưu `private.sao_luu_20260924_truoc_nap`. Viết `tools/nap_excel.py` dùng lại hằng ngày (chạy thử rollback + báo cáo). Chưa commit/push. |

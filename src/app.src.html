@@ -1808,6 +1808,7 @@ function openBooking(b) {
       fSel(T('pod'), 'cang_den', opt(S.cangden.map(x => [x.ma, x.ma + ' · ' + (x.ten_vn || '') + (x.ten_tq ? ' ' + x.ten_tq : '')]), b.cang_den, true)) +
       fIn(T('etd'), 'etd', b.etd, 'date') + fIn(T('eta'), 'eta', b.eta, 'date') + fIn(T('bkTong'), 'so_luong_cont', b.so_luong_cont, 'number', ' min="0" max="500" step="1"') + '</div>' +
     '<label class="field">' + esc(T('note')) + '<textarea name="ghi_chu"' + (canWrite() ? '' : ' disabled') + '>' + esc(b.ghi_chu || '') + '</textarea></label>' +
+    (canWrite() ? pdfBlock() : '') +
     (isNew ? '<p class="muted" style="margin:0;font-size:12px">' + esc(T1('Booking dùng chung cho nhiều lô (mỗi lô 1 khách). Thêm lô rồi chọn booking này, máy chép tàu / ETD / ETA / cảng sang lô.', '一个订舱可分给多个批次（每批一个客户）。')) + '</p>' :
       '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px" data-bk-lots><h3>' + esc(T('bkLots')) + '</h3>' +
       (t && t.k === 'vuot' ? '<p style="margin:0 0 6px;font-size:12px;color:var(--red-ink);font-weight:600">⚠ ' + esc(T1('Các lô cần ' + t.xep + ' cont, booking chỉ có ' + t.tong + ' — xin thêm ' + t.n + ' cont với hãng tàu hoặc bớt cont ở lô.', '批次需要 ' + t.xep + ' 柜，订舱仅 ' + t.tong + ' 柜')) + '</p>' : t && t.k === 'con' ? '<p class="muted" style="margin:0 0 6px;font-size:12px">' + esc(T1('Còn ' + t.n + ' cont chưa xếp lô.', '还有 ' + t.n + ' 柜未分批')) + '</p>' : '') +
@@ -1817,6 +1818,52 @@ function openBooking(b) {
       (isAdmin() && !(b.so_lo > 0) ? '<div><button type="button" class="btn btn-danger" data-act="del-booking" data-bk="' + esc(b.so_booking) + '">' + esc(T1('Xoá booking này', '删除此订舱')) + '</button></div>' : ''));
   S.drawer = { kind:'booking', id:b.so_booking || null };
   document.getElementById('drawer').innerHTML = drawerFrame(title, sub, body, 'f-booking');
+}
+// ---- Đọc PDF booking bằng AI (Gemini qua Edge Function doc-booking-pdf): AI trích → điền form → NGƯỜI duyệt rồi Lưu; PDF không lưu ----
+function pdfBlock() {
+  return '<div class="sec" style="background:var(--soft);border-radius:10px;padding:12px 14px" data-bk-pdf><h3 style="margin-bottom:4px">' + esc(T1('Đọc PDF booking bằng AI', 'AI读取订舱PDF')) + '</h3>' +
+    '<p class="muted" style="margin:0 0 6px;font-size:12px">' + esc(T1('Chọn file booking confirmation (PDF, ≤ 8 MB). Máy trích số booking / hãng / tàu / chuyến / cảng / ETD / ETA / số cont và điền vào form; anh chị kiểm tra rồi bấm Lưu. File PDF không được lưu lại.', '选择订舱PDF，AI提取信息填入表单，核对后保存。PDF不会被保存。')) + '</p>' +
+    '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><input type="file" accept="application/pdf,.pdf" data-on="bk-pdf" style="font-size:13px"><span id="bk-pdf-kq" class="muted" style="font-size:12px"></span></div></div>';
+}
+const PDF_CANG = [['SHANGHAI', 'thượng hải'], ['NINGBO', 'ninh ba'], ['TIANJIN', 'thiên tân'], ['XINGANG', 'thiên tân'], ['QINGDAO', 'thanh đảo'], ['DALIAN', 'đại liên'], ['GUANGZHOU', 'quảng châu'], ['NANSHA', 'quảng châu'], ['HUANGPU', 'quảng châu'], ['XIAMEN', 'hạ môn'], ['SHENZHEN', 'thâm quyến'], ['SHEKOU', 'thâm quyến'], ['YANTIAN', 'thâm quyến'], ['FUZHOU', 'phúc châu'], ['HONG KONG', 'hồng kông'], ['HONGKONG', 'hồng kông']];
+function cangTuAI(v) {
+  if (!v) return null; const k = khongDau(v);
+  let c = S.cangden.find(x => [x.ma, x.ten_vn, x.ten_tq].some(t => t && (k.includes(khongDau(t)) || khongDau(t).includes(k))));
+  if (c) return c.ma;
+  const vi = PDF_CANG.find(p => k.includes(khongDau(p[0]))); if (!vi) return null;
+  c = S.cangden.find(x => x.ten_vn && khongDau(x.ten_vn) === khongDau(vi[1])); return c ? c.ma : null;
+}
+function hangTuAI(v) {
+  if (!v) return null; const k = khongDau(v).replace(/[^a-z0-9]/g, '');
+  const h = S.hangtau.find(x => { const m = khongDau(x.ma).replace(/[^a-z0-9]/g, ''); return m && (k.includes(m) || m.includes(k)); });
+  return h ? h.ma : null;
+}
+// Điền kết quả AI vào form booking (chỉ ô đang trống hoặc form mới); trả về danh sách ô đã điền + ô chưa khớp
+function dienBookingTuAI(form, bk) {
+  const done = [], miss = [];
+  const setV = (name, v, label) => { const el = form.querySelector('[name="' + name + '"]'); if (!el || v == null || v === '') return false; if (el.readOnly && el.value) return false;
+    if (el.tagName === 'SELECT' && !Array.from(el.options).some(o => o.value === String(v))) return false;
+    el.value = v; if (String(el.value) !== String(v)) return false; el.style.outline = '2px solid var(--teal)'; el.style.outlineOffset = '1px'; done.push(label); return true; };
+  setV('so_booking', bk.so_booking, T('booking')); setV('ten_tau', bk.ten_tau, T('vessel')); setV('chuyen', bk.chuyen, T('chuyen'));
+  setV('etd', bk.etd, 'ETD'); setV('eta', bk.eta, 'ETA'); setV('so_luong_cont', bk.so_luong_cont, T('bkTong'));
+  if (!setV('hang_tau', hangTuAI(bk.hang_tau), T('shipLine')) && bk.hang_tau) miss.push(T('shipLine') + ' "' + bk.hang_tau + '"');
+  if (!setV('cang_den', cangTuAI(bk.cang_den), T('pod')) && bk.cang_den) miss.push(T('pod') + ' "' + bk.cang_den + '"');
+  const info = [bk.closing && 'Cut-off ' + bk.closing, bk.loai_cont && bk.loai_cont, bk.cang_di && T1('Cảng đi', '起运港') + ' ' + bk.cang_di, bk.ghi_chu].filter(Boolean).join(' · ');
+  const gc = form.querySelector('[name="ghi_chu"]');
+  if (gc && info && gc.value.indexOf(info) < 0) { gc.value = (gc.value ? gc.value + '\n' : '') + T1('Từ PDF', '来自PDF') + ': ' + info; gc.style.outline = '2px solid var(--teal)'; done.push(T('note')); }
+  return { done, miss };
+}
+async function docPdfBooking(inp) {
+  const f = inp.files && inp.files[0], form = inp.closest('form'), kq = document.getElementById('bk-pdf-kq'); if (!f || !form) return;
+  if (f.size > 8 * 1024 * 1024) { toast(T1('File PDF quá lớn (tối đa 8 MB).', 'PDF过大'), true); return; }
+  if (kq) kq.textContent = T1('Đang đọc PDF bằng AI…', 'AI读取中…'); inp.disabled = true;
+  try {
+    const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = rej; r.readAsDataURL(f); });
+    const j = await callEdgeFn('doc-booking-pdf', 'doc_pdf', { pdf_base64:b64, ten_file:f.name });
+    const r = dienBookingTuAI(form, j.booking || {});
+    if (kq) kq.innerHTML = esc(T1('Đã điền: ', '已填写：') + (r.done.join(', ') || '—') + ' (' + (j.model || 'AI') + ')') + (r.miss.length ? '<br><span style="color:var(--amb-ink)">' + esc(T1('Chưa khớp danh mục — chọn tay: ', '未匹配，请手选：') + r.miss.join('; ')) + '</span>' : '') + '<br>' + esc(T1('Kiểm tra lại rồi bấm Lưu.', '核对后保存。'));
+  } catch (e) { if (kq) kq.textContent = ''; toast(T1('Đọc PDF lỗi: ', '读取失败：') + errMsg(e), true); }
+  inp.disabled = false;
 }
 async function saveBooking(form) {
   const o = formObj(form), id = S.drawer && S.drawer.id;
@@ -2252,10 +2299,11 @@ async function saveDm(form) {
   } catch (e) { toast(errMsg(e), true); }
 }
 /* ---------------- tạo / đặt mật khẩu tài khoản nhân viên (Quản lý, qua Edge Function) ---------------- */
-async function callNhanVienFn(action, payload) {
+async function callNhanVienFn(action, payload) { return callEdgeFn('quan-ly-nhan-vien', action, payload); }
+async function callEdgeFn(fn, action, payload) {
   const { data:sess } = await sb.auth.getSession();
   if (!sess || !sess.session) throw new Error(T1('Phiên đăng nhập đã hết, tải lại trang.', '登录已过期，请刷新页面。'));
-  const r = await fetch(SUPABASE_URL + '/functions/v1/quan-ly-nhan-vien', {
+  const r = await fetch(SUPABASE_URL + '/functions/v1/' + fn, {
     method:'POST',
     headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + sess.session.access_token, 'apikey':SUPABASE_KEY },
     body: JSON.stringify(Object.assign({ action }, payload))
@@ -2462,6 +2510,7 @@ document.addEventListener('change', e => {
   else if (el.dataset.on === 'nk-bang') { S.nkBang = el.value; loadNhatKy(); }
   else if (el.dataset.on === 'lo-sortk') setLoSort(el.value, el.value === 'moi' ? -1 : 1);
   else if (el.dataset.on === 'bk-all') { S.bkAll = el.checked; renderMain(); }
+  else if (el.dataset.on === 'bk-pdf') docPdfBooking(el);
   else if (el.dataset.on === 'cc-f') { S.ccF = Object.assign({}, S.ccF, { [el.dataset.k]: el.value }); renderMain(); }
   else if (el.dataset.on === 'lo-bk') loBkFill(el);
   else if (el.dataset.on === 'don-kh') dienMaDon(el.value);
