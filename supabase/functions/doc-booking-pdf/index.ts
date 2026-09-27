@@ -10,6 +10,7 @@
 //   { action:'chat', messages:[{role:'user'|'model', text}], context:'...' } → { text }   (dùng cho chatbot Phase IV)
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { SO_DO_DU_LIEU } from './so_do_du_lieu.ts';
 
 const CORS: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
@@ -163,7 +164,9 @@ NGHIỆP VỤ GHI DỮ LIỆU (chỉ khi ĐƯỢC CUNG CẤP công cụ ghi_*; n
 - Nếu KHÔNG có công cụ ghi_*, chỉ tư vấn/đề xuất cách làm thủ công, KHÔNG hứa tự thực hiện.
 - CẤM BỊA HÀNH ĐỘNG: chỉ được nói "đã lưu / đã tạo / đã ghi nhận / đã cập nhật" SAU KHI thực sự gọi một công cụ ghi_* và nó chạy xong. Nếu yêu cầu của người dùng KHÔNG khớp công cụ nào (ví dụ: ghi chú tự do như "cont này kiểm dịch được tại bãi HLS", lưu lời nhắc, đánh dấu linh tinh) thì NÓI THẬT rằng hiện chưa có chức năng đó qua chatbot, rồi HỎI LẠI xem người dùng muốn làm gì (đổi trạng thái? cập nhật trường nào?). TUYỆT ĐỐI KHÔNG trả lời kiểu "tôi đã ghi nhận vào hệ thống" khi thực tế không có công cụ nào được gọi.
 - Khi thông tin người dùng đưa còn thiếu hoặc mơ hồ để gọi công cụ, HỎI LẠI cho rõ thay vì đoán bừa hoặc bịa dữ liệu.
+${SO_DO_DU_LIEU}
 ${stTable}
+THỜI GIAN HIỆN TẠI (giờ Việt Nam, UTC+7): ${new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 16).replace('T', ' ')} — dùng để hiểu "hôm nay / mai / tuần này".
 ${ctx ? '\nBỐI CẢNH MÀN HÌNH (JSON):\n' + ctx : ''}`;
       let last = '';
       for (const m of MODELS) {

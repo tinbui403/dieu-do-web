@@ -2773,7 +2773,7 @@ async function aiExecTool(name, args) {
       const bk = String(args.so_booking || '').trim();
       const [bt, lt] = await Promise.all([
         sb.from('booking_tong_hop').select('*').eq('so_booking', bk).maybeSingle(),
-        sb.from('lo_tong_hop').select('lo,khach_hang,cls,etd,eta,trang_thai').eq('so_booking', bk).order('lo')
+        sb.from('lo_tong_hop').select('lo,khach_hang,ten_tau,cls,closing,etd,eta,da_kiem_dich,da_huy,so_luong_cont,so_cont,so_cont_dang_chay').eq('so_booking', bk).order('lo')
       ]);
       return { booking: bt.data || null, lots: lt.data || [] };
     }
@@ -2844,7 +2844,8 @@ async function aiExecTool(name, args) {
       if (los.length) { const lr = await sb.from('lo_tong_hop').select('lo,ten_tau,da_kiem_dich,cls,closing,cang_ha').in('lo', los); (lr.data || []).forEach(l => { loInfo[l.lo] = l; }); }
       const now = Date.now(), gioCon = e => e ? Math.round((new Date(e).getTime() - now) / 3600000) : null;
       const groups = {};
-      conts.forEach(c => { const l = loInfo[c.lo]; if (!l || !l.da_kiem_dich) return; (groups[c.lo] = groups[c.lo] || { lo:c.lo, ten_tau:l.ten_tau, cang_ha:l.cang_ha, cls:l.cls || l.closing || null, conts:[] }).conts.push({ so_cont:c.so_cont, bai_tam:c.bai_tam, kho:c.kho }); });
+      const suCoMo = new Set(); if (los.length) { const sr = await sb.from('lo_su_co').select('lo').eq('da_xu_ly', false).in('lo', los); (sr.data || []).forEach(x => suCoMo.add(x.lo)); }
+    conts.forEach(c => { const l = loInfo[c.lo]; if (!l || !l.da_kiem_dich || suCoMo.has(c.lo)) return; (groups[c.lo] = groups[c.lo] || { lo:c.lo, ten_tau:l.ten_tau, cang_ha:l.cang_ha, cls:l.cls || l.closing || null, conts:[] }).conts.push({ so_cont:c.so_cont, bai_tam:c.bai_tam, kho:c.kho }); });
       let arr = Object.values(groups).map(g => Object.assign(g, { gio_con_lai: gioCon(g.cls) }));
       if (!args.hoi_het) arr = arr.filter(g => g.gio_con_lai != null && g.gio_con_lai <= 72);
       arr.sort((a, b) => (a.gio_con_lai == null ? 9e9 : a.gio_con_lai) - (b.gio_con_lai == null ? 9e9 : b.gio_con_lai));
@@ -3094,14 +3095,15 @@ async function aiSend(text) {
     // Lịch sử chỉ giữ text (user + câu trả lời cuối của bot); các bước gọi công cụ nằm trong contents tạm của lượt này
     const contents = S.chatMsgs.map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.text }] }));
     let finalText = '';
-    for (let step = 0; step < 6; step++) {
+    for (let step = 0; step < 8; step++) {
       const r = await callEdgeFn('doc-booking-pdf', 'chat', { contents, tools: aiTools(), context: aiCtx() });
       if (r.functionCall) {
-        // AI yêu cầu gọi công cụ → web tự truy vấn Supabase rồi gửi kết quả lại
-        const fc = r.functionCall;
-        const result = await aiExecTool(fc.name, fc.args || {});
-        contents.push({ role: 'model', parts: r.parts || [{ functionCall: fc }] });
-        contents.push({ role: 'user', parts: [{ functionResponse: { name: fc.name, response: { result } } }] });
+        // AI yêu cầu gọi công cụ (có thể NHIỀU cái song song) → web tự truy vấn Supabase rồi gửi đủ kết quả lại
+        const parts = r.parts || [{ functionCall: r.functionCall }];
+        const calls = parts.filter(p => p.functionCall).map(p => p.functionCall);
+        const results = await Promise.all(calls.map(fc => aiExecTool(fc.name, fc.args || {}).catch(e => ({ error: errMsg(e) }))));
+        contents.push({ role: 'model', parts });
+        contents.push({ role: 'user', parts: calls.map((fc, i) => ({ functionResponse: { name: fc.name, response: { result: results[i] } } })) });
         showTyping();
         continue;
       }
