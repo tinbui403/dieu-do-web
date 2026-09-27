@@ -3525,19 +3525,22 @@ async function renderNhaXe() {
     '.nx-empty{border:1px dashed var(--line);border-radius:14px;padding:40px 16px;text-align:center;color:var(--muted)}' +
     '</style>';
   const head = '<header class="nx-top"><div class="nx-brand"><div class="nx-logo">🚚</div><div><b>' + esc(S.me.ho_ten || 'Nhà xe') + '</b><div class="muted" style="font-size:13px">' + esc(S.me.nha_xe || '') + ' · ' + esc(T1('Nhà xe', '车队')) + '</div></div></div><div style="display:flex;gap:8px"><button class="btn btn-sm" onclick="nxRefresh()">↻ ' + esc(T1('Làm mới', '刷新')) + '</button><button class="btn btn-sm" onclick="nxSignout()">' + esc(T1('Đăng xuất', '退出')) + '</button></div></header>';
-  const list = rows.length ? rows.map(c =>
+  const card = c =>
     '<div class="nx-card"><div class="nx-cont"><b>' + esc(c.so_cont || '—') + '</b>' + (c.lo ? '<span class="muted" style="font-size:13px"> · Lô ' + esc(c.lo) + '</span>' : '') + '</div>' +
     '<div>' + badge(c) + '</div>' +
     '<div class="nx-meta">' +
       '<span>📍 ' + esc(T1('Đang ở', '当前')) + ': <b style="color:var(--ink)">' + esc(viTri(c)) + '</b></span>' +
       '<span>🏭 ' + esc(T1('Kho', '仓库')) + ': ' + esc(c.kho || '—') + '</span>' +
       (c.ngay_can_len_kho ? '<span>🕒 ' + esc(T1('Cần lên kho', '需到厂')) + ': ' + fTs(c.ngay_can_len_kho) + '</span>' : (c.ngay_den_kho ? '<span>🕒 ' + esc(T1('Đến kho', '到厂')) + ': ' + fDate(c.ngay_den_kho) + '</span>' : '')) +
-    '</div></div>'
-  ).join('') : '<div class="nx-empty">' + esc(T1('Chưa có container nào được giao cho nhà xe của bạn.', '暂无分配给您车队的柜子。')) + '</div>';
+    '</div></div>';
+  const xe = rows.filter(c => c.thuoc !== 'bai'), bai = rows.filter(c => c.thuoc === 'bai');
+  const sec = (title, arr, empty) => '<div class="nx-h"><h1>' + esc(title) + '</h1><span class="nx-count">' + arr.length + ' cont</span></div>' +
+    (arr.length ? '<div>' + arr.map(card).join('') + '</div>' : '<div class="nx-empty">' + esc(empty) + '</div>');
+  let body = sec(T1('Container của nhà xe', '本车队柜子'), xe, T1('Chưa có container nào giao cho nhà xe của bạn.', '暂无分配给您车队的柜子。'));
+  if (bai.length) body += '<div style="height:20px"></div>' + sec(T1('Cont đang ở bãi của bạn', '在您堆场的柜子'), bai, '');
   root.innerHTML = css + '<div class="nx-wrap">' + head +
-    '<div class="nx-h"><h1>' + esc(T1('Container của tôi', '我的柜子')) + '</h1><span class="nx-count">' + rows.length + ' cont</span></div>' +
-    '<p class="muted nx-sub">' + esc(T1('Các container được giao cho nhà xe của bạn và vị trí hiện tại. Chỉ xem.', '分配给您车队的柜子及当前位置，仅查看。')) + '</p>' +
-    '<div>' + list + '</div></div>';
+    '<p class="muted nx-sub" style="margin-top:8px">' + esc(T1('Container của nhà xe bạn (và cont đang ở bãi của bạn, nếu có). Chỉ xem.', '您车队的柜子（及在您堆场的柜子）。仅查看。')) + '</p>' +
+    body + '</div>';
 }
 async function afterLogin(session) {
   S.session = session;
