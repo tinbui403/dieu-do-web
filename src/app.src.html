@@ -1294,8 +1294,8 @@ function loOrder(a, b) {
 }
 function vBoard() {
   const n = counts(), seg = S.boardSeg || '1';
-  const chips = '<div class="chips">' + ['1', '2', '3', '4'].map(k => '<button class="chip" data-act="board-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Lọc container theo trạng thái', '按柜状态筛选')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-don">' + ico('plus', 16) + esc(T('donHang')) + '</button>' : '') + '</div>';
-  const body = seg === '4' ? baiBody() : taiKhoBody(seg);
+  const chips = '<div class="chips">' + ['1', '2', '3', '4', '5'].map(k => '<button class="chip" data-act="board-seg" data-v="' + k + '" aria-pressed="' + (seg === k) + '">' + esc(stLabel(k) + ' · ' + n[k]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Lọc container theo trạng thái', '按柜状态筛选')) + '</span>' + (canWrite() ? '<span style="flex:1"></span><button class="btn btn-pri" data-act="new-don">' + ico('plus', 16) + esc(T('donHang')) + '</button>' : '') + '</div>';
+  const body = seg === '4' ? baiBody() : seg === '5' ? daHaCangBody() : taiKhoBody(seg);
   return '<div class="stack" style="gap:16px">' + chips + body + '</div>';
 }
 // Bộ lọc màn Đơn chờ lên (anh Hi 24/09: lọc theo kho đóng hàng, khách, cảng, lô)
@@ -1331,6 +1331,39 @@ function taiKhoBody(seg) {
       return '<section class="tbl cards"><div class="tbl-h"><h2>' + esc(k) + '</h2><span class="muted" style="font-size:12px">' + esc([ki.khu_vuc, ki.ten_tq].filter(Boolean).join(' · ')) + '</span><span style="flex:1"></span><span class="cnt-b">' + g[k].length + '</span></div><div class="tbl-x">' + head +
         g[k].slice().sort(loOrder).map(c => { const l = lotOf(c); return '<div class="tr" style="' + cols + '">' + contCell(c) + '<span style="font-weight:600">' + esc(c.lo || '—') + (l && l.dong_trong_ngay ? ' <span title="' + esc(T('dongNgay')) + '">⚡</span>' : '') + (suCo(c.lo) ? ' ' + pill('!', 'var(--red-bg)', 'var(--red-ink)') : '') + '</span><span>' + esc(c.ma_don || '—') + '</span><span data-l="' + esc(seg === '1' ? T('can') : T('den')) + '">' + (seg === '1' ? fTs(c.ngay_can_len_kho) : fDate(c.ngay_den_kho)) + '</span><span data-l="' + esc(T('day')) + '" style="' + (c.du_kien_day ? '' : 'color:#8A5A00;font-style:italic') + '">' + (c.du_kien_day ? fTs(c.du_kien_day) : esc(T('notEntered'))) + '</span><span data-l="' + esc(T('carrier')) + '">' + esc(c.nha_xe || (gyDuyetRong(c.id) ? gyNx(gyDuyetRong(c.id)) : '') || '—') + '</span><span>' + (c.cont_kiem_dich ? pill(T('kdShort'), 'var(--amb-bg)', 'var(--amb-ink)') : '') + '</span><span><span style="display:flex;gap:8px;align-items:center">' + clChip(l && l.closing) + '<span class="muted" style="font-size:12px">' + (l && l.closing ? fTs(l.closing) : '') + '</span></span>' + clsDetail(l) + '</span>' + nextBtn(c) + '</div>' + (seg === '1' ? keHoachRong(c) : ''); }).join('') + '</div></section>'; }).join('')
       : '<div class="empty">' + esc(T1('Không có cont nào ở bước này.', '没有柜子处于此状态。')) + '</div>');
+}
+/* ---------------- ĐÃ HẠ CẢNG (anh Hi 27/09: theo dõi cont đã hạ cảng để khai ePort + thanh lý rồi lên tàu) ---------------- */
+function hcFlagBtn(l, f, label) {
+  const on = !!l[f];
+  if (!canWrite()) return pill(label + (on ? ' ✓' : ' ✗'), on ? 'var(--green-bg,#DCFCE7)' : 'var(--red-bg)', on ? 'var(--green-ink)' : 'var(--red-ink)');
+  return '<button class="btn btn-sm" data-act="hc-flag" data-lo="' + esc(l.lo) + '" data-f="' + f + '" data-v="' + (on ? '0' : '1') + '" title="' + esc(on ? T1('Bấm để bỏ đánh dấu', '点击取消') : T1('Bấm để đánh dấu đã xong', '点击标记完成')) + '" style="' + (on ? 'border-color:var(--green-ink);color:var(--green-ink);font-weight:700' : 'border-color:var(--red-ink);color:var(--red-ink)') + '">' + esc(label) + ' ' + (on ? '✓' : '✗') + '</button>';
+}
+function daHaCangBody() {
+  const list = S.conts.filter(c => c.trang_thai === '5');
+  const g = {}; list.forEach(c => { (g[c.lo || '—'] = g[c.lo || '—'] || []).push(c); });
+  const lots = Object.keys(g).map(k => ({ k, l:S.lots[k] || { lo:k }, cs:g[k] }));
+  const xong = x => !!(x.l.da_khai_eport && x.l.thanh_ly);
+  const nChuaEp = lots.filter(x => !x.l.da_khai_eport).length, nChuaTl = lots.filter(x => !x.l.thanh_ly).length, nSan = lots.filter(xong).length;
+  const f = S.hcLoc || 'all';
+  const loc = { all:() => true, ep:x => !x.l.da_khai_eport, tl:x => !x.l.thanh_ly, san:xong };
+  const shown = lots.filter(loc[f] || loc.all).sort((a, b) => (a.l.closing ? new Date(a.l.closing) : 9e15) - (b.l.closing ? new Date(b.l.closing) : 9e15) || String(a.k).localeCompare(String(b.k), 'vi', { numeric:true }));
+  const stat = (n, t, sub) => '<section class="card" style="display:flex;flex-direction:column;gap:4px"><div style="display:flex;align-items:baseline;justify-content:space-between"><b style="font-size:14px;color:var(--pri-ink)">' + esc(t) + '</b><span class="num" style="font-size:28px;font-weight:700">' + n + '</span></div><span class="muted" style="font-size:12px">' + esc(sub) + '</span></section>';
+  const cards = '<div class="g4">' + stat(list.length, T1('Cont đã hạ cảng', '已回港柜'), T1(lots.length + ' lô đang chờ lên tàu', lots.length + ' 批待登船')) + stat(nChuaEp, T1('Lô chưa khai ePort', '未申报ePort批次'), T1('Cần khai ePort trước CLS', '需在截关前申报')) + stat(nChuaTl, T1('Lô chưa thanh lý', '未清关批次'), T1('Chưa thanh lý tờ khai', '报关单未清关')) + stat(nSan, T1('Sẵn sàng lên tàu', '可登船'), T1('Đã khai ePort + thanh lý', '已申报+已清关')) + '</div>';
+  const chips = '<div class="chips">' + [['all', T1('Tất cả', '全部') + ' · ' + lots.length], ['ep', T1('Chưa khai ePort', '未申报ePort') + ' · ' + nChuaEp], ['tl', T1('Chưa thanh lý', '未清关') + ' · ' + nChuaTl], ['san', T1('Sẵn sàng lên tàu', '可登船') + ' · ' + nSan]].map(o => '<button class="chip" data-act="hc-loc" data-v="' + o[0] + '" aria-pressed="' + (f === o[0]) + '">' + esc(o[1]) + '</button>').join('') + '<span class="muted" style="font-size:12px">' + esc(T1('Bấm nút ePort / Thanh lý để đánh dấu cho cả lô · xếp theo CLS gần nhất', '点击ePort/清关按钮标记整批 · 按截关排序')) + '</span></div>';
+  const cols = '--cols:140px 100px 76px 104px 104px 110px minmax(120px,1fr) 124px;--minw:980px';
+  const head = '<div class="tr th" style="' + cols + '"><span>' + esc(T('cont')) + '</span><span>' + esc(T('seal')) + '</span><span>' + esc(T1('Bãi', '堆场')) + '</span><span>' + esc(T('yardIn')) + '</span><span>' + esc(T1('Hạ cảng lúc', '回港时间')) + '</span><span>' + esc(T1('Chi phí bãi', '堆场费用')) + '</span><span>' + esc(T('madon')) + '</span><span></span></div>';
+  const body = shown.map(x => { const l = x.l, cs = x.cs.slice().sort(loOrder);
+    const conLai = x.k === '—' ? 0 : S.conts.filter(c => c.lo === x.k && ['1', '2', '3', '4'].indexOf(c.trang_thai) > -1).length;
+    const tongBai = cs.reduce((a, c) => a + (c.gio_vao_bai ? baiCost(c).tong : 0), 0);
+    const chot = S.hcXacNhan === x.k;
+    const lenTau = canWrite() && x.k !== '—' && xong(x) && !conLai ? '<button class="btn btn-sm btn-pri" data-act="hc-len-tau" data-lo="' + esc(x.k) + '">' + esc(chot ? T1('Bấm lần nữa để xác nhận', '再点一次确认') : T1('Cả lô lên tàu', '整批登船')) + ' →</button>' : '';
+    return '<section class="tbl cards"><div class="tbl-h" style="flex-wrap:wrap;gap:8px"><h2>' + esc(T('loCol') + ' ' + x.k) + '</h2>' + (x.k !== '—' ? '<button class="lk" style="font-size:12px" data-act="open-lo" data-lo="' + esc(x.k) + '">' + esc(T1('mở lô', '打开批次')) + '</button>' : '') + clChip(l.closing) + '<span class="muted" style="font-size:12px">' + esc([l.khach_hang, l.booking, (l.hang_tau || '') + (l.ten_tau ? ' · ' + l.ten_tau : ''), cangHa(l)].filter(Boolean).join(' · ')) + '</span><span style="flex:1"></span>' + (x.k !== '—' ? hcFlagBtn(l, 'da_khai_eport', 'ePort') + hcFlagBtn(l, 'thanh_ly', T('tl')) : '') + lenTau + '<span class="cnt-b">' + cs.length + '</span></div>' +
+      '<div class="kv" style="padding:4px 16px 8px;font-size:12px"><span>' + esc(T('closing')) + '</span><span><b>' + fTs(l.closing, true) + '</b>' + clsDetail(l) + '</span><span>' + esc(T('etd')) + '</span><span>' + fDate(l.etd || l.etd_kho, true) + '</span><span>' + esc(T('tokhai')) + '</span><span class="mono">' + esc(l.so_to_khai || '—') + '</span><span>' + esc(T1('Tổng chi phí bãi', '堆场费用合计')) + '</span><span><b>' + money(tongBai) + '</b></span></div>' +
+      (conLai ? '<p style="margin:0;padding:0 16px 8px;font-size:12px;color:#8A5A00">⚠ ' + esc(T1('Lô còn ' + conLai + ' cont chưa hạ cảng', '该批还有 ' + conLai + ' 柜未回港')) + '</p>' : '') +
+      (!l.da_khai_eport && l.closing && new Date(l.closing) - Date.now() < 24 * 36e5 ? '<p style="margin:0;padding:0 16px 8px;font-size:12px;font-weight:700;color:var(--red-ink)">⚠ ' + esc(T1('Sắp tới / đã quá CLS mà chưa khai ePort', '临近/已过截关仍未申报ePort')) + '</p>' : '') +
+      '<div class="tbl-x">' + head + cs.map(c => { const k = c.gio_vao_bai ? baiCost(c) : null;
+        return '<div class="tr" style="' + cols + '">' + contBtn(c) + '<span class="mono" style="font-size:12px" data-l="' + esc(T('seal')) + '">' + esc(c.so_seal || '—') + '</span><span data-l="' + esc(T1('Bãi', '堆场')) + '">' + esc(c.bai_tam || T1('thẳng', '直接')) + '</span><span data-l="' + esc(T('yardIn')) + '">' + fTs(c.gio_vao_bai) + '</span><span data-l="' + esc(T1('Hạ cảng lúc', '回港时间')) + '">' + fTs(c.gio_ra_bai) + '</span><span class="num" data-l="' + esc(T1('Chi phí bãi', '堆场费用')) + '">' + (k ? money(k.tong) : '—') + '</span><span class="ell" data-l="' + esc(T('madon')) + '">' + esc(c.ma_don || '—') + '</span>' + nextBtn(c) + '</div>'; }).join('') + '</div></section>'; }).join('');
+  return cards + chips + (body || '<div class="empty">' + esc(list.length ? T1('Không có lô nào khớp bộ lọc.', '没有符合筛选的批次。') : T1('Chưa có cont nào đã hạ cảng.', '暂无已回港的柜子。')) + '</div>');
 }
 function vTaiKho() {
   const n = counts(), seg = S.tkSeg;
@@ -1788,6 +1821,7 @@ async function loadDon() {
     S.donList = d.data || []; const last = sl.data[0];
     const ngay = S.cauhinh['Số ngày sau ETD được dọn dữ liệu'] || '90';
     box.innerHTML = '<div class="stack" style="gap:12px"><div class="msg">' + esc(T1('Lô được gợi ý xoá khỏi Supabase: mọi cont đã lên tàu / hủy, ETD quá ' + ngay + ' ngày, và đã có bản sao lưu trên Google Drive sau lần sửa cuối. Dữ liệu vẫn nằm trong file sao lưu.', '建议清理：全部已登船/取消、ETD超过' + ngay + '天且已备份的批次。')) + '</div>' +
+      '<div class="msg" style="background:var(--teal-bg);color:var(--teal-ink)">' + esc(T1('🗓 Tự động dọn: 02:00 sáng ngày 2 hằng tháng máy tự dọn lô đủ điều kiện (chỉ khi đã có bản sao lưu NGÀY 1 đầy đủ sau lần sửa cuối), booking không còn lô, nhật ký cũ hơn ' + (+S.cauhinh['Số ngày giữ nhật ký'] || 45) + ' ngày, gợi ý và yêu cầu ePort cũ. Bật/tắt ở Cấu hình → "Tự động dọn dẹp hằng tháng". Bản sao lưu trên Drive: giữ 60 ngày gần nhất + bản ngày 01 mỗi tháng vĩnh viễn.', '每月2日02:00自动清理（需有1日完整备份）。可在配置中开关。')) + '</div>' +
       '<div class="kv" style="font-size:13px"><span>' + esc(T1('Bản sao lưu gần nhất', '最近备份')) + '</span><span>' + (last ? (last.url ? '<a href="' + esc(last.url) + '" target="_blank" rel="noopener">' + esc(last.ten) + '</a>' : esc(last.ten)) + ' · ' + fTs(last.luc, true) : '—') + '</span><span>' + esc(T1('Đã dọn trước đây', '已清理')) + '</span><span>' + (dd.count || 0) + ' ' + esc(T1('lô', '批')) + '</span></div>' +
       (S.donList.length ? '<div class="chips"><label class="chk"><input type="checkbox" data-on="don-all" checked>' + esc(T1('Chọn tất cả', '全选')) + '</label><span class="muted" style="font-size:13px">' + S.donList.length + ' ' + esc(T1('lô · ', '批 · ')) + S.donList.reduce((a, x) => a + (+x.so_cont || 0), 0) + ' cont</span><span style="flex:1"></span><button class="btn btn-danger" data-act="don-run">' + esc(T1('Xoá các lô đã chọn khỏi Supabase', '从Supabase删除所选批次')) + '</button></div>' +
         '<section class="tbl"><div class="tbl-x">' + '<div class="tr th" style="--cols:40px 80px 160px minmax(160px,1fr) 90px 60px 200px;--minw:860px"><span></span><span>' + esc(T('loCol')) + '</span><span>' + esc(T('booking')) + '</span><span>' + esc(T('vessel')) + '</span><span>ETD</span><span>Cont</span><span>' + esc(T1('Sao lưu', '备份')) + '</span></div>' +
@@ -2302,7 +2336,7 @@ async function saveCont(form) {
     if (!id) {
       const st = o.trang_thai || '1';
       if (['1', '2', '3'].indexOf(st) > -1) S.tkSeg = st;
-      if (['1', '2', '3', '4'].indexOf(st) > -1) S.boardSeg = st;
+      if (['1', '2', '3', '4', '5'].indexOf(st) > -1) S.boardSeg = st;
       toast(T1('Đã thêm — cont nằm ở mục “' + stLabel(st) + '”', '已新增，位于“' + stLabel(st) + '”'));
       if (o.lo && S.lots[o.lo]) { renderMain(); openLo(S.lots[o.lo]); }
       else if (['1', '2', '3', '4'].indexOf(st) > -1) { S.tab = 'board'; renderShell(); renderMain(); }
@@ -3078,6 +3112,20 @@ const ACT = {
   'copy-grp': async (d) => { const t = S.goiy.filter(g => g.duyet && !g.da_ap_dung).map(gyView).filter(g => (g.nx || '—') === d.nx).map(g => g.text).join('\n\n'); await copyText(t); S.copied = 'grp-' + d.nx; toast(T('copied')); if (!d.keep) renderMain(); },
   'tk-seg': d => { S.tkSeg = d.v; renderMain(); },
   'board-seg': d => { S.boardSeg = d.v; renderMain(); },
+  'hc-loc': d => { S.hcLoc = d.v; renderMain(); },
+  'hc-flag': async d => {
+    if (!canWrite() || ['da_khai_eport', 'thanh_ly'].indexOf(d.f) < 0) return;
+    const v = d.v === '1', patch = {}; patch[d.f] = v;
+    try { await q(sb.from('lo').update(patch).eq('lo', d.lo)); toast(T('loCol') + ' ' + d.lo + ' · ' + (d.f === 'da_khai_eport' ? 'ePort' : T('tl')) + (v ? ' ✓' : ' ✗')); await loadData(); renderMain(); renderNavCounts(); }
+    catch (e) { toast(errMsg(e), true); }
+  },
+  'hc-len-tau': async d => {
+    if (!canWrite()) return;
+    if (S.hcXacNhan !== d.lo) { S.hcXacNhan = d.lo; renderMain(); setTimeout(() => { if (S.hcXacNhan === d.lo) { S.hcXacNhan = null; renderMain(); } }, 4000); return; }
+    S.hcXacNhan = null;
+    try { const r = await q(sb.from('cont').update({ trang_thai:'6' }).eq('lo', d.lo).eq('trang_thai', '5').select('id')); toast(T('loCol') + ' ' + d.lo + ' → ' + stLabel('6') + ' (' + ((r.data || []).length) + ' cont)'); await loadData(); renderMain(); renderNavCounts(); }
+    catch (e) { toast(errMsg(e), true); }
+  },
   'move': d => {
     if (d.to === '4') {
       const c = S.conts.find(x => x.id === d.id) || {}, bai = BAI_THEO_NX[c.nha_xe];

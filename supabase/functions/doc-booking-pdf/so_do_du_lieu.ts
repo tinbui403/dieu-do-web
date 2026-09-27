@@ -9,7 +9,7 @@ SƠ ĐỒ DỮ LIỆU ZADAM — dùng để TỰ SUY LUẬN: hiểu câu hỏi �
 [1] THỰC THỂ & QUAN HỆ
 BOOKING (khoá so_booking) = chỗ trên tàu do hãng cấp. Cột: hang_tau, ten_tau, chuyen, cang_den, etd, eta, so_luong_cont (= số cont hãng cấp).
   └─ 1 booking → NHIỀU LÔ.
-LÔ (khoá lo, vd "614A") = 1 khách + 1 đơn xuất, gắn 1 booking. Cột: khach_hang, so_booking, hang_tau, ten_tau, cang_den, etd, eta, cls, cang_ha, da_kiem_dich, ma_don_kdtv, so_luong_cont (kế hoạch), da_huy.
+LÔ (khoá lo, vd "614A") = 1 khách + 1 đơn xuất, gắn 1 booking. Cột: khach_hang, so_booking, hang_tau, ten_tau, cang_den, etd, eta, cls, cang_ha, da_kiem_dich, da_khai_eport (đã khai ePort), thanh_ly (đã thanh lý tờ khai), so_to_khai, ma_don_kdtv, so_luong_cont (kế hoạch), da_huy.
   Lô giữ BẢN SAO tàu/ETD/ETA của booking và có thể khác booking (sửa riêng, booking đổi không kéo theo lô).
   └─ 1 lô → NHIỀU CONT.
 CONT (khoá id; so_cont có thể TRỐNG khi chưa cấp cont rỗng) = 1 container. Cột: lo, ma_don, khach_hang, kho, trang_thai, nha_xe, so_xe, bai_tam, cont_kiem_dich, so_seal, ngay_can_len_kho, ngay_den_kho, gio_vao_bai, gio_ra_bai.
@@ -30,7 +30,7 @@ SỰ CỐ LÔ: loại "KD không đạt" hoặc "Rớt tàu"; đang mở khi ch�
 2 Đang đóng hàng → đang ở KHO (cột kho).
 3 Đầy chờ kéo → đóng xong, VẪN Ở KHO, chờ xe kéo đi (bãi hoặc cảng).
 4 Ở bãi tạm → ở BÃI (cột bai_tam), để kiểm dịch hoặc chờ hạ cảng.
-5 Đã hạ cảng → ở CẢNG HẠ (lô.cang_ha).
+5 Đã hạ cảng → ở CẢNG HẠ (lô.cang_ha); chờ khai ePort + thanh lý rồi lên tàu (màn Container → tab Đã hạ cảng).
 6 Đã lên tàu → đã xuất đi (tàu lô.ten_tau).
 9 Hủy/đổi cont → BỎ QUA khi đếm/thống kê, trừ khi người dùng hỏi riêng cont hủy.
 "Đang chạy" / "còn hoạt động" / "chưa đi" = trạng thái 1–5. Lô da_huy = đã hủy, bỏ qua trừ khi hỏi riêng.
@@ -76,6 +76,7 @@ VÍ DỤ:
 - Mã dạng số + chữ như 614A, 622A = mã LÔ. "đơn", "đơn mới", "đơn chưa xếp" = cont trạng thái 1 chưa có lô.
 - "lấy rỗng", "cắt rỗng", "cấp rỗng", "chờ lên kho" = trạng thái 1. "đang đóng", "đang đóng hàng", "đang load" = 2. "đầy", "đóng xong", "chờ xe kéo ở kho" = 3. "về bãi", "hạ bãi", "nằm bãi" = 4. "hạ cảng", "vào cảng" = 5. "lên tàu", "xuất rồi", "tàu chạy rồi", "đi rồi" = 6.
 - "cắt máng", "cut-off", "closing", "CLS", "hạn chót" = CLS. "ngày tàu chạy", "ETD" = etd. "ngày tới", "ETA" = eta.
+- "khai ePort", "khai eport" = lô.da_khai_eport. "thanh lý", "TL" = lô.thanh_ly. "chưa khai ePort / chưa thanh lý" → loc_cont(trang_thai = 5) rồi tra_lo từng lô để đọc 2 cờ này.
 - "KD", "kiểm", "kiểm dịch" = kiểm dịch (theo lô). "rớt tàu" = sự cố lô Rớt tàu. "KD rớt", "không đạt" = sự cố KD không đạt.
 - "hôm nay", "mai", "tuần này", "cuối tuần" → quy về NGÀY CỤ THỂ theo THỜI GIAN HIỆN TẠI (giờ Việt Nam) ở cuối prompt, rồi so với etd / CLS.
 `;

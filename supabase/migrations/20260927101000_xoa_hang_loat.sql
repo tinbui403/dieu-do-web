@@ -29,10 +29,10 @@ declare n_goiy int; n_cont int; n_lo int; n_bk int;
 begin
   if coalesce(private.vai_tro_hien_tai(), '') <> 'Quản lý' then raise exception 'Chỉ Quản lý mới được xoá'; end if;
   perform set_config('dieu_do.bo_qua_nhat_ky', 'on', true);
-  delete from public.goi_y; get diagnostics n_goiy = row_count;
-  delete from public.cont;   get diagnostics n_cont = row_count;
-  delete from public.lo;     get diagnostics n_lo = row_count;
-  delete from public.booking;get diagnostics n_bk = row_count;
+  delete from public.goi_y where true; get diagnostics n_goiy = row_count;
+  delete from public.cont where true;   get diagnostics n_cont = row_count;
+  delete from public.lo where true;     get diagnostics n_lo = row_count;
+  delete from public.booking where true;get diagnostics n_bk = row_count;
   perform set_config('dieu_do.bo_qua_nhat_ky', 'off', true);
   perform private.ghi_nhat_ky_tay('booking', 'xoá TOÀN BỘ booking + lô + cont', 'xoa', jsonb_build_object('goi_y', n_goiy, 'cont', n_cont, 'lo', n_lo, 'booking', n_bk));
   return jsonb_build_object('goi_y', n_goiy, 'cont', n_cont, 'lo', n_lo, 'booking', n_bk);

@@ -112,3 +112,12 @@ Thêm hàm `canh_bao_thieu_rong()` — trả về cont đầy mức *CLS gần* 
 - `SUPABASE_KEY` trong code là **publishable key** — được phép công khai; dữ liệu được bảo vệ bằng Row Level Security.
 - **Không** đưa lên GitHub: file dữ liệu thật (`tests/fixtures.json`, file Excel, file xuất dữ liệu), mật khẩu, `service_role` key. `.gitignore` đã chặn sẵn các file thử nghiệm.
 - Nên để repo ở chế độ **Private**.
+
+## Sao lưu đầy đủ + chi phí bãi + dọn dẹp tự động (28/09/2026)
+
+- Migration `20260928090000_sao_luu_day_du_chi_phi_bai_don_dep.sql`:
+  - `sao_luu_du_lieu(p_ma)` sao lưu **mọi bảng public** (tự gồm bảng thêm sau này) + `so_dong` (số dòng từng bảng).
+  - `chi_phi_bai_ngay(p_ma, p_ngay)`: chi phí từng cont theo bãi trong 1 ngày (giờ VN), cách tính khớp màn Bãi tạm.
+  - `private.don_dep_dinh_ky()` — pg_cron `don-dep-hang-thang` 02:00 ngày 2 hằng tháng: lô đủ điều kiện (chỉ khi có bản sao lưu **ngày 1 đầy đủ** sau lần sửa cuối), booking mồ côi, nhật ký > "Số ngày giữ nhật ký" (45), gợi ý > 60 ngày, yêu cầu ePort > 30 ngày, log cron > 14 ngày. Tắt: Cấu hình "Tự động dọn dẹp hằng tháng" = Tắt.
+- Apps Script `sao-luu/SaoLuuV2.gs` (thêm vào cùng dự án với SaoLuuSupabase.gs + DongBo.gs, chạy `caiDatV2` 1 lần): mỗi tối sao lưu đầy đủ (JSON + Sheet), xuất **Chi phí bãi MM-yyyy** (trang Tổng hợp + trang từng ngày) vào thư mục Drive "Chi phí bãi", dọn bản sao lưu cũ (giữ 60 ngày + bản ngày 01 mỗi tháng vĩnh viễn).
+- Web: màn Container thêm tab **Đã hạ cảng** (gom theo lô, bấm nhanh ePort / Thanh lý, lọc chưa khai / chưa thanh lý, cả lô lên tàu bấm 2 lần).
