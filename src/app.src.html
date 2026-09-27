@@ -2457,6 +2457,7 @@ const AI_TOOLS = [{ function_declarations: [
 
 // ===== Bộ công cụ GHI (chỉ nạp khi user có quyền thao tác). Mọi lệnh ghi PHẢI qua bảng xác nhận. =====
 const AI_WRITE_TOOLS = { function_declarations: [
+  { name:'ghi_don_hang', description:'Tạo MỘT hoặc nhiều đơn hàng mới = container "Đơn chờ lên" ĐỘC LẬP (CHƯA gắn booking, CHƯA gắn lô). Dùng khi người dùng nói "tạo đơn hàng", "lên đơn" kèm: chủ hàng (bắt buộc), kho đóng, số lượng, và (yêu cầu) cảng đến + ngày tàu + hãng tàu. TUYỆT ĐỐI KHÔNG tự tạo booking hay booking tạm hay lô — tìm booking / tạo lô là việc RIÊNG ở bước sau.', parameters:{ type:'object', properties:{ khach_hang:{type:'string'}, kho:{type:'string'}, so_luong:{type:'integer',description:'số cont, mặc định 1'}, cang_den:{type:'string',description:'cảng đến yêu cầu'}, ngay_tau:{type:'string',description:'ngày tàu yêu cầu YYYY-MM-DD'}, hang_tau:{type:'string'}, ngay_dat_hang:{type:'string',description:'YYYY-MM-DD'}, ma_don:{type:'string'} }, required:['khach_hang'] } },
   { name:'ghi_booking', description:'Tạo mới hoặc cập nhật một booking. Nếu số booking đã có thì cập nhật, chưa có thì tạo mới. Sau khi gọi, hệ thống hiện bảng xác nhận cho người dùng bấm Đồng ý — KHÔNG coi là đã lưu.', parameters:{ type:'object', properties:{ so_booking:{type:'string'}, hang_tau:{type:'string'}, ten_tau:{type:'string'}, cang_den:{type:'string'}, etd:{type:'string',description:'YYYY-MM-DD'}, closing:{type:'string',description:'giờ cắt máng YYYY-MM-DD HH:MM'} }, required:['so_booking'] } },
   { name:'ghi_lo', description:'Tạo một lô mới thuộc một booking cho một khách hàng. Hệ thống hiện bảng xác nhận trước khi lưu.', parameters:{ type:'object', properties:{ lo:{type:'string',description:'mã lô muốn tạo'}, booking:{type:'string'}, khach_hang:{type:'string'} }, required:['lo','booking'] } },
   { name:'ghi_them_cont', description:'Thêm N đơn/container trống (Đơn chờ lên) vào một lô đã có. Hệ thống hiện bảng xác nhận trước khi lưu.', parameters:{ type:'object', properties:{ lo:{type:'string'}, so_luong:{type:'integer'} }, required:['lo','so_luong'] } },
@@ -2605,14 +2606,19 @@ function aiChuanTt(v) { const raw = String(v == null ? '' : v).trim().toLowerCas
 function aiMoTaText(rows) { return rows.map(r => '• ' + r.nhan + ': ' + r.gia_tri).join('\n'); }
 
 // Khớp giá trị người dùng nói (tên/mã) về MÃ trong danh mục (cang_den, hang_tau...) để không vướng khóa ngoại
-function aiKhopDm(list, v) {
+function aiKhopDm(list, v, pk) {
+  pk = pk || 'ma';
   if (v == null || String(v).trim() === '') return null;
-  const s = String(v).trim().toLowerCase();
+  const norm = x => khongDau(String(x == null ? '' : x)).replace(/\s+/g, '');
+  const s = norm(v);
+  if (!s) return null;
   list = list || [];
-  let m = list.find(x => (x.ma || '').toLowerCase() === s);
-  if (!m) m = list.find(x => (x.ten_vn || x.ten || '').toLowerCase() === s || (x.ten_tq || '').toLowerCase() === s);
-  if (!m) m = list.find(x => { const ma = (x.ma || '').toLowerCase(), tn = (x.ten_vn || x.ten || '').toLowerCase(); return (ma && (s.includes(ma) || ma.includes(s))) || (tn && (tn.includes(s) || s.includes(tn))); });
-  return m ? m.ma : null;
+  const fields = ['ma', 'ten', 'ten_vn', 'ten_tq'];
+  // 1) khớp chính xác sau khi bỏ dấu + khoảng trắng
+  let m = list.find(x => fields.some(fd => x[fd] && norm(x[fd]) === s));
+  // 2) khớp một phần (tên chứa nhau)
+  if (!m) m = list.find(x => fields.some(fd => { const t = x[fd] && norm(x[fd]); return t && (t.includes(s) || s.includes(t)); }));
+  return m ? (m[pk] != null ? m[pk] : (m.ma != null ? m.ma : m.ten)) : null;
 }
 
 async function aiChuanBiGhi(name, args) {
@@ -2650,9 +2656,14 @@ async function aiChuanBiGhi(name, args) {
     if (!bk) return { error: 'Thiếu số booking cho lô' };
     const ex = await sb.from('lo').select('lo').eq('lo', lo).maybeSingle();
     if (ex.data) return { error: 'Lô ' + lo + ' đã tồn tại — không tạo trùng.' };
-    const kh = args.khach_hang != null ? String(args.khach_hang).trim() : '';
+    let kh = null; const canhBaoLo = [];
+    if (args.khach_hang != null && String(args.khach_hang).trim() !== '') {
+      kh = aiKhopDm(S.khachhang, args.khach_hang, 'ten');
+      if (!kh) canhBaoLo.push('Khách hàng "' + String(args.khach_hang).trim() + '" chưa có trong danh mục — sẽ để trống, thêm sau.');
+    }
     const rows = [{ nhan:'Mã lô', gia_tri: lo }, { nhan:'Booking', gia_tri: bk }];
     if (kh) rows.push({ nhan:'Khách hàng', gia_tri: kh });
+    canhBaoLo.forEach(w => rows.push({ nhan:'⚠ Lưu ý', gia_tri: w }));
     return { loai:'ghi_lo', tieu_de: 'Tạo lô mới ' + lo, mo_ta: rows, mo_ta_text: aiMoTaText(rows), du_lieu: { lo, booking: bk, khach_hang: kh || null } };
   }
   if (name === 'ghi_them_cont') {
@@ -2696,6 +2707,31 @@ async function aiChuanBiGhi(name, args) {
     if (khongThay.length) rows.push({ nhan:'Không tìm thấy', gia_tri: khongThay.join(', ') });
     return { loai:'ghi_keo_cont', tieu_de: 'Kéo ' + keo.length + ' cont — xe ' + nx, mo_ta: rows, mo_ta_text: aiMoTaText(rows), du_lieu: { ids: keo.map(c => c.id), nha_xe: nx, ha_cang: haCang } };
   }
+  if (name === 'ghi_don_hang') {
+    const kh = aiKhopDm(S.khachhang, args.khach_hang, 'ten');
+    if (!kh) return { error: 'Chưa rõ hoặc không tìm thấy khách hàng "' + (args.khach_hang || '') + '" trong danh mục. Cho tôi tên khách đúng nhé.' };
+    const sl = args.so_luong != null ? parseInt(args.so_luong, 10) : 1;
+    if (!(sl >= 1 && sl <= 50)) return { error: 'Số lượng phải từ 1 đến 50' };
+    const canhBao = [];
+    let kho = null;
+    if (args.kho != null && String(args.kho).trim() !== '') { kho = aiKhopDm(S.kho, args.kho, 'ten'); if (!kho) canhBao.push('Kho "' + String(args.kho).trim() + '" chưa có trong danh mục — để trống, thêm sau.'); }
+    let cang = null;
+    if (args.cang_den != null && String(args.cang_den).trim() !== '') { cang = aiKhopDm(S.cangden, args.cang_den, 'ma'); if (!cang) canhBao.push('Cảng "' + String(args.cang_den).trim() + '" chưa có trong danh mục — để trống.'); }
+    let hang = null;
+    if (args.hang_tau != null && String(args.hang_tau).trim() !== '') { hang = aiKhopDm(S.hangtau, args.hang_tau, 'ma'); if (!hang) canhBao.push('Hãng tàu "' + String(args.hang_tau).trim() + '" chưa có trong danh mục — để trống.'); }
+    const ngayTau = (args.ngay_tau != null && String(args.ngay_tau).trim()) ? String(args.ngay_tau).trim() : null;
+    const ngayDat = (args.ngay_dat_hang != null && String(args.ngay_dat_hang).trim()) ? String(args.ngay_dat_hang).trim() : null;
+    const maDon = (args.ma_don != null && String(args.ma_don).trim()) ? String(args.ma_don).trim() : null;
+    const rows = [{ nhan:'Khách hàng', gia_tri: kh }, { nhan:'Số lượng', gia_tri: sl + ' cont' }, { nhan:'Trạng thái', gia_tri: 'Đơn chờ lên (CHƯA gắn booking/lô)' }];
+    if (kho) rows.push({ nhan:'Kho đóng', gia_tri: kho });
+    if (maDon) rows.push({ nhan:'Mã đơn', gia_tri: maDon });
+    if (cang) rows.push({ nhan:'Cảng đến (yêu cầu)', gia_tri: cang });
+    if (ngayTau) rows.push({ nhan:'Ngày tàu (yêu cầu)', gia_tri: ngayTau });
+    if (hang) rows.push({ nhan:'Hãng tàu (yêu cầu)', gia_tri: hang });
+    if (ngayDat) rows.push({ nhan:'Ngày đặt hàng', gia_tri: ngayDat });
+    canhBao.forEach(w => rows.push({ nhan:'⚠ Lưu ý', gia_tri: w }));
+    return { loai:'ghi_don_hang', tieu_de: 'Tạo ' + sl + ' đơn hàng (' + kh + ')', mo_ta: rows, mo_ta_text: aiMoTaText(rows), du_lieu: { khach_hang: kh, kho, so_luong: sl, ma_don: maDon, cang_den_yc: cang, ngay_tau_yc: ngayTau, hang_tau_yc: hang, ngay_dat_hang: ngayDat } };
+  }
   return { error: 'Chưa hỗ trợ thao tác ghi: ' + name };
 }
 
@@ -2734,6 +2770,21 @@ async function aiThucThiGhi(p) {
       await q(sb.from('cont').update(patch).eq('id', id));
     }
     return 'Đã kéo ' + d.ids.length + ' cont (xe ' + d.nha_xe + ')' + (d.ha_cang ? ' → Đã hạ cảng' : '');
+  }
+  if (p.loai === 'ghi_don_hang') {
+    const d = p.du_lieu, rows = [];
+    for (let i = 0; i < d.so_luong; i++) {
+      const r = { khach_hang: d.khach_hang, trang_thai: '1', ngay_goi_cont: todayVN(), nguon: 'web' };
+      if (d.kho) r.kho = d.kho;
+      if (d.ma_don) r.ma_don = d.ma_don;
+      if (d.cang_den_yc) r.cang_den_yc = d.cang_den_yc;
+      if (d.ngay_tau_yc) r.ngay_tau_yc = d.ngay_tau_yc;
+      if (d.hang_tau_yc) r.hang_tau_yc = d.hang_tau_yc;
+      if (d.ngay_dat_hang) r.ngay_dat_hang = d.ngay_dat_hang;
+      rows.push(r);
+    }
+    await q(sb.from('cont').insert(rows));
+    return 'Đã tạo ' + d.so_luong + ' đơn hàng cho ' + d.khach_hang + ' (Đơn chờ lên)';
   }
   throw new Error('Loại thao tác không hỗ trợ: ' + p.loai);
 }

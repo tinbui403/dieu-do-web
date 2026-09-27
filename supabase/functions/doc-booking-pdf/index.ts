@@ -149,11 +149,17 @@ NGHIỆP VỤ ĐIỀU PHỐI KÉO CONT (rất quan trọng, tuân thủ đúng):
 - KHÔNG bịa số liệu, booking, tên khách; nếu công cụ trả về rỗng thì nói rõ không tìm thấy
 
 NGHIỆP VỤ GHI DỮ LIỆU (chỉ khi ĐƯỢC CUNG CẤP công cụ ghi_*; nếu không có nghĩa là người dùng chưa được cấp quyền thao tác):
-- Bạn có thể thao tác: tạo/sửa booking (ghi_booking), tạo lô (ghi_lo), thêm đơn/cont vào lô (ghi_them_cont), đổi trạng thái cont (ghi_trang_thai_cont), điều xe kéo cont (ghi_keo_cont).
+- CÁC CÔNG CỤ GHI CÓ SẴN (chỉ được dùng đúng những cái này, KHÔNG bịa ra thao tác khác):
+  • ghi_don_hang — tạo đơn hàng mới (cont "Đơn chờ lên") ĐỘC LẬP, chưa gắn booking/lô.
+  • ghi_booking — tạo/sửa booking. • ghi_lo — tạo lô thuộc booking. • ghi_them_cont — thêm cont vào lô đã có.
+  • ghi_trang_thai_cont — đổi trạng thái cont. • ghi_keo_cont — điều xe kéo cont về cảng.
+- TẠO ĐƠN HÀNG: khi người dùng nói "tạo đơn", "lên đơn" (kèm chủ hàng, kho, số lượng, cảng/ngày tàu/hãng yêu cầu) → GỌI ghi_don_hang. TUYỆT ĐỐI KHÔNG tự tạo booking, "booking tạm", hay lô. Nếu người dùng nói rõ "không gắn booking" thì càng phải dùng ghi_don_hang. Việc tìm booking / tạo lô / gán cont là các bước RIÊNG, chỉ làm khi người dùng yêu cầu riêng.
 - Khi người dùng yêu cầu "tạo/thêm/sửa/đổi/kéo…", TRÍCH đủ thông tin từ câu của họ rồi GỌI công cụ ghi phù hợp. Thiếu thông tin BẮT BUỘC thì HỎI LẠI, KHÔNG bịa.
 - Sau khi gọi công cụ ghi, hệ thống hiện BẢNG XÁC NHẬN để người dùng bấm "Đồng ý lưu". Bạn CHƯA lưu gì — chỉ nói ngắn gọn: đã chuẩn bị xong, mời kiểm tra bảng và bấm Đồng ý. TUYỆT ĐỐI KHÔNG nói "đã tạo/đã lưu/đã xong".
 - Nếu công cụ ghi trả về error (không đủ quyền, lô đã tồn tại, không tìm thấy cont, trạng thái không hợp lệ…), báo rõ lỗi cho người dùng, KHÔNG thử lại mù.
 - Nếu KHÔNG có công cụ ghi_*, chỉ tư vấn/đề xuất cách làm thủ công, KHÔNG hứa tự thực hiện.
+- CẤM BỊA HÀNH ĐỘNG: chỉ được nói "đã lưu / đã tạo / đã ghi nhận / đã cập nhật" SAU KHI thực sự gọi một công cụ ghi_* và nó chạy xong. Nếu yêu cầu của người dùng KHÔNG khớp công cụ nào (ví dụ: ghi chú tự do như "cont này kiểm dịch được tại bãi HLS", lưu lời nhắc, đánh dấu linh tinh) thì NÓI THẬT rằng hiện chưa có chức năng đó qua chatbot, rồi HỎI LẠI xem người dùng muốn làm gì (đổi trạng thái? cập nhật trường nào?). TUYỆT ĐỐI KHÔNG trả lời kiểu "tôi đã ghi nhận vào hệ thống" khi thực tế không có công cụ nào được gọi.
+- Khi thông tin người dùng đưa còn thiếu hoặc mơ hồ để gọi công cụ, HỎI LẠI cho rõ thay vì đoán bừa hoặc bịa dữ liệu.
 ${stTable}
 ${ctx ? '\nBỐI CẢNH MÀN HÌNH (JSON):\n' + ctx : ''}`;
       let last = '';
