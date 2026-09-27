@@ -3501,6 +3501,44 @@ async function doLogin(f) {
     renderLogin(/Invalid login/i.test(m) ? 'Sai email hoặc mật khẩu. 邮箱或密码错误。' : /confirm/i.test(m) ? 'Email chưa được xác nhận. 邮箱未确认。' : m, true);
   }
 }
+function isNhaXe() { return S.me && S.me.vai_tro === 'Nhà xe'; }
+window.nxSignout = async function () { try { await sb.auth.signOut(); } catch (e) {} location.reload(); };
+window.nxRefresh = function () { renderNhaXe(); };
+// Chế độ NHÀ XE: chỉ 1 màn "Container của tôi" (chỉ đọc). Không nav, không màn khác.
+// Dữ liệu lấy qua RPC cont_cua_toi() — chỉ cont của nhà xe này + cột an toàn (không giá/khách).
+async function renderNhaXe() {
+  const root = document.getElementById('root');
+  root.innerHTML = '<div class="loading">Đang tải… 加载中…</div>';
+  let rows = [];
+  try { const r = await sb.rpc('cont_cua_toi'); if (r.error) throw r.error; rows = r.data || []; }
+  catch (e) { root.innerHTML = '<div class="login"><div class="login-card"><div class="msg err">' + esc(errMsg(e)) + '</div><button class="btn" onclick="location.reload()">Thử lại 重试</button></div></div>'; return; }
+  const viTri = c => c.trang_thai === '4' ? ('Bãi ' + (c.bai_tam || '—')) : (c.trang_thai === '5' || c.trang_thai === '6') ? T1('Đã ra cảng', '已到港') : (c.kho ? ('Kho ' + c.kho) : '—');
+  const badge = c => { const s = ST[c.trang_thai] || {}; return '<span class="badge" style="background:' + (s.bg || '#eee') + ';color:' + (s.fg || '#333') + ';padding:3px 10px;border-radius:8px;font-size:12px;font-weight:700;white-space:nowrap">' + esc(c.trang_thai_ten || stLabel(c.trang_thai)) + '</span>'; };
+  const css = '<style>' +
+    '.nx-wrap{max-width:920px;margin:0 auto;padding:0 16px 48px}' +
+    '.nx-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0;flex-wrap:wrap}' +
+    '.nx-brand{display:flex;align-items:center;gap:12px}.nx-logo{width:44px;height:44px;border-radius:12px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:24px}' +
+    '.nx-h{display:flex;align-items:baseline;gap:12px;margin:8px 0 2px}.nx-h h1{margin:0;font-size:24px}.nx-count{color:var(--muted);font-weight:700}' +
+    '.nx-sub{margin:0 0 16px}' +
+    '.nx-card{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;background:var(--card,#fff);display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center}' +
+    '.nx-cont{font-size:16px}.nx-meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:13px;border-top:1px dashed var(--line);padding-top:8px;margin-top:2px}' +
+    '.nx-empty{border:1px dashed var(--line);border-radius:14px;padding:40px 16px;text-align:center;color:var(--muted)}' +
+    '</style>';
+  const head = '<header class="nx-top"><div class="nx-brand"><div class="nx-logo">🚚</div><div><b>' + esc(S.me.ho_ten || 'Nhà xe') + '</b><div class="muted" style="font-size:13px">' + esc(S.me.nha_xe || '') + ' · ' + esc(T1('Nhà xe', '车队')) + '</div></div></div><div style="display:flex;gap:8px"><button class="btn btn-sm" onclick="nxRefresh()">↻ ' + esc(T1('Làm mới', '刷新')) + '</button><button class="btn btn-sm" onclick="nxSignout()">' + esc(T1('Đăng xuất', '退出')) + '</button></div></header>';
+  const list = rows.length ? rows.map(c =>
+    '<div class="nx-card"><div class="nx-cont"><b>' + esc(c.so_cont || '—') + '</b>' + (c.lo ? '<span class="muted" style="font-size:13px"> · Lô ' + esc(c.lo) + '</span>' : '') + '</div>' +
+    '<div>' + badge(c) + '</div>' +
+    '<div class="nx-meta">' +
+      '<span>📍 ' + esc(T1('Đang ở', '当前')) + ': <b style="color:var(--ink)">' + esc(viTri(c)) + '</b></span>' +
+      '<span>🏭 ' + esc(T1('Kho', '仓库')) + ': ' + esc(c.kho || '—') + '</span>' +
+      (c.ngay_can_len_kho ? '<span>🕒 ' + esc(T1('Cần lên kho', '需到厂')) + ': ' + fTs(c.ngay_can_len_kho) + '</span>' : (c.ngay_den_kho ? '<span>🕒 ' + esc(T1('Đến kho', '到厂')) + ': ' + fDate(c.ngay_den_kho) + '</span>' : '')) +
+    '</div></div>'
+  ).join('') : '<div class="nx-empty">' + esc(T1('Chưa có container nào được giao cho nhà xe của bạn.', '暂无分配给您车队的柜子。')) + '</div>';
+  root.innerHTML = css + '<div class="nx-wrap">' + head +
+    '<div class="nx-h"><h1>' + esc(T1('Container của tôi', '我的柜子')) + '</h1><span class="nx-count">' + rows.length + ' cont</span></div>' +
+    '<p class="muted nx-sub">' + esc(T1('Các container được giao cho nhà xe của bạn và vị trí hiện tại. Chỉ xem.', '分配给您车队的柜子及当前位置，仅查看。')) + '</p>' +
+    '<div>' + list + '</div></div>';
+}
 async function afterLogin(session) {
   S.session = session;
   document.getElementById('root').innerHTML = '<div class="loading">Đang tải dữ liệu… 数据加载中…</div>';
@@ -3513,6 +3551,7 @@ async function afterLogin(session) {
     if (S.me.ai_hoi_dap == null) S.me.ai_hoi_dap = ['Quản lý', 'Điều độ', 'CSKH'].indexOf(S.me.vai_tro) > -1;
     if (S.me.ai_thao_tac == null) S.me.ai_thao_tac = !!S.me.ai_duoc_luu && ['Quản lý', 'Điều độ'].indexOf(S.me.vai_tro) > -1;
     try { if (!localStorage.getItem('dd_lang') && S.me.ngon_ngu) LANG = S.me.ngon_ngu; } catch (e) { LANG = S.me.ngon_ngu || 'vi'; }
+    if (isNhaXe()) { await renderNhaXe(); toast('Chào ' + (S.me.ho_ten || '') + '!', false); return; }   // Nhà xe: chỉ 1 màn Cont của tôi
     await loadCatalogs(); renderShell(); await loadData(); renderMain(); renderNavCounts(); startRealtime();
     toast('Chào mừng ' + S.me.ho_ten + '!', false);
   } catch (e) { document.getElementById('root').innerHTML = '<div class="login"><div class="login-card"><div class="msg err">' + esc(errMsg(e)) + '</div><button class="btn" onclick="location.reload()">Thử lại 重试</button></div></div>'; }
