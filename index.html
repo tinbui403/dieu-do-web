@@ -2701,6 +2701,7 @@ const AI_TOOLS = [{ function_declarations: [
   { name:'dem_cont_theo_trang_thai', description:'Đếm tổng số container theo từng trạng thái trên toàn hệ thống (dùng cho câu hỏi thống kê tổng)', parameters:{ type:'object', properties:{} } },
   { name:'lo_toi_han_cls', description:'Danh sách lô GẦN hoặc ĐÃ QUÁ hạn CLS (cut-off / cắt máng / closing). Dùng cho mọi câu hỏi: lô nào quá hạn, quá cắt máng, quá cut-off, trễ closing, sắp tới hạn, có bao nhiêu lô quá ngày cắt máng. Trả về so_lo_qua_han (số lô đã quá hạn) + danh sách kèm gio_con_lai (âm = đã quá hạn = gấp nhất), đã xếp quá hạn trước.', parameters:{ type:'object', properties:{ so_ngay:{ type:'integer', description:'số ngày tới, mặc định 3' } } } },
   { name:'cont_gap_can_keo', description:'Danh sách container ĐẦY CHỜ KÉO cần kéo về cảng, kèm khu vực kho + CLS + số giờ còn lại (ÂM = đã quá hạn = gấp nhất). Đã xếp gấp trước. DÙNG cho câu hỏi kéo cont: "khu vực X có cont nào gấp cần kéo", "gợi ý cont kéo chung chuyến", "kho gần nhau có cont gấp không". Lọc được theo khu_vuc / kho / nha_xe. LƯU Ý nghiệp vụ: kéo cont gộp theo KHU VỰC, KHÔNG cần cùng khách hàng.', parameters:{ type:'object', properties:{ khu_vuc:{ type:'string' }, kho:{ type:'string' }, nha_xe:{ type:'string' } } } },
+  { name:'lo_cho_ha_cang', description:'Lô đã KIỂM DỊCH XONG, cont đang Ở BÃI TẠM, chờ kéo HẠ CẢNG (mặc định CLS còn ≤72h; hoi_het=true = mọi lô KD xong đang ở bãi). DÙNG cho câu hỏi: "lô nào kiểm dịch xong (rồi) chờ kéo", "cont nào chờ hạ cảng", "cont nào cần kéo ra cảng", "lô đã kiểm dịch đang ở bãi". Trả về danh sách lô + các cont (số cont, bãi tạm) + CLS + giờ còn lại. ⚠ ĐỪNG nhầm với trạng thái "Đầy chờ kéo" (bước 3 = đóng hàng xong ở kho, CHƯA kiểm dịch, CHƯA ở bãi) — cái đó dùng cont_gap_can_keo.', parameters:{ type:'object', properties:{ hoi_het:{ type:'boolean', description:'true = mọi lô KD xong đang ở bãi, không giới hạn 72h' } } } },
   { name:'booking_thieu_cont', description:'Danh sách booking chưa đủ cont so với số hãng cấp (cần xin thêm cont)', parameters:{ type:'object', properties:{} } },
   { name:'goi_y_booking', description:'Gợi ý booking phù hợp cho một đơn hàng theo cảng đến / ngày tàu / hãng / số cont', parameters:{ type:'object', properties:{ cang_den:{ type:'string' }, ngay_tau:{ type:'string', description:'ngày tàu dạng YYYY-MM-DD' }, hang_tau:{ type:'string' }, so_cont:{ type:'integer' } }, required:['cang_den'] } }
 ]}];
@@ -2834,6 +2835,21 @@ async function aiExecTool(name, args) {
         return a.gio_con_lai - b.gio_con_lai;
       });
       return { so_ket_qua: conts.length, ghi_chu: 'Xep gap truoc; gio_con_lai am = da qua han CLS. Keo cont gop theo khu_vuc, khong can cung khach.', conts: conts.slice(0, 100) };
+    }
+    if (name === 'lo_cho_ha_cang') {
+      const cr = await sb.from('cont').select('so_cont,lo,bai_tam,kho').eq('trang_thai', '4').limit(1000);
+      const conts = cr.data || [];
+      const los = Array.from(new Set(conts.map(c => c.lo).filter(Boolean)));
+      const loInfo = {};
+      if (los.length) { const lr = await sb.from('lo_tong_hop').select('lo,ten_tau,da_kiem_dich,cls,closing,cang_ha').in('lo', los); (lr.data || []).forEach(l => { loInfo[l.lo] = l; }); }
+      const now = Date.now(), gioCon = e => e ? Math.round((new Date(e).getTime() - now) / 3600000) : null;
+      const groups = {};
+      conts.forEach(c => { const l = loInfo[c.lo]; if (!l || !l.da_kiem_dich) return; (groups[c.lo] = groups[c.lo] || { lo:c.lo, ten_tau:l.ten_tau, cang_ha:l.cang_ha, cls:l.cls || l.closing || null, conts:[] }).conts.push({ so_cont:c.so_cont, bai_tam:c.bai_tam, kho:c.kho }); });
+      let arr = Object.values(groups).map(g => Object.assign(g, { gio_con_lai: gioCon(g.cls) }));
+      if (!args.hoi_het) arr = arr.filter(g => g.gio_con_lai != null && g.gio_con_lai <= 72);
+      arr.sort((a, b) => (a.gio_con_lai == null ? 9e9 : a.gio_con_lai) - (b.gio_con_lai == null ? 9e9 : b.gio_con_lai));
+      const tongCont = arr.reduce((s, g) => s + g.conts.length, 0);
+      return { so_lo: arr.length, so_cont: tongCont, ghi_chu: 'Lo da kiem dich xong, cont dang O BAI TAM, cho keo HA CANG (mac dinh CLS con <=72h; hoi_het=true = tat ca). gio_con_lai am = qua han. Day KHONG phai trang thai "Day cho keo" (buoc 3).', lo: arr.slice(0, 100) };
     }
     if (name === 'booking_thieu_cont') {
       const r = await sb.from('booking_tong_hop').select('so_booking,hang_tau,ten_tau,etd,cang_den,so_luong_cont,cont_da_xep,cac_lo').limit(3000);
