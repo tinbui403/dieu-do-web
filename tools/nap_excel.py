@@ -11,7 +11,7 @@ KHÔNG đưa file SQL sinh ra lên git (chứa dữ liệu thật).
 """
 import argparse, datetime, json, re, sys, hashlib, difflib
 import openpyxl
-from model import read_dieu_do, read_kd, norm, s, d, ts, is_cont, VN
+from model import read_dieu_do, read_kd, read_don_moi, xldate, norm, s, d, ts, is_cont, VN
 
 # ---------- ánh xạ tên Excel → danh mục trong DB ----------
 # Đặt trong file anh_xa_ten.local.json cạnh script (KHÔNG đưa lên git vì chứa tên khách / kho / nhà xe thật).
@@ -142,6 +142,25 @@ def main():
     so_trung = [c for c in CONT if sum(1 for x in CONT if x['so_cont'] == c['so_cont']) > 1]
     if so_trung: sys.exit('Số cont trùng trong phạm vi nạp: ' + ', '.join(sorted({c['so_cont'] for c in so_trung})))
 
+    # ---- ĐƠN HÀNG MỚI (ngoài khung đỏ): chưa có booking/cont/lô → mỗi dòng = 1 cont "Đơn chờ lên" độc lập ----
+    DON = []
+    for o in read_don_moi(wb):
+        if o['row'] < a.tu_dong: continue
+        lenv = o['ngay_len_kho_dk']
+        if isinstance(lenv, (int, float)) and not isinstance(lenv, bool):
+            dl = xldate(lenv); lenv = datetime.datetime(dl.year, dl.month, dl.day, tzinfo=VN) if dl else None
+        can_len, gio_ghi = gio_len_kho(lenv, nam)
+        note = norm(o['note']); note = None if note.lower() in ('', 'x') else note
+        madon = norm(o['ma_don'])
+        slug = re.sub(r'[^A-Z0-9]', '', madon.upper()) or ('R%d' % o['row'])
+        DON.append(dict(row=o['row'], id='D%02d%02d%02d-%s-%d' % (nam % 100, mm, dd, slug, o['row']),
+                        ma_don=(madon or None), khach=khach_cua(o['khach']) or None, kho=kho_cua(o['kho']) or None,
+                        cang_yc=cang_cua(o['cang']) or None,
+                        hang_yc=(hang_cua(o['hang_tau']) or None) if norm(o['hang_tau']) else None,
+                        ngay_tau_yc=(xldate(o['etd']) if o['etd'] not in (None, '') else None),
+                        ngay_goi=xldate(o['ngay_goi']), can_len=can_len, gio_ghi=gio_ghi,
+                        note=note, cskh=norm(o['cskh']) or None))
+
     # ---------- SQL ----------
     L = []
     w = L.append
@@ -154,11 +173,14 @@ def main():
     w("  drop table if exists _bao_cao; create temp table _bao_cao (tt serial, dong text);")
     w("  create temp table x_lo (lo text primary key, booking text, hang_tau text, ten_tau text, cang_den text, etd date, eta date, etd_kho date, closing_mail timestamptz, closing_eport timestamptz, closing_tay timestamptz, ma_don_kdtv text, da_khai_eport boolean, thanh_ly boolean, so_luong int, cont_kd text, rot boolean, cskh text, ghi_chu text) on commit drop;")
     w("  create temp table x_cont (row int, lo text, so_cont text, so_seal text, ma_don text, khach text, kho text, kho_goc text, hien_trang_goc text, st text, bai text, ngay_den_kho date, ngay_goi date, can_len timestamptz, gio_ghi text, nha_xe text, so_xe text, tem boolean, gio_vao timestamptz, gio_ra timestamptz, gia numeric, phu_phi numeric, phat_sinh numeric, note text, cskh text) on commit drop;")
+    w("  create temp table x_don (row int, id text, ma_don text, khach text, kho text, cang_yc text, hang_yc text, ngay_tau_yc date, ngay_goi date, can_len timestamptz, gio_ghi text, note text, cskh text) on commit drop;")
     for lo in sorted(scope):
         v = LO[lo]
         w("  insert into x_lo values (%s);" % ', '.join(q(v[k]) for k in ['lo','booking','hang_tau','ten_tau','cang_den','etd','eta','etd_kho','closing_mail','closing_eport','closing_tay','ma_don_kdtv','da_khai_eport','thanh_ly','so_luong','cont_kd','rot','cskh','ghi_chu']))
     for c in CONT:
         w("  insert into x_cont values (%s);" % ', '.join(q(c[k]) for k in ['row','lo','so_cont','so_seal','ma_don','khach','kho','kho_goc','hien_trang_goc','st','bai','ngay_den_kho','ngay_goi','can_len','gio_ghi','nha_xe','so_xe','tem','gio_vao','gio_ra','gia','phu_phi','phat_sinh','note','cskh']))
+    for o in DON:
+        w("  insert into x_don values (%s);" % ', '.join(q(o[k]) for k in ['row','id','ma_don','khach','kho','cang_yc','hang_yc','ngay_tau_yc','ngay_goi','can_len','gio_ghi','note','cskh']))
     w("""
   -- 0. Danh mục thiếu → thêm (báo cáo)
   for x in select distinct khach as ten from x_cont where khach is not null and khach not in (select ten from public.khach_hang) loop
@@ -281,6 +303,28 @@ def main():
     end if;
   end loop;
 
+  -- 5b. ĐƠN HÀNG MỚI (ngoài khung đỏ): thêm danh mục thiếu rồi upsert cont "Đơn chờ lên" (trạng thái 1, chưa gắn lô/booking/số cont)
+  for x in select distinct khach as ten from x_don where khach is not null and khach not in (select ten from public.khach_hang) loop
+    insert into public.khach_hang (ten) values (x.ten); insert into _bao_cao (dong) values ('DANH MỤC: thêm khách hàng ' || x.ten); end loop;
+  for x in select distinct kho as ten, khach from x_don where kho is not null and kho not in (select ten from public.kho) loop
+    insert into public.kho (ten, khach_hang_chinh) values (x.ten, x.khach); insert into _bao_cao (dong) values ('DANH MỤC: thêm kho ' || x.ten); end loop;
+  for x in select distinct cang_yc as ma from x_don where cang_yc is not null and cang_yc not in (select ma from public.cang_den) loop
+    insert into public.cang_den (ma, ten_vn) values (x.ma, x.ma); insert into _bao_cao (dong) values ('DANH MỤC: thêm cảng đến ' || x.ma); end loop;
+  for x in select distinct hang_yc as ma from x_don where hang_yc is not null and hang_yc not in (select ma from public.hang_tau) loop
+    insert into public.hang_tau (ma) values (x.ma); insert into _bao_cao (dong) values ('DANH MỤC: thêm hãng tàu ' || x.ma); end loop;
+  for x in select * from x_don order by row loop
+    insert into public.cont (id, lo, ma_don, khach_hang, kho, so_cont, trang_thai, cang_den_yc, hang_tau_yc, ngay_tau_yc, ngay_goi_cont, ngay_can_len_kho, gio_len_kho_ghi_chu, ghi_chu, cskh, nguon, nguoi_cap_nhat)
+    values (x.id, null, x.ma_don, x.khach, x.kho, null, '1', x.cang_yc, x.hang_yc, x.ngay_tau_yc, x.ngay_goi, x.can_len, x.gio_ghi, x.note, x.cskh, '""" + nhan + """ (đơn mới, dòng ' || x.row || ')', '""" + nhan + """')
+    on conflict (id) do update set
+      ma_don = excluded.ma_don, khach_hang = coalesce(excluded.khach_hang, public.cont.khach_hang), kho = coalesce(excluded.kho, public.cont.kho),
+      cang_den_yc = coalesce(excluded.cang_den_yc, public.cont.cang_den_yc), hang_tau_yc = coalesce(excluded.hang_tau_yc, public.cont.hang_tau_yc),
+      ngay_tau_yc = coalesce(excluded.ngay_tau_yc, public.cont.ngay_tau_yc), ngay_goi_cont = coalesce(excluded.ngay_goi_cont, public.cont.ngay_goi_cont),
+      ngay_can_len_kho = coalesce(excluded.ngay_can_len_kho, public.cont.ngay_can_len_kho), gio_len_kho_ghi_chu = coalesce(excluded.gio_len_kho_ghi_chu, public.cont.gio_len_kho_ghi_chu),
+      ghi_chu = coalesce(excluded.ghi_chu, public.cont.ghi_chu), cskh = coalesce(excluded.cskh, public.cont.cskh), nguoi_cap_nhat = excluded.nguoi_cap_nhat
+    where public.cont.trang_thai = '1';   -- chỉ ghi đè khi đơn còn "Đơn chờ lên" (chưa xếp kế hoạch)
+    insert into _bao_cao (dong) values ('ĐƠN MỚI ' || coalesce(x.ma_don,'-') || ' · ' || coalesce(x.khach,'-') || ' · ' || coalesce(x.kho,'-') || ' · cảng ' || coalesce(x.cang_yc,'-') || coalesce(' · lên kho ' || to_char(x.can_len at time zone 'Asia/Ho_Chi_Minh','DD/MM HH24:MI'),'') || coalesce(' · ' || x.note,''));
+  end loop;
+
   -- 6. Cont kiểm dịch theo sheet Kế hoạch KD (mỗi lô 1 cont; lô đã tích KD thì không đổi, chỉ báo)
   for x in select l.lo, l.cont_kd from x_lo l where l.cont_kd is not null loop
     select * into c from public.lo where lo = x.lo;
@@ -301,7 +345,7 @@ def main():
   end loop;
 
   -- 7. Tổng kết
-  insert into _bao_cao (dong) select '— TỔNG: ' || (select count(*) from public.lo where lo in (select lo from x_lo)) || ' lô trong phạm vi; cont đang chạy (bước 1-5): ' || (select count(*) from public.cont where trang_thai < '6') || '; cont ' || '""" + nhan + """' || ' mới: ' || (select count(*) from public.cont where nguon like '""" + nhan + """%');
+  insert into _bao_cao (dong) select '— TỔNG: ' || (select count(*) from public.lo where lo in (select lo from x_lo)) || ' lô trong phạm vi; cont đang chạy (bước 1-5): ' || (select count(*) from public.cont where trang_thai < '6') || '; cont ' || '""" + nhan + """' || ' mới: ' || (select count(*) from public.cont where nguon like '""" + nhan + """%') || '; ĐƠN MỚI (Đơn chờ lên): ' || (select count(*) from x_don);
 """)
     if a.thu:
         w("  select string_agg(dong, E'\\n' order by tt) into v_bc from _bao_cao;")
@@ -314,6 +358,7 @@ def main():
     print('lô trong phạm vi (%d):' % len(scope), ', '.join(sorted(scope)))
     print('lô bỏ qua (CLS đã qua / xong):', ', '.join(sorted(l for l in LO if l not in scope and l not in xoa)))
     print('cont trong phạm vi:', len(CONT), '| xoá lô:', xoa, '| rớt tàu:', rot, '| đổi mã:', doi)
+    print('đơn hàng mới (Đơn chờ lên):', len(DON), '→', ', '.join('%s(d%d)' % (o['ma_don'], o['row']) for o in DON) or '-')
     print('SQL:', a.ra, len(sql), 'bytes, sha256', hashlib.sha256(sql.encode('utf-8')).hexdigest())
 
 if __name__ == '__main__':

@@ -65,6 +65,32 @@ def read_kd(wb):
         out.setdefault(lo, []).append(rec)
     return out
 
+def xldate(v):
+    """Excel serial number (vd 46275) → date (epoch 1899-12-30). datetime/date/'dd/mm/yyyy' cũng nhận. None nếu không đọc được."""
+    if isinstance(v, (datetime.datetime, datetime.date)): return d(v)
+    if isinstance(v, (int, float)) and 20000 < v < 80000:
+        return (datetime.datetime(1899, 12, 30) + datetime.timedelta(days=int(v))).date()
+    return d(v)
+
+def read_don_moi(wb):
+    """Đọc các dòng ĐƠN HÀNG MỚI ở sheet 'MỚI ĐIỀU ĐỘ' (phần NGOÀI khung đỏ):
+    có Mã đơn hàng (cột 5) + khách/kho, NHƯNG chưa có Booking / số Cont / Lô
+    (điều độ chưa xếp kế hoạch). Mỗi dòng = 1 đơn = 1 cont 'Đơn chờ lên' độc lập."""
+    ws = wb['MỚI ĐIỀU ĐỘ']; mm = merged_map(ws)
+    val = lambda r, c: mm.get((r, c), ws.cell(r, c).value)
+    out = []
+    for r in range(3, ws.max_row + 1):
+        ma_don = norm(val(r, 5)); cont = norm(val(r, 3)); booking = norm(val(r, 2)); lo = norm(val(r, 1))
+        khach = norm(val(r, 9)); kho = norm(val(r, 12))
+        if not ma_don: continue                       # không có mã đơn = không phải đơn
+        if is_cont(cont) or booking or lo: continue    # đã có cont / booking / lô = đã xếp (trong khung đỏ) → bỏ
+        if not (khach or kho): continue                 # dòng rác / không đủ thông tin
+        out.append({'row': r, 'ma_don': ma_don, 'khach': khach, 'kho': kho,
+                    'cang': norm(val(r, 8)), 'ngay_goi': val(r, 6), 'ngay_len_kho_dk': val(r, 7),
+                    'tau': norm(val(r, 11)), 'hang_tau': norm(val(r, 21)), 'etd': val(r, 19),
+                    'note': norm(val(r, 14)), 'cskh': norm(val(r, 33))})
+    return out
+
 if __name__ == '__main__':
     wb = openpyxl.load_workbook(sys.argv[1], data_only=True)
     rows = read_dieu_do(wb); kd = read_kd(wb)

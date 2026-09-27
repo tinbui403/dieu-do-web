@@ -2381,6 +2381,11 @@ function openCont(c) {
         if (c.cont_kiem_dich && l.da_kiem_dich && S.me && S.me.vai_tro === 'CSKH') return '<label class="field chkf" data-kd-cskh-lock><input type="checkbox" name="cont_kiem_dich" checked disabled>' + esc(T('kdCont')) + ' <span class="muted" style="font-size:11px">(' + esc(T1('lô đã kiểm dịch — CSKH không đổi được, báo Điều độ', '已检疫，客服不能修改')) + ')</span></label>';
         return fChk(T('kdCont'), 'cont_kiem_dich', c.cont_kiem_dich) + (c.cont_kiem_dich && l.da_kiem_dich ? '<span class="muted" style="font-size:11px">' + esc(T1('Bỏ dấu / hủy cont này → lô về chưa kiểm dịch', '取消后本批恢复未检疫')) + '</span>' : ''); })() +
     '</div></div>' +
+    (!c.lo ? '<div class="sec"><h3>' + esc(T('ycTau')) + ' <span class="muted" style="font-weight:400;font-size:12px">' + esc(T1('(chưa có booking — để tìm booking / xếp lô)', '（暂无订舱 — 用于找订舱/建批次）')) + '</span></h3><div class="grid3">' +
+      fSel(T('cangYc'), 'cang_den_yc', opt(S.cangden.map(x => [x.ma, x.ma + ' · ' + (x.ten_vn || '')]), c.cang_den_yc, true)) +
+      fIn(T('tauYc'), 'ngay_tau_yc', c.ngay_tau_yc, 'date') +
+      fSel(T('hangYc'), 'hang_tau_yc', opt(S.hangtau.map(x => [x.ma, x.ma]), c.hang_tau_yc, true)) +
+    '</div></div>' : '') +
     '<div class="sec"><h3>' + esc(T1('Thời gian', '时间')) + '</h3><div class="grid2">' +
       fIn(T('callDate'), 'ngay_goi_cont', c.ngay_goi_cont || (isNew ? todayVN() : ''), 'date') + fIn(T('can'), 'ngay_can_len_kho', tsToInput(c.ngay_can_len_kho), 'datetime-local') +
       fIn(T('gioGhiChu'), 'gio_len_kho_ghi_chu', c.gio_len_kho_ghi_chu) + fIn(T('den'), 'ngay_den_kho', c.ngay_den_kho, 'date') +
@@ -2679,6 +2684,15 @@ function renderChatMsgs() {
 }
 // ===== Chatbot AI: bộ công cụ (function calling) để AI tự truy vấn Supabase =====
 const ST_NHAN = {'1':'Đơn chờ lên','2':'Đang đóng hàng','3':'Đầy chờ kéo','4':'Ở bãi tạm','5':'Đã hạ cảng','6':'Đã lên tàu','9':'Hủy/đổi cont'};
+// Chuẩn hoá 1 cont để trả cho AI: thêm tên trạng thái + tên tiếng Việt rõ nghĩa cho cảng/ngày tàu/hãng YÊU CẦU (đơn chờ lên chưa có booking/lô)
+function aiContRa(c) {
+  return Object.assign({}, c, {
+    trang_thai_ten: ST_NHAN[c.trang_thai] || c.trang_thai,
+    cang_den_yeu_cau: c.cang_den_yc || null,
+    ngay_tau_yeu_cau: c.ngay_tau_yc || null,   // = ETD / ngày tàu KHÁCH YÊU CẦU cho đơn chờ lên
+    hang_tau_yeu_cau: c.hang_tau_yc || null
+  });
+}
 const AI_TOOLS = [{ function_declarations: [
   { name:'tra_lo', description:'Tra thông tin 1 lô hàng theo mã lô, gồm các container thuộc lô', parameters:{ type:'object', properties:{ ma_lo:{ type:'string', description:'mã lô, ví dụ 612, 604A' } }, required:['ma_lo'] } },
   { name:'tra_cont', description:'Tìm container theo MỘT từ khóa cụ thể (số cont, mã đơn). Nếu cần LỌC theo điều kiện (kho + trạng thái, lô + trạng thái…) thì dùng loc_cont thay vì tra_cont.', parameters:{ type:'object', properties:{ tu_khoa:{ type:'string', description:'từ khóa tìm: số cont / mã đơn / tên kho / tên khách' } }, required:['tu_khoa'] } },
@@ -2718,13 +2732,13 @@ async function aiExecTool(name, args) {
       const kw = String(args.tu_khoa || '').trim();
       if (!kw) return { error: 'thiếu từ khóa' };
       const pat = '%' + kw + '%';
-      const r = await sb.from('cont').select('id,so_cont,ma_don,lo,khach_hang,kho,trang_thai,nha_xe,bai_tam,ngay_den_kho')
+      const r = await sb.from('cont').select('id,so_cont,ma_don,lo,khach_hang,kho,trang_thai,nha_xe,bai_tam,ngay_den_kho,ngay_can_len_kho,cang_den_yc,ngay_tau_yc,hang_tau_yc')
         .or(['so_cont', 'ma_don', 'lo', 'kho', 'khach_hang'].map(f => f + '.ilike.' + pat).join(',')).limit(100);
-      const conts = (r.data || []).map(c => Object.assign({}, c, { trang_thai_ten: ST_NHAN[c.trang_thai] || c.trang_thai }));
+      const conts = (r.data || []).map(aiContRa);
       return { so_ket_qua: conts.length, conts };
     }
     if (name === 'loc_cont') {
-      let query = sb.from('cont').select('id,so_cont,ma_don,lo,khach_hang,kho,trang_thai,nha_xe,bai_tam,cont_kiem_dich,ngay_den_kho');
+      let query = sb.from('cont').select('id,so_cont,ma_don,lo,khach_hang,kho,trang_thai,nha_xe,bai_tam,cont_kiem_dich,ngay_den_kho,ngay_can_len_kho,cang_den_yc,ngay_tau_yc,hang_tau_yc');
       const dk = {};
       // Map ve dung danh muc (kho/khach theo ten, bai_tam/nha_xe theo ma) de khong tra rong do sai chinh ta
       if (args.kho != null && String(args.kho).trim() !== '') { const k = aiKhopDm(S.kho, args.kho, 'ten'); if (k) { query = query.eq('kho', k); dk.kho = k; } else { query = query.ilike('kho', '%' + String(args.kho).trim() + '%'); dk.kho = args.kho; } }
@@ -2751,8 +2765,8 @@ async function aiExecTool(name, args) {
         else if (kd.includes('can') || kd.includes('co')) conts = conts.filter(c => c.cont_kiem_dich);
         dk.kiem_dich = args.kiem_dich;
       }
-      const out = conts.map(c => Object.assign({}, c, { trang_thai_ten: ST_NHAN[c.trang_thai] || c.trang_thai }));
-      return { so_ket_qua: out.length, dieu_kien: dk, ghi_chu: 'kho=noi dong hang; bai_tam=noi ha tam (vd HLS); da map ten ve dung danh muc', conts: out.slice(0, 200) };
+      const out = conts.map(aiContRa);
+      return { so_ket_qua: out.length, dieu_kien: dk, ghi_chu: 'kho=noi dong hang; bai_tam=noi ha tam (vd HLS); cang_den_yc/ngay_tau_yc/hang_tau_yc = cang/ngay tau/hang YEU CAU cua don cho len (chua co booking); da map ten ve dung danh muc', conts: out.slice(0, 200) };
     }
     if (name === 'tra_booking') {
       const bk = String(args.so_booking || '').trim();
