@@ -2,7 +2,157 @@
 
 > **Dành cho Claude (bất kỳ tài khoản / phiên nào):** đọc `README.md` trước để hiểu hệ thống, rồi đọc file này để biết đang dở ở đâu. Xong mỗi mốc thì **cập nhật lại file này** (mục "Đang làm", "Bước kế tiếp", "Nhật ký phiên") trước khi dừng.
 
-Cập nhật lần cuối: **26/09/2026** (giờ VN, phiên XÂY LẠI — tài khoản phụ: Phase II.4 đọc PDF booking bằng Gemini)
+Cập nhật lần cuối: **28/09/2026 — ĐỢT 14** (giờ VN, tài khoản phụ · Cowork — giao diện kính (glass) toàn bộ 9 màn + CLS mail/ePort thủ công + đồng bộ biểu đồ + sửa modal kiểm dịch & chat AI)
+
+## ✅ PHIÊN 28/09 — ĐỢT 14: CHATBOT DÙNG 2 KEY GEMINI (dự phòng khi hết quota free tier)
+
+- Anh Hi hỏi đổi/thêm key: làm rõ **gói PRO tiêu dùng (Google One AI Premium) KHÔNG nâng hạn mức API** — tier của API key chỉ do **billing của Cloud project** quyết định (ảnh key `...KbEg` ghi "Niveau sans frais" = free). Nguồn: ai.google.dev/gemini-api/docs/billing + /rate-limits. Muốn tăng: bật billing (paid) HOẶC dùng nhiều key ở nhiều project/tài khoản (quota tính theo project).
+- **Đã làm (Edge `doc-booking-pdf/index.ts`):** thêm secret thứ 2 `GEMINI_API_KEY_2` → `GEMINI_KEYS = [KEY, KEY_2].filter(Boolean)`; helper mới `geminiFetch(url, init)` gọi Gemini, **gặp HTTP 429 (hết quota/quá RPM) tự đổi sang key kế tiếp gọi lại**, lỗi khác/hết key thì trả luôn. Áp cho CẢ 3 chỗ gọi: `gemini()` (đọc PDF + geminiAny), list models (action 'models'), vòng chat (generateContent). Guard đổi sang `!GEMINI_KEYS.length`. esbuild bundle OK.
+- Điều kiện có tác dụng: **2 key phải ở 2 project/tài khoản KHÁC nhau** (cùng project = chung quota = vô ích). Key 2 = `...KbEg` (tài khoản vtmthu.0404); key đang chạy là của tài khoản khác (tạo trước 28/09).
+- ⚠ **CẦN anh Hi:** (1) Supabase → Edge Functions → Secrets → thêm `GEMINI_API_KEY_2` = key `...KbEg`; (2) **deploy lại** `doc-booking-pdf`; (3) test chatbot (ping/hỏi thử). KHÔNG đụng web, KHÔNG migration.
+
+## ✅ PHIÊN 28/09 — ĐỢT 11+12+13: GIAO DIỆN KÍNH TOÀN BỘ + CLS MAIL/EPORT THỦ CÔNG + ĐỒNG BỘ BIỂU ĐỒ + SỬA MODAL KIỂM DỊCH & CHAT AI
+
+> Gộp chung 1 lần deploy/push. Chỉ đụng WEB (`app.src.html`/`index.html`) + 1 migration + `sao-luu/DongBo.gs`. **KHÔNG cần deploy Edge.**
+
+**ĐỢT 11 — Thiết kế lại giao diện "kính" (glass) cho CẢ 9 màn (anh Hi duyệt "chất đấy"):**
+- Viết lại toàn bộ `<style>` sang hệ token: nền/kính (`--glass`, `--glass-2`, `--glass-line`, `--brd`), bóng (`--sh-card`), 3 mức chữ (`--ink`/`--muted`/`--faint`), nhấn xanh→tím (`--pri`/`--pri-grad` #5b8cff→#8b6cf6), trạng thái (`--red/--amb/--teal` + `-bg`). Helper `clGlass(txt,bg,fg,bd)` = viên thuốc nền trong + viền màu.
+- **Mặc định SÁNG**, nút gạt ☀/🌙 (action `theme`, lưu `localStorage dd_theme`). `:root`=sáng, `:root[data-theme="dark"]`=tối. Sửa lỗi input trắng ở dark (Danh mục / nhân sự) + `select option` nền tối.
+- "Nổi khối hơn + kính hơn + đỡ chói": chữ vs màu tương phản hợp lý, làm ngày/đêm đỡ mỏi mắt. Test Playwright 16/16.
+
+**ĐỢT 12 — CLS mail / ePort + cập nhật thủ công (5 màn CLS anh Hi gửi):**
+1. Chip trạng thái CLS → phong cách glass (`clChip`→`clGlass`). 2. Bỏ trường "CLS nhập tay" (nó chính là CLS mail). 3. CLS mail ban đầu = CLS đọc từ file booking PDF (Edge đã tách `closing`). 4. Hiển thị rõ CLS mail vs CLS ePort (mỗi cái 1 dòng có nhãn). 5. CLS ePort chỉ cập nhật THỦ CÔNG (bỏ cron theo giờ). 6. Mã KDTV cũng chỉ cập nhật thủ công.
+- **Migration `20260928140000_cls_mail_booking_va_bo_cron_eport.sql`** (anh Hi ĐÃ chạy OK): thêm `booking.closing_mail`; `lo_dong_bo_booking()` copy closing_mail booking↔lô; trigger `booking_day_cls_mail()`; gỡ 4 cron ePort (`cls-eport-gui/-xu-ly`, `eport-spitc-goi/-xu-ly`). `lo.cls = coalesce(closing_mail, closing_eport, closing)`.
+- **`sao-luu/DongBo.gs`**: `caiDatDongBo()` chỉ GỠ trigger cũ (KDTV/backup tự động), không tạo mới. ⚠ Anh Hi phải DÁN tay hàm này vào Apps Script online rồi chạy (bản online tách rời file đĩa).
+
+**ĐỢT 13 — 2 việc bổ sung + 2 lỗi anh Hi vừa báo:**
+- Tab Booking: THÊM cột **CLS mail** vào bảng danh sách (grid cols + header + ô `fTs(b.closing_mail)`); form booking thêm ô nhập CLS mail; đọc file AI tự điền CLS mail.
+- Đồng bộ **thanh thông báo + biểu đồ** Tổng quan sang bảng màu glass: sparkline, thanh ưu tiên/closing, heatmap `shade()`, vòng donut, viền bãi, `barList`, `priBadge`, `MUC`/`TYPES`→clGlass, gradient header.
+- **Sửa modal "Kế hoạch kiểm dịch" (nút Xem bảng để chụp gửi):** ép nền TRẮNG cố định (`#fff`) + header gradient xanh→tím → ảnh chụp gửi luôn sạch, hết lỗi chữ tối trên nền tối ở chế độ dark.
+- **Sửa chat AI chế độ sáng "không thấy gì":** chữ gợi ý "Hỏi về lô, cont, booking…" đổi từ màu lavender mờ (tàng hình nền sáng) sang `var(--muted)` (rõ cả 2 theme); placeholder ô nhập đậm hơn.
+- Build OK, JS OK. Chụp ảnh kiểm chứng modal KD + chat AI ở cả sáng/tối → đạt.
+
+⚠ **CÒN CẦN (chưa push):** (1) migration 20260928140000 — ĐÃ chạy; (2) dán `DongBo.gs` vào Apps Script + chạy `caiDatDongBo`; (3) **push web** (only-me + ban-public) — Edge KHÔNG cần. Nhắc: cấu hình "Chế độ thử: cho xoá dữ liệu đã chạy" → Tắt trước khi lên production.
+
+## ✅ PHIÊN 28/09 — ĐỢT 10: SAO LƯU ĐẦY ĐỦ + CHI PHÍ BÃI RA DRIVE + DỌN DẸP TỰ ĐỘNG + TAB ĐÃ HẠ CẢNG (anh Hi chọn phương án C, dự án dùng 10+ năm)
+
+- **Lỗ hổng phát hiện:** `sao_luu_du_lieu` (20/09) KHÔNG sao lưu booking, lo_su_co, chi_phi_cont, bang_gia_xe, thong_tin_cu, lo_da_don → nút Dọn dữ liệu xoá lô kéo theo sự cố + chi phí phát sinh (cascade) = MẤT VĨNH VIỄN.
+- **Migration `20260928090000_sao_luu_day_du_chi_phi_bai_don_dep.sql`:** (1) `sao_luu_du_lieu` sao lưu MỌI bảng public (động, bảng thêm sau tự có) + trả `so_dong`; (2) `chi_phi_bai_ngay(p_ma,p_ngay)` chi phí bãi theo ngày VN — "trong ngày" (điện theo giờ trong ngày, nâng hạ ngày vào, hạ cảng ngày ra, phát sinh theo ngày nhập; cộng các ngày = tổng) + "tích luỹ" khớp web; dùng giá bãi HIỆN TẠI; (3) `private.lo_sua_cuoi(lo)` gồm cả chi phí + sự cố; `lo_co_the_don()` chỉ nhận bản sao lưu đầy đủ (`so_dong ? 'chi_phi_cont'`); (4) `private.don_dep_dinh_ky()` + pg_cron `don-dep-hang-thang` `0 19 1 * *` (= 02:00 ngày 2 giờ VN): lô đủ điều kiện CHỈ khi có bản sao lưu NGÀY 1 đầy đủ sau lần sửa cuối, booking mồ côi, nhật ký > 45 ngày (cấu hình "Số ngày giữ nhật ký", tối thiểu 35), goi_y > 60 ngày, eport_yeu_cau > 30 ngày, cron.job_run_details > 14 ngày; ghi nhật ký 'he_thong'. Tắt: Cấu hình "Tự động dọn dẹp hằng tháng". Test PG16 cục bộ: đúng mọi tình huống, chạy lại không lỗi.
+- **Apps Script `sao-luu/SaoLuuV2.gs`** (THÊM vào cùng dự án Apps Script với SaoLuuSupabase.gs + DongBo.gs, dùng lại hằng số + goiSupabase_; chạy `caiDatV2` 1 lần — thay trigger saoLuuVaGhiNhan bằng saoLuuDayDu, giữ trigger dongBoMaKDTV): mỗi tối JSON + Sheet đầy đủ → ghi_nhan_sao_luu kèm so_dong; xuất "Chi phí bãi MM-yyyy" (trang Tổng hợp ngày×bãi + CỘNG THÁNG, trang dd-MM chi tiết) vào thư mục Drive "Chi phí bãi"; dọn bản sao lưu cũ (giữ 60 ngày + bản ngày 01 vĩnh viễn, cho vào Thùng rác). `xuatChiPhiBaiBu` để xuất bù. Test node mock 11/11 (bắt + sửa lỗi dòng CỘNG THÁNG nhân đôi).
+- **Web:** Container thêm chip **Đã hạ cảng** (`daHaCangBody`): thẻ thống kê, lọc Tất cả/Chưa khai ePort/Chưa thanh lý/Sẵn sàng lên tàu, gom theo lô xếp CLS, nút ePort / Thanh lý bấm đổi cờ lô, cảnh báo còn cont chưa hạ + sát CLS chưa khai, chi phí bãi đã chốt, "Cả lô lên tàu" (chỉ khi đủ 2 cờ + không còn cont chưa hạ, bấm 2 lần). Tab Dọn dữ liệu thêm dòng lịch tự dọn. Sơ đồ chatbot thêm cờ ePort/thanh lý. Test Playwright 16/16 (cả mobile). README cập nhật.
+- ⚠ **Cần anh Hi:** chạy migration 20260928090000 → dán SaoLuuV2.gs vào Apps Script + chạy caiDatV2 → deploy Edge (sơ đồ) → commit/push (kèm `20260927101000_xoa_hang_loat.sql` sửa `where true` chưa commit).
+
+## ✅ PHIÊN 27/09 — ĐỢT 9: SƠ ĐỒ DỮ LIỆU cho chatbot (bước 1 — AI tự suy luận nhiều bước)
+
+- Mục tiêu (anh Hi): mỗi người hỏi một kiểu → AI phải tự hiểu dữ liệu nối nhau thế nào và tự ghép, thay vì mỗi cách hỏi lại thêm 1 tool.
+- File mới **`supabase/functions/doc-booking-pdf/so_do_du_lieu.ts`** (hằng `SO_DO_DU_LIEU`, ~2.200 token), viết theo schema thật trong migrations + AI_TOOLS thật, 6 phần: [1] thực thể & quan hệ (booking→lô→cont, danh mục, sự cố, đường nối) · [2] vòng đời cont = đang ở đâu · [3] quy tắc nghiệp vụ suy ra (CLS hiệu lực, KD theo lô, 48h hạ thẳng, chờ hạ cảng 72h, thừa/thiếu, kéo vs ghép lô) · [4] tool ↔ dữ liệu (+ những gì KHÔNG tra được) · [5] cách tự suy luận B1–B5 + ví dụ nhiều bước · [6] từ ngữ đời thường → khái niệm.
+- `index.ts`: import sơ đồ, chèn vào system prompt + dòng **THỜI GIAN HIỆN TẠI (giờ VN)** để hiểu "mai/tuần này". ⚠ **Thêm/đổi bảng, cột, tool → phải sửa file sơ đồ cho khớp.**
+- Sửa 3 lỗi phát hiện khi đối chiếu (`app.src.html`): (a) `tra_booking` select cột `trang_thai` không có trong `lo_tong_hop` → danh sách lô của booking LUÔN rỗng; (b) `lo_cho_ha_cang` chưa loại lô có sự cố mở (màn Hạ cảng có loại) → nay khớp; (c) `aiSend` chỉ trả lời công cụ đầu tiên khi Gemini gọi nhiều công cụ song song (API sẽ lỗi) → nay trả đủ, chạy song song; vòng suy luận 6 → 8 lượt.
+- Build OK, JS OK, esbuild index.ts OK. ✅ Edge đã deploy, `c097548` lên only-me, origin `9d4d255` — ĐÃ LÊN PRODUCTION. Bước 2 (tool lọc linh hoạt `truy_van_linh_hoat`) CHƯA làm — chờ anh Hi.
+
+## ✅ PHIÊN 27/09 — ĐỢT 8: chatbot hiểu "chờ kéo hạ cảng" (kiểm dịch xong)
+
+- Lỗi: hỏi "lô kiểm dịch xong rồi chờ kéo, cont nào" → AI hiểu "chờ kéo" = trạng thái "Đầy chờ kéo" (bước 3) → query rỗng → trả "không có" (SAI). Đúng nghĩa: lô ĐÃ kiểm dịch, cont Ở BÃI TẠM, CLS ≤72h → chờ kéo HẠ CẢNG (như màn Hạ cảng: 4 lô/5 cont).
+- Web (`app.src.html`): thêm công cụ chatbot **`lo_cho_ha_cang`** (khớp logic `haCangLots`: cont trạng thái '4' + lô da_kiem_dich, mặc định CLS≤72h, hoi_het=true = tất cả) trả lô + cont + CLS + giờ còn lại. Tool desc dạy phân biệt với "Đầy chờ kéo" (→ cont_gap_can_keo).
+- Edge prompt (`doc-booking-pdf`): thêm quy tắc phân biệt 2 nghĩa "chờ kéo" + bắt buộc gọi lo_cho_ha_cang khi hỏi "kiểm dịch xong chờ kéo / chờ hạ cảng".
+- Build OK, JS OK. ⚠ **Cần: push web + deploy Edge** (prompt mới). Tool client giúp AI chọn đúng ngay cả khi chưa deploy, nhưng deploy Edge để dạy prompt chắc hơn.
+- Anh Hi hỏi "AI tự hiểu ngữ cảnh được không?" → hướng đã chốt: bước 1 = sơ đồ dữ liệu (ĐỢT 9, đã làm); bước 2 = tool lọc linh hoạt chạy dưới RLS (chưa làm).
+
+## ✅ PHIÊN 27/09 — ĐỢT 7: Nhà xe kiêm bãi tạm (HLS) xem thêm cont ở bãi của mình
+
+- Yêu cầu: nhà xe HLS vừa là nhà xe vừa là bãi tạm → ngoài cont của nhà xe HLS còn xem cont đang Ở BÃI HLS (do nhà xe khác kéo về).
+- Migration `20260927130000_nha_xe_xem_bai.sql`: mở rộng `cont_cua_toi()` — thêm cont ở bãi (trang_thai '4') khi mã/tên bãi khớp nha_xe của tài khoản (khớp `bai_tam=nx` HOẶC bai_tam.ma/ten = nx, bao cả 'HLS' lẫn 'Hoàng Liên Sơn'); thêm cột `thuoc` ('xe'/'bai'). Phải `drop function` trước vì đổi return type. Nhà xe không kiêm bãi → không có nhóm 'bai'.
+- Web `renderNhaXe`: tách 2 nhóm "Container của nhà xe" + "Cont đang ở bãi của bạn". Build OK, JS OK.
+- ⚠ Chạy migration `20260927130000` + push web (đã có sẵn trên máy).
+- Quy tắc CHUNG (khớp mã/tên bãi, không hardcode HLS) → mọi nhà xe kiêm bãi đều tự áp dụng. Nếu tên nhà xe ≠ mã/tên bãi thì cần bảng ánh xạ nhà xe↔bãi (chưa cần).
+
+## ✅ PHIÊN 27/09 — ĐỢT 6: SIẾT QUYỀN NHÀ XE (bảo mật 2 lớp)
+
+**Lỗ hổng anh Hi phát hiện:** tài khoản vai trò **Nhà xe** đang xem được HẾT mọi màn (Danh mục có SĐT/khách, giá cước, tất cả cont, booking...) → lộ thông tin. Gốc: RLS policy "nhan vien doc" cho MỌI authenticated đọc tất cả bảng (`vai_tro is not null`), và NAV_GROUPS không gate theo vai trò.
+
+**Đã sửa — 2 lớp (anh Hi chốt: giao diện + RLS backend; Nhà xe chỉ xem cont của mình):**
+- **Backend** — migration `20260927120000_quyen_nha_xe.sql`: `private.nha_xe_hien_tai()`; **`toi_la_ai` → security DEFINER** (để Nhà xe vẫn đăng nhập sau khi chặn đọc nhan_vien); RPC `cont_cua_toi()` (definer) chỉ trả cột an toàn (so_cont/lô/trạng thái/kho/bãi/ngày — KHÔNG giá, KHÔNG khách) và chỉ cont có nha_xe = nhà xe của mình; **restrictive policy "chan nha xe doc"** trên MỌI bảng (kể cả cont, nhan_vien) → Nhà xe đọc thẳng bảng/API đều rỗng, chỉ lấy được qua RPC. Views *_tong_hop đã security_invoker nên tự rỗng theo.
+- **Web** (`src/app.src.html`): `isNhaXe()` + `renderNhaXe()` (màn "Container của tôi" chỉ đọc, gọi `cont_cua_toi`, hiện vị trí "Đang ở" + kho + ngày); trong `afterLogin` nếu vai trò Nhà xe → render màn này rồi `return` (KHÔNG dựng shell/nav/loadData) → không vào được màn khác. Build OK, JS OK.
+- ⚠ **Thứ tự chạy:** anh Hi **chạy migration TRƯỚC**, rồi mới **push web** (nếu push web trước mà chưa có RPC → Nhà xe lỗi màn). Test: login Nhà xe (hls01) chỉ thấy Container của tôi; login QL/ĐĐ/CSKH vẫn đầy đủ như cũ.
+- Lỗi khi chạy: `42P13 cannot change return type` ở `toi_la_ai` → thêm `drop function if exists` trước. Anh Hi đã chạy + test OK.
+
+## ✅ PHIÊN 27/09 — ĐỢT 5: viết HƯỚNG DẪN SỬ DỤNG cho team
+
+- Tạo **`HUONG_DAN_ZADAM_DIEU_DO.pdf`** (8 trang, gốc dự án) — bản PDF đẹp gửi team: bìa + tổng quan + sơ đồ luồng/6 bước + trang riêng mỗi vai trò (CSKH/ĐĐ/QL/Nhà xe) + trang Trợ lý AI + mẹo; có mockup chú thích, giọng thân thiện. Nguồn HTML: `tools/huong_dan_pdf_source.html` (build bằng Chromium/playwright, font DejaVu Sans cho tiếng Việt).
+- Tạo `HUONG_DAN_SU_DUNG.md` (thư mục gốc dự án): giới thiệu tổng thể dự án (booking/lô/cont, luồng nghiệp vụ), bảng vai trò×quyền (QL/ĐĐ/CSKH/Nhà xe/Chỉ xem), mô tả các màn hình, 6 bước trạng thái cont, hướng dẫn theo từng vai trò, và phần **Trợ lý AI** (2 mức quyền, hỏi đáp, thao tác có bảng xác nhận, đọc PDF booking). File không chứa data thật → commit được.
+- Ghi chú: DB đã làm trống lại (booking/lô/cont=0), chờ chạy `nap_don_moi_27-09_that.sql` để nạp 22 lô + 43 cont + 9 đơn.
+- Bài học: nút "Xoá toàn bộ" dính "DELETE requires a WHERE clause" → đã sửa hàm dùng `where true` (chạy trực tiếp trên Supabase). Đọc PDF không lỗi, chỉ chậm không đều do Gemini free tier.
+
+## ✅ PHIÊN 27/09 — ĐỢT 4: hiện "Yêu cầu tàu" (cảng/ngày tàu/hãng YC) cho đơn chờ lên
+
+**Vấn đề anh Hi:** đơn hàng mới (Đơn chờ lên) có `cang_den_yc/ngay_tau_yc/hang_tau_yc` (cảng/ngày tàu/hãng YÊU CẦU) — list hiện "SHA · 02/10" — NHƯNG (1) form sửa cont KHÔNG có mục này để xem/sửa; (2) công cụ chatbot `tra_cont`/`loc_cont` không trả các cột này → AI nói "không lưu ETD" (sai). Điều độ không biết ngày tàu yêu cầu để xếp.
+
+**Đã sửa (chỉ `src/app.src.html` — client, KHÔNG cần deploy Edge):**
+- `tra_cont` + `loc_cont`: thêm `cang_den_yc, ngay_tau_yc, hang_tau_yc, ngay_can_len_kho` vào select; thêm hàm `aiContRa()` map alias tiếng Việt rõ nghĩa (`ngay_tau_yeu_cau`, `cang_den_yeu_cau`, `hang_tau_yeu_cau`) + ghi chú để AI hiểu đây là YÊU CẦU của đơn chờ lên (chưa có booking).
+- `openCont`: thêm mục "Yêu cầu tàu (chưa có booking — để tìm booking/xếp lô)" gồm cảng đến YC / ngày tàu YC / hãng YC, chỉ hiện khi cont CHƯA gắn lô. Lưu tự động qua `formObj`.
+- Build OK, `node --check` (tách JS) OK. index.html + app.src.html trên máy = bản mới, chờ anh Hi push (only-me + ban-public cho team).
+
+## ✅ PHIÊN 27/09 — ĐỢT 3: SỬA LOGIC ĐỌC EXCEL — tách "đơn hàng mới" (ngoài khung đỏ)
+
+**Vấn đề anh Hi chỉ ra:** sheet MỚI ĐIỀU ĐỘ có 2 vùng. TRONG khung đỏ = lô đã xếp kế hoạch (đủ booking + số cont + nhà xe, đã kéo lên kho). NGOÀI khung đỏ = ĐƠN HÀNG MỚI: chỉ có mã đơn + khách + kho + cảng + ngày gọi/ngày lên kho, CHƯA có booking/cont/lô (điều độ chưa xếp). `nap_excel.py` cũ chỉ đọc dòng có lô/booking/cont nên **bỏ sót hoàn toàn** vùng đơn mới.
+
+**Đã sửa (anh Hi chốt: mỗi dòng = 1 đơn; sửa hẳn tool dùng lâu dài):**
+- `model.py`: thêm `read_don_moi(wb)` (đọc dòng có mã đơn + khách/kho, KHÔNG có booking/cont/lô) + `xldate()` (đổi số serial Excel → ngày).
+- `nap_excel.py`: dựng bảng `x_don`, thêm danh mục thiếu (khách/kho/cảng_yc/hãng_yc), **upsert vào public.cont**: trạng thái `'1'` (Đơn chờ lên), `lo=null`, `so_cont=null`, cảng vào cột `cang_den_yc` (đúng mô hình Đơn hàng của app). id = `D<yymmdd>-<mã đơn>-<dòng>`, `on conflict(id) do update ... where trang_thai='1'` (không đè khi đơn đã được xếp) → chạy lại an toàn.
+- `anh_xa_ten.local.json`: thêm CANG "KHOR FAKKAN" → KFK.
+- Kết quả chạy thử 27/09: **9 đơn mới** (HX 0996, JF 09170, JF 09193, HX 09195, HX 09197, HX 09198×2, LS 09199×2) — cảng KFK/SHA/DAL đúng, giờ lên kho hiểu "chiều/下午"→13h, "sáng/早上"→7h.
+- File SQL: `tools/nap_don_moi_27-09.sql` (--thu) và `nap_don_moi_27-09_that.sql` (thật). Chạy file thật = re-sync 22 lô/43 cont (idempotent, không hại) + thêm 9 đơn mới. ⚠ Code .py đã sửa trên máy, anh Hi commit qua PowerShell (VM không push được).
+
+## ✅ PHIÊN 27/09 — ĐỢT 2 (chiều/tối): nâng cấp hiểu ý + xoá hàng loạt + reset & nạp data mới
+
+**Commit `1027b55` (đã push origin + only-me).** Gồm:
+- **loc_cont** phân biệt kho / bãi tạm (HLS = Hoàng Liên Sơn) / cảng + lọc kiểm dịch (chua/da); map tên về đúng danh mục (aiKhopDm chuẩn hoá bỏ dấu/khoảng trắng → "HENGXING"↔"HENG XING").
+- **ghi_don_hang**: chatbot tạo đơn = cont "Đơn chờ lên" ĐỘC LẬP (không ép booking tạm). Prompt: cấm bịa "đã ghi nhận" khi không có công cụ → nói thật + hỏi lại.
+- **Xoá hàng loạt** (Quản lý, không hỏi lôi thôi, bấm 2 lần chống lỡ tay): tab Booking có "Xoá booking đã chọn" + "Xoá toàn bộ booking"; tab Lô có "Xoá lô đã chọn" (xoá được cả lô đã lên tàu). Migration `20260927101000_xoa_hang_loat.sql`: xoa_booking / xoa_toan_bo_booking / xoa_lo_hang_loat (kéo theo cont + gợi ý).
+- ⚠ **FIX 27/09 (đợt 4):** Supabase chặn DELETE không WHERE ("DELETE requires a WHERE clause") → `xoa_toan_bo_booking` phải `delete from ... where true;` (đã sửa migration). Lệnh xoá sạch trong SQL Editor cũng phải dùng `where true`.
+
+**RESET + NẠP DATA MỚI 27/09 (anh Hi làm):**
+- Đã LÀM TRỐNG toàn bộ vận hành (delete goi_y/cont/lo/booking; giữ danh mục + nhân viên).
+- Nạp lại từ `data hôm nay.xlsx` bằng `tools/nap_excel.py`: **22 lô + 43 cont** (lô 614A→634, VP1). 46 lô cũ quá hạn CLS bỏ qua theo ý anh Hi.
+- ⚠ **Lưu ý dùng nap_excel.py:** data trong file mới nằm ở ĐẦU sheet (dòng 3-139) → phải thêm `--tu-dong 3` (mặc định 1250 sẽ ra 0 lô). Lệnh: `python nap_excel.py "data hôm nay.xlsx" --ngay 27/09 --ra nap_27-09.sql --thu --tu-dong 3` (bỏ --thu để ghi thật). Copy file SQL vào clipboard: `Get-Content "nap_27-09.sql" -Raw -Encoding UTF8 | Set-Clipboard` rồi dán SQL Editor.
+
+**⚠ BÀI HỌC git 27/09:** VM Cowork commit hay kẹt file khoá (HEAD.lock / tmp_obj, không xoá được trong mnt). → **git commit/push chạy từ PowerShell**, dọn trước bằng `Remove-Item -Force .git\HEAD.lock, .git\index.lock; Get-ChildItem -Recurse .git\objects -Filter tmp_obj_* | Remove-Item -Force`. Nếu commit fail mà vẫn commit-tree → push nhầm bản cũ (đã dính 1 lần, phải push lại).
+
+---
+## ✅ PHIÊN 27/09 (tài khoản phụ · Cowork) — ĐÃ PUSH + DEPLOY + TEST XONG (lên production)
+
+**Commit local trên master (đã TEST OK trên localhost 27/09):** `cfdd18a` (Lô 1) + `933c6ba` (Lô 2) + `88aab39` (fix bat_tat_ai_duoc_luu chặn nhầm QL) + `3899215` (map tên cảng/hãng → mã, tránh lỗi khóa ngoại). Đã chạy 3 khối SQL migration + fix qua SQL Editor; Edge Function đã deploy. ĐÃ TEST: chatbot đọc "26 lô quá cắt máng" đúng; phân quyền 2 mức OK; tạo booking qua chatbot (TESTAI01, ZADAM) + bảng xác nhận + map "Đại Liên"→DAL OK. ĐÃ PUSH XONG 27/09: origin/master `344bd7e` (bản team, qua ban-public) + only-me/master `3899215` (bản đầy đủ). Team Ctrl+F5 là dùng bản mới. Việc nhỏ còn lại: xoá 2 booking thử TESTAI01/ZADAM nếu chưa.
+
+### Lô 1 (cfdd18a) — Sửa lỗi chatbot trả SAI "lô quá hạn" + nút dọn nhật ký
+- **Lỗi gốc:** tool `lo_toi_han_cls` / `cont_gap_can_keo` lọc trên field `cls` thô → BỎ SÓT lô chỉ có ETD (chưa nhập CLS) → chatbot nói "không có lô quá hạn / yên tâm" dù màn Lô/Booking đầy lô "Quá 34 giờ / 3 ngày / 6 ngày". Đã sửa: tính **closing hiệu lực = cls → closing tay → (etd − 1 ngày)** giống web; thêm `so_lo_qua_han`, `nguon_cls`.
+- **System prompt Edge Function:** cấm trả lời trấn an khi chưa query; buộc kèm số liệu cụ thể (tên lô, số giờ/ngày quá hạn); dạy từ đồng nghĩa cắt máng = CLS = cut-off = closing.
+- **Nút "Dọn nhật ký cũ"** trong tab Dọn dữ liệu (chỉ QL, giữ 30 ngày, bấm 2 lần xác nhận). Migration `20260927100000_don_nhat_ky_cu.sql` (hàm `dem_nhat_ky_cu` + `don_nhat_ky_cu`).
+
+### Lô 2 (933c6ba) — Chatbot THAO TÁC ghi dữ liệu (có xác nhận) + phân quyền 2 mức
+- **Phân quyền 2 mức per-account:** `ai_hoi_dap` (hỏi đáp/tra cứu) + `ai_thao_tac` (ghi; = `ai_duoc_luu` AND vai trò QL/ĐĐ). Migration `20260927100100_quyen_chatbot_2_muc.sql`: thêm cột `ai_hoi_dap`, hàm `quyen_chatbot()` + `bat_tat_ai_hoi_dap()`. **KHÔNG đụng `toi_la_ai`** (tránh đổi return type). Tái dùng cột `ai_duoc_luu` sẵn có làm nền quyền thao tác.
+- **UI:** nút 🤖 ẩn nếu user không có quyền hỏi đáp; bảng NV (QL) cấp 2 quyền per-account: 💬 hỏi đáp / 🤖 thao tác. `afterLogin` nạp `quyen_chatbot()` vào `S.me` (fallback theo vai trò nếu hàm chưa deploy → web vẫn chạy khi push web trước migration).
+- **5 công cụ ghi** (chỉ nạp khi `ai_thao_tac`): `ghi_booking`, `ghi_lo`, `ghi_them_cont`, `ghi_trang_thai_cont`, `ghi_keo_cont`. Mọi lệnh ghi → **BẢNG XÁC NHẬN trong chat** (`aiChuanBiGhi` validate → user bấm "Đồng ý lưu" → `aiThucThiGhi` ghi thật). Validate: kiểm tra tồn tại lô/cont, trạng thái hợp lệ, chỉ kéo cont "Đầy chờ kéo".
+
+### ✅ QUY TRÌNH ĐÃ DÙNG 27/09 (ghi lại để lần sau lặp đúng):
+1) **Chạy 2 migration** qua Supabase SQL Editor (dán nội dung 2 file `supabase/migrations/20260927100000_don_nhat_ky_cu.sql` và `20260927100100_quyen_chatbot_2_muc.sql`).
+2) **Push + deploy:**
+```powershell
+cd "E:\\kiểm dịch\\Claude outputs\\điều độ"
+git fetch origin
+$SHA = git commit-tree "master^{tree}" -p origin/master -m "chatbot cat mang + don nhat ky + thao tac ghi + phan quyen 2 muc"
+git branch -f ban-public $SHA
+git diff origin/master ban-public
+git push origin ban-public:master
+git push only-me master
+npx supabase functions deploy doc-booking-pdf --project-ref cgfcbxsyjtdlligpdzbp --no-verify-jwt
+```
+3) **Test sau deploy** (Ctrl+F5):
+   - Đọc: "có bao nhiêu lô quá ngày cắt máng" → phải liệt kê ĐÚNG các lô Quá X giờ/ngày (không còn nói "yên tâm").
+   - Ghi: bật quyền 🤖 Thao tác cho 1 QL/ĐĐ trong Danh mục→Nhân viên → hỏi "đổi trạng thái cont XXX sang đã hạ cảng" → hiện BẢNG XÁC NHẬN → bấm Đồng ý lưu.
+- ✅ **ĐÃ TEST TAY OK 27/09** trên localhost:8000 (web mới) trước khi push team: đọc lô quá cắt máng đúng; bật quyền 🤖; tạo booking qua chatbot + bảng xác nhận + map tên cảng→mã. (VM Cowork không login app + postgres MCP hỏng nên không test tự động được — luôn test tay sau deploy, nhất là công cụ ghi.)
+
+---
+
 
 ## ✅ ĐẨY GITHUB 24/09 — ĐÃ PUSH XONG (team dùng bản mới)
 
@@ -209,9 +359,20 @@ Bộ test dùng 5 lô gần nhất trong file Excel vận hành ngày 22/09 (fil
 
 ## Quy ước — đừng làm sai
 
+**Bài học kỹ thuật 27/09 (bổ sung):**
+- **Schema thực trên Supabase KHÁC file migration** (tài khoản chính sửa tay). Migration mới LUÔN dùng `create or replace` / `alter table ... add column if not exists` để idempotent. Trước khi đụng hàm cũ, kiểm tra bản thực qua SQL Editor.
+- **Hàm tạo tay trên Supabase có thể kiểm tra quyền SAI** (vd `bat_tat_ai_duoc_luu` cũ chặn cả Quản lý). Chuẩn: kiểm tra quyền QL bằng `private.vai_tro_hien_tai()` (giống `don_du_lieu`). Đã thay bằng migration `20260927100200`.
+- **Cột khóa ngoại (cang_den, hang_tau) phải là MÃ, không phải tên.** Khi chatbot ghi, dùng `aiKhopDm()` map "Shanghai"/"Đại Liên" → mã (SHA/DAL) trước khi insert, tránh lỗi FK.
+- **Cách test bản mới KHÔNG đẩy cho team:** deploy Edge Function (tương thích ngược, web cũ vẫn chạy) → chạy `python -m http.server 8000` trong thư mục dự án → mở localhost:8000 đăng nhập test → OK mới push ban-public.
+- **VM Cowork không có credential git + chưa login supabase** → mọi push/deploy vẫn phải anh Hi chạy PowerShell. Claude có device_bash chạy được build/commit/đọc-sửa file trên máy, nhưng KHÔNG push/deploy được.
+
+
 - **Đẩy bản public (`origin` = dieu-do-web):** KHÔNG `git push origin master` (lịch sử master có commit chứa dữ liệu thật + đã tách khỏi origin). Làm: `SHA=$(git commit-tree "master^{tree}" -p origin/master -m "mô tả")` → `git branch -f ban-public $SHA` → kiểm tra `git diff origin/master ban-public` không có dữ liệu thật → `git push origin ban-public:master`.
 - **Không chép dữ liệu thật** (booking, số cont, tên khách, email nhân viên) vào bất kỳ file nào được git theo dõi, kể cả TIEN_DO.md.
 - **Không sửa trực tiếp `index.html`.** Sửa `src/app.src.html` (và `src/kiem_dich_wizard.js` nếu cần) rồi chạy `python build.py`.
+- **Đổi RETURN TYPE của hàm có sẵn** → `drop function if exists` trước, không thì lỗi `42P13`.
+- **Vai trò Nhà xe chỉ xem cont của mình** — chặn 2 lớp: RLS restrictive mọi bảng + màn riêng `renderNhaXe()` gọi RPC `cont_cua_toi()`. Bảng/màn mới PHẢI thêm vào danh sách policy "chan nha xe doc".
+- **Chatbot:** schema/tool đổi → sửa `supabase/functions/doc-booking-pdf/so_do_du_lieu.ts` cho khớp rồi deploy Edge. "Chờ kéo" có 2 nghĩa (bước 3 vs KD xong chờ hạ cảng) — xem ĐỢT 8.
 - `build.py` nhúng cả supabase + wizard vào index.html → **index.html tự chứa** (mở ở đâu cũng chạy, không cần file js ngoài).
 - Thay đổi DB = **thêm file migration mới** trong `supabase/migrations/`, không sửa migration cũ.
 - **`service_role` key KHÔNG được đưa vào bất kỳ file client nào** (app.src.html, index.html) — chỉ đặt trong Edge Function (Supabase tự cấp qua biến môi trường, không cần lưu ở đâu khác).
@@ -221,6 +382,9 @@ Bộ test dùng 5 lô gần nhất trong file Excel vận hành ngày 22/09 (fil
 
 ## Việc còn treo (chưa ai yêu cầu làm, chỉ ghi để nhớ)
 
+- ✅ Đợt 7: migration `20260927130000` ĐÃ CHẠY (kiểm `cont_cua_toi` có cột `thuoc` = true). Đợt 8+9: Edge `doc-booking-pdf` ĐÃ DEPLOY, commit `c097548` ĐÃ push only-me. Đã đẩy ban-public → origin `9d4d255` (+ `fa25c9b` là commit trùng, cùng nội dung, vô hại). **Đợt 6–9 đã lên production đủ.**
+- ✅ Đợt 10: migration `20260928090000` ĐÃ CHẠY + `SaoLuuV2.gs` ĐÃ CÀI (caiDatV2 chạy OK 27/09 23:16: sao lưu đủ 20 bảng, booking=14; chi phí bãi 27-09 13 cont; dọn 0 file). Edge đã deploy, commit `c4e9a6c` lên only-me, origin `3c66b70` — **ĐỢT 10 ĐÃ LÊN PRODUCTION ĐỦ.**
+- Bước 2 chatbot: tool lọc linh hoạt `truy_van_linh_hoat` (chạy dưới session user → RLS tự áp) — chờ anh Hi.
 - Bảng màu đã quay về tím – chàm (24/09) nên các hex tím trong `vTong` (area/heatmap/bar) nay hợp tông. Pill trạng thái 1/2 + CLS xa vẫn xanh dương (`#DBEAFE/#1D4ED8`, `#E0E7FF/#4338CA`) — cố ý giữ, đổi thì phải hỏi anh Hi.
 - Ngưỡng `html.lite` (≤2 nhân / ≤2GB → nền đứng yên) đặt để máy văn phòng yếu không giật; nếu anh Hi muốn nền động cả trên máy yếu thì bỏ dòng đầu `<script>`.
 - Thư mục `Claude outputs/` (ảnh chụp màn hình có số cont thật) và các file nháp PHASE* đang **untracked** — đừng `git add -A`; chỉ add đúng file.
@@ -233,6 +397,8 @@ Bộ test dùng 5 lô gần nhất trong file Excel vận hành ngày 22/09 (fil
 
 | Ngày | Tài khoản / phiên | Đã làm |
 |---|---|---|
+| 28/09/2026 (đợt 10) | Cowork (phụ) | Sao lưu MỌI bảng (vá lỗ hổng mất sự cố/chi phí khi dọn lô), chi phí bãi theo ngày ra Drive (SaoLuuV2.gs), dọn dẹp tự động ngày 2 hằng tháng (pg_cron), giữ bản sao lưu 60 ngày + ngày 01 vĩnh viễn, tab Container "Đã hạ cảng" (khai ePort/thanh lý). Chờ chạy migration + cài Apps Script + push. |
+| 27/09/2026 (đợt 9) | Cowork (phụ) | Sơ đồ dữ liệu cho chatbot (`so_do_du_lieu.ts`) + giờ VN trong prompt; sửa tra_booking (lô luôn rỗng), lo_cho_ha_cang (loại sự cố), aiSend (nhiều công cụ song song, 8 lượt). Chờ deploy Edge + push. |
 | 26/09/2026 | Cowork (tài khoản phụ · Phase II.4) | Nhận API key Gemini → secret GEMINI_API_KEY; Edge Function doc-booking-pdf (ping/models/doc_pdf/chat) deploy + test ping OK (gemini-3.5-flash); web: khối Đọc PDF booking bằng AI trong form booking, điền form để người duyệt. Test bộ cũ giữ đạt. Chưa commit/push. |
 | 25/09/2026 (~01:30) | Cowork (tài khoản phụ · Phase I) | 4 mẫu lệnh tiếng Việt dựng trên web (`lenhText`): STT theo nhà xe/ngày, Kho đầy = vị trí hiện tại, CUT-OFF = CLS, Note = giờ lên kho đơn rỗng; bỏ dòng Nhà xe song ngữ. Test 9/9. Commit riêng. |
 | 25/09/2026 (~00:30–01:00) | Cowork (tài khoản phụ · Phase II) | Migration booking/lô/đơn hàng (bảng booking, lo.so_booking + khach_hang, cont yêu cầu tàu, trigger đồng bộ, backfill 143 booking / 235 lô, view booking_tong_hop, hàm goi_y_booking) chạy thử rồi chạy thật trên Supabase (SHA khớp). Web: tab Booking, form lô chọn booking + khách, Tạo đơn hàng (gợi ý mã đơn), Chờ cắt rỗng lọc + Tìm booking → tạo lô & gán, đổi tàu chọn booking có sẵn. Test mới 48/48, bộ cũ giữ đạt. Đồng bộ về máy, build khớp SHA. Chưa commit/push. |

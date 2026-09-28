@@ -38,13 +38,14 @@ function doGet(e) {
 }
 
 function caiDatDongBo() {
+  // (anh Hi 28/09) Mã KDTV giờ cập nhật THỦ CÔNG bằng nút "Cập nhật mã KDTV" trên web (doGet vẫn chạy).
+  // Sao lưu hằng ngày do file SaoLuuV2 (caiDatV2) quản lý. Hàm này chỉ GỠ các trigger tự động cũ của file này.
+  var n = 0;
   ScriptApp.getProjectTriggers().forEach(function (t) {
-    const f = t.getHandlerFunction();
-    if (f === 'saoLuu' || f === 'saoLuuVaGhiNhan' || f === 'dongBoMaKDTV') ScriptApp.deleteTrigger(t);
+    var f = t.getHandlerFunction();
+    if (f === 'saoLuu' || f === 'saoLuuVaGhiNhan' || f === 'dongBoMaKDTV') { ScriptApp.deleteTrigger(t); n++; }
   });
-  ScriptApp.newTrigger('saoLuuVaGhiNhan').timeBased().everyDays(1).atHour(GIO_CHAY).inTimezone(MUI_GIO).create();
-  ScriptApp.newTrigger('dongBoMaKDTV').timeBased().everyHours(1).create();
-  dongBoMaKDTV();
+  Logger.log('Đã gỡ ' + n + ' trigger tự động (sao lưu cũ + đồng bộ KDTV mỗi giờ). KDTV giờ bấm nút trên web; sao lưu do SaoLuuV2 lo.');
 }
 
 function goiSupabase_(ham, thamSo) {

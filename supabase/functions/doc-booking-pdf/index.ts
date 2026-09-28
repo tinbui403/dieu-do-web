@@ -1,7 +1,7 @@
 // Edge Function: doc-booking-pdf — đọc file PDF booking bằng Gemini (Google AI Studio) và trả về
 // các ô cần cho bảng booking để NGƯỜI DUYỆT rồi lưu. KHÔNG lưu file PDF ở đâu cả (chỉ đi qua bộ nhớ).
 //
-// Secret cần đặt trong Supabase (Edge Functions → Secrets): GEMINI_API_KEY   (không bao giờ đưa vào web)
+// Secret cần đặt trong Supabase (Edge Functions → Secrets): GEMINI_API_KEY (bắt buộc) + GEMINI_API_KEY_2 (tuỳ chọn, key tài khoản Google KHÁC để nâng trần free tier — gặp 429 tự đổi key). Không bao giờ đưa key vào web.
 // Deploy: Dashboard → Edge Functions → Deploy via Editor (tắt "Verify JWT with legacy secret" như hàm quan-ly-nhan-vien)
 //
 // Body JSON gửi lên (cần header Authorization: Bearer <access_token> của người đã đăng nhập, vai trò QL/ĐĐ/CSKH):
@@ -21,7 +21,10 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY') || '';
-const MODELS = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-flash', 'gemini-flash-latest'];   // thử lần lượt (theo danh sách action=models 26/09), model nào chạy thì dùng
+// Key thứ 2 (tài khoản Google khác) để nâng trần free tier: đặt secret GEMINI_API_KEY_2 trong Supabase.
+const GEMINI_API_KEY_2 = Deno.env.get('GEMINI_API_KEY_2') || '';
+const GEMINI_KEYS = [GEMINI_API_KEY, GEMINI_API_KEY_2].filter(Boolean);
+const MODELS = ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];   // thử lần lượt; model GA ổn định (2.5-flash) đứng đầu cho đỡ 503, model mới làm dự phòng
 const MAX_PDF_BYTES = 8 * 1024 * 1024;
 
 function json(body: unknown, status = 200) {
@@ -45,11 +48,28 @@ const PROMPT_PDF = `Bạn là nhân viên chứng từ hãng tàu. Đọc file b
 }
 Nếu một ô không tìm thấy thì để null. Không bịa số.`;
 
+// Gọi Gemini qua nhiều key: gặp 429 (hết quota / quá RPM) thì tự đổi sang key kế tiếp gọi lại.
+async function geminiFetch(url: string, init: RequestInit & { headers?: Record<string, string> }): Promise<Response> {
+  let r: Response | null = null;
+  for (let i = 0; i < GEMINI_KEYS.length; i++) {
+    const headers = { ...(init.headers || {}), 'x-goog-api-key': GEMINI_KEYS[i] };
+    // 503 = model quá tải tạm thời -> chờ rồi thử lại chính model/key này 1 lần trước khi bỏ qua
+    for (let attempt = 0; attempt < 2; attempt++) {
+      r = await fetch(url, { ...init, headers });
+      if (r.status !== 503 || attempt === 1) break;
+      try { await r.body?.cancel(); } catch (_e) { /* bỏ qua */ }
+      await new Promise((res) => setTimeout(res, 700));
+    }
+    if (r.status !== 429 || i === GEMINI_KEYS.length - 1) return r; // OK / 503 / lỗi khác / hết key -> trả luôn
+    try { await r.body?.cancel(); } catch (_e) { /* bỏ qua */ } // 429 và còn key -> huỷ body, thử key kế
+  }
+  return r as Response;
+}
 async function gemini(model: string, parts: unknown[], jsonMode: boolean) {
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent';
   const body: Record<string, unknown> = { contents: [{ role: 'user', parts }] };
   if (jsonMode) body.generationConfig = { responseMimeType: 'application/json', temperature: 0.1 };
-  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY }, body: JSON.stringify(body) });
+  const r = await geminiFetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   const txt = await r.text();
   if (!r.ok) throw new Error('Gemini ' + model + ' HTTP ' + r.status + ': ' + txt.slice(0, 300));
   const d = JSON.parse(txt);
@@ -74,7 +94,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   try {
     if (req.method !== 'POST') throw new Error('Method not allowed');
-    if (!GEMINI_API_KEY) throw new Error('Chưa đặt secret GEMINI_API_KEY trong Supabase');
+    if (!GEMINI_KEYS.length) throw new Error('Chưa đặt secret GEMINI_API_KEY trong Supabase');
 
     // Người gọi phải đăng nhập và là QL / ĐĐ / CSKH (dùng chính JWT của họ để xác thực)
     const authHeader = req.headers.get('Authorization') || '';
@@ -95,7 +115,7 @@ Deno.serve(async (req: Request) => {
     const action = body.action;
 
     if (action === 'models') {
-      const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200', { headers: { 'x-goog-api-key': GEMINI_API_KEY } });
+      const r = await geminiFetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200', { headers: {} });
       const txt = await r.text(); if (!r.ok) throw new Error('HTTP ' + r.status + ': ' + txt.slice(0, 300));
       const d = JSON.parse(txt);
       return json({ ok: true, models: (d.models || []).filter((x: { supportedGenerationMethods?: string[] }) => (x.supportedGenerationMethods || []).includes('generateContent')).map((x: { name: string }) => x.name) });
@@ -174,7 +194,7 @@ ${ctx ? '\nBỐI CẢNH MÀN HÌNH (JSON):\n' + ctx : ''}`;
           const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + m + ':generateContent';
           const reqBody: Record<string, unknown> = { system_instruction: { parts: [{ text: sys }] }, contents };
           if (tools) reqBody.tools = tools;
-          const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY }, body: JSON.stringify(reqBody) });
+          const r = await geminiFetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(reqBody) });
           const txt = await r.text();
           if (!r.ok) { last = 'Gemini ' + m + ' HTTP ' + r.status + ': ' + txt.slice(0, 300); if (/^(404|429|503)$/.test(String(r.status))) continue; throw new Error(last); }
           const d = JSON.parse(txt);
